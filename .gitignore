@@ -95,6 +95,7 @@ proguard/
 
 # Log Files
 *.log
+*.htm
 
 # Android Studio Navigation editor temp files
 .navigation/
@@ -655,6 +656,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.htm
 
 # Chutzpah Test files
 _Chutzpah*
@@ -843,6 +845,7 @@ node_modules/
 
 # Visual Studio 6 build log
 *.plg
+*.htm
 
 # Visual Studio 6 workspace options file
 *.opt
@@ -896,6 +899,7 @@ ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
+*.htm
 
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
@@ -981,9 +985,12 @@ _deps
 *.exe
 *.out
 *.app
+*.htm
 
 # C/C++ binary extension file
 *.bin
+*.suo
+*.ncb
 
 ##### C
 # Prerequisites
