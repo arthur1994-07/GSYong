@@ -843,6 +843,24 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
+# Auto-generated files by Visual Studio
+*.ncb
+*.suo
+*.sdf
+*.cache
+*.dbmdl
+*.opendb
+*.pdb
+*.psess
+*.vsp
+*.vsps
+*.vssscc
+*.vssscc
+*.vsix
+*.vsixmanifest
+*.vscode/
+.vscode/
+
 # Visual Studio 6 build log
 *.plg
 *.htm
