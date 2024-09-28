@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Linker_Input_AdditionalDependencies_Common_R"
+	InheritedPropertySheets=".\Linker_Input_AdditionalDependencies\Gfx_R.vsprops;.\Linker_Input_AdditionalDependencies\DirectX_Common.vsprops;.\Linker_Input_AdditionalDependencies\DirectShow_Common.vsprops;.\Linker_Input_AdditionalDependencies\Boost_R.vsprops;.\Linker_Input_AdditionalDependencies\OpenSSL_R.vsprops;.\Linker_Input_AdditionalDependencies\LibXl_Common.vsprops;.\Linker_Input_AdditionalDependencies\Window_Common.vsprops;.\Linker_Input_AdditionalDependencies\Vld_D.vsprops"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		IgnoreDefaultLibraryNames=""
+	/>
+</VisualStudioPropertySheet>

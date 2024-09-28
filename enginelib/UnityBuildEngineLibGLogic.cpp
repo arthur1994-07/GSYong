@@ -1,0 +1,5 @@
+#include "pch.h"
+#include "./G-Logic/GLDefine.cpp"
+#include "./G-Logic/GLogic.cpp"
+#include "./G-Logic/GLPeriod.cpp"
+#include "./G-Logic/GLQuadTree.cpp"

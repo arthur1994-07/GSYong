@@ -1,0 +1,11 @@
+#include "stdafx.h"
+
+#include "./Hash/CHash.cpp"
+#include "./Hash/CRC32.cpp"
+#include "./Hash/gosthash.cpp"
+#include "./Hash/md2.cpp"
+#include "./Hash/md4.cpp"
+#include "./Hash/md5.cpp"
+#include "./Hash/MinMd5.cpp"
+#include "./Hash/sha1.cpp"
+#include "./Hash/sha2.cpp"

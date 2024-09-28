@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Preprocessor_LibProject_Debug"
+	InheritedPropertySheets=".\Preprocessor_LibProject_Common.vsprops"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="_DEBUG&#x0D;&#x0A;"
+	/>
+</VisualStudioPropertySheet>

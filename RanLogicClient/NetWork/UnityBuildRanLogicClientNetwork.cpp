@@ -1,0 +1,6 @@
+#include "pch.h"
+#include "s_CPatch.cpp"
+#include "s_NetClient.cpp"
+#include "s_NetClientMsg.cpp"
+#include "s_NetClientMsgDelCharacter.cpp"
+#include "s_NetClientMsgLogin.cpp"

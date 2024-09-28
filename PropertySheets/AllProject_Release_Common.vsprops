@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="AllProject_Release_Common"
+	InheritedPropertySheets=".\AllProjectCommon.vsprops"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="1"
+		EnableFiberSafeOptimizations="true"
+		PreprocessorDefinitions="NDEBUG"
+		OpenMP="true"
+		PrecompiledHeaderThrough="stdafx.h"
+		WarningLevel="3"
+		DebugInformationFormat="3"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		OutputFile="$(SolutionDir)/_bin/Game.exe"
+		IgnoreDefaultLibraryNames="libcmt.lib;libcd.lib;libcmtd.lib;"
+		OptimizeReferences="2"
+		EnableCOMDATFolding="2"
+		OptimizeForWindows98="1"
+		RandomizedBaseAddress="1"
+	/>
+</VisualStudioPropertySheet>

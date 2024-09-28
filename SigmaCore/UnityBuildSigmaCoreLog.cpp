@@ -1,0 +1,12 @@
+#include "stdafx.h"
+
+#include "./Log/LogBase.cpp"
+#include "./Log/LogConsole.cpp"
+#include "./Log/LogDatabase.cpp"
+#include "./Log/LogDefine.cpp"
+#include "./Log/LogEditBox.cpp"
+#include "./Log/LogFile.cpp"
+#include "./Log/LogMan.cpp"
+#include "./Log/LogPacket.cpp"
+#include "./Log/LogWindowsEvent.cpp"
+#include "./Log/LogXML.cpp"

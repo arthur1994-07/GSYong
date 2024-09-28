@@ -1,0 +1,17 @@
+#include "stdafx.h"
+
+#include "./File/BaseStream.cpp"
+#include "./File/DepthWithTextToFile.cpp"
+#include "./File/FileFind.cpp"
+#include "./File/FileUtil.cpp"
+#include "./File/ReportFiles.cpp"
+#include "./File/SerialFile.cpp"
+#include "./File/SerialMemory.cpp"
+#include "./File/SFileSystem.cpp"
+#include "./File/StringFile.cpp"
+#include "./File/StringMemory.cpp"
+#include "./File/TxtFile.cpp"
+
+#include "./File/Excel/BasicExcel.cpp"
+#include "./File/Excel/ExcelFormat.cpp"
+#include "./File/Excel/MinExcel.cpp"

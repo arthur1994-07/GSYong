@@ -1,0 +1,656 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 태국어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_THA)
+#ifdef _WIN32
+LANGUAGE LANG_THAI, SUBLANG_DEFAULT
+#pragma code_page(874)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMPARETOOL_DIALOG DIALOGEX 0, 0, 667, 493
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "CompareTool"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_COMPARE_RESULT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,46,653,415
+    PUSHBUTTON      "NEW",IDC_BUTTON_NEW,7,21,26,14
+    PUSHBUTTON      "CSV SAVE",IDC_BUTTON_CSVSAVE,35,21,39,14
+    PUSHBUTTON      "LOAD A",IDC_BUTTON_LOAD_A,167,6,34,13
+    PUSHBUTTON      "LOAD B",IDC_BUTTON_LOAD_B,167,21,34,13
+    CONTROL         "",IDC_STATIC_NAME_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,204,22,56,12
+    EDITTEXT        IDC_EDIT_COUNTRY_A,262,7,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COUNTRY_B,262,22,40,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Compare",IDC_BUTTON_COMPARE,303,6,37,25
+    CONTROL         "ALL",IDC_RADIO_ALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,343,8,29,10
+    CONTROL         "PART",IDC_RADIO_PART,"Button",BS_AUTORADIOBUTTON,343,24,34,10
+    CONTROL         "SKILL",IDC_RADIO_EDIT_SKILL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,6,32,14
+    CONTROL         "MOB NPC",IDC_RADIO_EDIT_MOBNPC,"Button",BS_AUTORADIOBUTTON,39,6,46,14
+    CONTROL         "ITEM",IDC_RADIO_EDIT_ITEM,"Button",BS_AUTORADIOBUTTON,85,6,31,14
+    LTEXT           "",IDC_STATIC_NAME_A,204,7,57,12,SS_SUNKEN
+    PUSHBUTTON      "Compare ID Csv Save",IDC_BUTTON_CSVSAVE2,75,21,73,14
+    PUSHBUTTON      "Set Compare Target",IDC_BUTTON_COMPARE_TARGET,379,22,73,14
+END
+
+IDD_COMPARE_TARGET_DIALOG DIALOGEX 0, 0, 430, 286
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,373,265,50,14
+    CONTROL         "",IDC_LIST_COMPARE_TARGET,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,416,158
+    CONTROL         "",IDC_LIST_COMPARE_SEARCH,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,196,198,78
+    EDITTEXT        IDC_EDIT_HEAD_SEARCH,12,179,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "SEARCH",IDC_BUTTON_HEAD_SEARCH,159,179,50,12
+    GROUPBOX        "Search Compare Item",IDC_STATIC,7,167,211,113,BS_FLAT
+    GROUPBOX        "Compare Target List",IDC_STATIC,224,166,199,96,BS_FLAT
+    CONTROL         "",IDC_LIST_COMPARE,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,230,176,189,82
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COMPARETOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 660
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 486
+    END
+
+    IDD_COMPARE_TARGET_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 태국어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 일본어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMPARETOOL_DIALOG DIALOGEX 0, 0, 667, 493
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "CompareTool"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "NEW",IDC_BUTTON_NEW,7,21,26,14
+    PUSHBUTTON      "CSV SAVE",IDC_BUTTON_CSVSAVE,35,21,39,14
+    PUSHBUTTON      "LOAD A",IDC_BUTTON_LOAD_A,167,6,34,13
+    PUSHBUTTON      "LOAD B",IDC_BUTTON_LOAD_B,167,21,34,13
+    CONTROL         "",IDC_STATIC_NAME_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,204,22,56,12
+    EDITTEXT        IDC_EDIT_COUNTRY_A,262,7,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COUNTRY_B,262,22,40,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Compare",IDC_BUTTON_COMPARE,303,6,37,25
+    CONTROL         "ALL",IDC_RADIO_ALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,343,8,29,10
+    CONTROL         "PART",IDC_RADIO_PART,"Button",BS_AUTORADIOBUTTON,343,24,34,10
+    CONTROL         "SKILL",IDC_RADIO_EDIT_SKILL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,6,32,14
+    CONTROL         "MOB NPC",IDC_RADIO_EDIT_MOBNPC,"Button",BS_AUTORADIOBUTTON,39,6,46,14
+    CONTROL         "ITEM",IDC_RADIO_EDIT_ITEM,"Button",BS_AUTORADIOBUTTON,85,6,31,14
+    CONTROL         "",IDC_LIST_COMPARE_RESULT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,46,653,415
+    LTEXT           "",IDC_STATIC_NAME_A,204,7,57,12,SS_SUNKEN
+    PUSHBUTTON      "Compare ID Csv Save",IDC_BUTTON_CSVSAVE2,75,21,73,14
+    PUSHBUTTON      "Set Compare Target",IDC_BUTTON_COMPARE_TARGET,379,22,73,14
+END
+
+IDD_COMPARE_TARGET_DIALOG DIALOGEX 0, 0, 430, 286
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,373,265,50,14
+    CONTROL         "",IDC_LIST_COMPARE_TARGET,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,416,158
+    CONTROL         "",IDC_LIST_COMPARE_SEARCH,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,196,198,78
+    EDITTEXT        IDC_EDIT_HEAD_SEARCH,12,179,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "SEARCH",IDC_BUTTON_HEAD_SEARCH,159,179,50,12
+    GROUPBOX        "Search Compare Item",IDC_STATIC,7,167,211,113,BS_FLAT
+    GROUPBOX        "Compare Target List",IDC_STATIC,224,166,199,96,BS_FLAT
+    CONTROL         "",IDC_LIST_COMPARE,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,230,176,189,82
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COMPARETOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 660
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 486
+    END
+
+    IDD_COMPARE_TARGET_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 일본어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 중국어(중국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMPARETOOL_DIALOG DIALOGEX 0, 0, 667, 493
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "CompareTool"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_COMPARE_RESULT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,46,653,415
+    PUSHBUTTON      "NEW",IDC_BUTTON_NEW,7,21,26,14
+    PUSHBUTTON      "CSV SAVE",IDC_BUTTON_CSVSAVE,35,21,39,14
+    PUSHBUTTON      "LOAD A",IDC_BUTTON_LOAD_A,167,6,34,13
+    PUSHBUTTON      "LOAD B",IDC_BUTTON_LOAD_B,167,21,34,13
+    CONTROL         "",IDC_STATIC_NAME_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,204,22,56,12
+    EDITTEXT        IDC_EDIT_COUNTRY_A,262,7,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COUNTRY_B,262,22,40,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Compare",IDC_BUTTON_COMPARE,303,6,37,25
+    CONTROL         "ALL",IDC_RADIO_ALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,343,8,29,10
+    CONTROL         "PART",IDC_RADIO_PART,"Button",BS_AUTORADIOBUTTON,343,24,34,10
+    CONTROL         "SKILL",IDC_RADIO_EDIT_SKILL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,6,32,14
+    CONTROL         "MOB NPC",IDC_RADIO_EDIT_MOBNPC,"Button",BS_AUTORADIOBUTTON,39,6,46,14
+    CONTROL         "ITEM",IDC_RADIO_EDIT_ITEM,"Button",BS_AUTORADIOBUTTON,85,6,31,14
+    LTEXT           "",IDC_STATIC_NAME_A,204,7,57,12,SS_SUNKEN
+    PUSHBUTTON      "Compare ID Csv Save",IDC_BUTTON_CSVSAVE2,75,21,73,14
+    PUSHBUTTON      "Set Compare Target",IDC_BUTTON_COMPARE_TARGET,379,22,73,14
+END
+
+IDD_COMPARE_TARGET_DIALOG DIALOGEX 0, 0, 430, 286
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,373,265,50,14
+    CONTROL         "",IDC_LIST_COMPARE_TARGET,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,416,158
+    CONTROL         "",IDC_LIST_COMPARE_SEARCH,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,196,198,78
+    EDITTEXT        IDC_EDIT_HEAD_SEARCH,12,179,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "SEARCH",IDC_BUTTON_HEAD_SEARCH,159,179,50,12
+    GROUPBOX        "Search Compare Item",IDC_STATIC,7,167,211,113,BS_FLAT
+    GROUPBOX        "Compare Target List",IDC_STATIC,224,166,199,96,BS_FLAT
+    CONTROL         "",IDC_LIST_COMPARE,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,230,176,189,82
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COMPARETOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 660
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 486
+    END
+
+    IDD_COMPARE_TARGET_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 중국어(중국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#include ""res\\CompareTool.rc2""  // Microsoft Visual C++에서 편집되지 않은 리소스\r\n"
+    "#include ""afxres.rc""         // 표준 구성 요소\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\CompareTool.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "CompareTool 정보"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "CompareTool Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2009",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "확인",IDOK,178,7,50,16,WS_GROUP
+END
+
+IDD_COMPARETOOL_DIALOG DIALOGEX 0, 0, 667, 494
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "CompareTool"
+FONT 9, "굴림", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "NEW",IDC_BUTTON_NEW,7,21,26,14
+    PUSHBUTTON      "CSV SAVE",IDC_BUTTON_CSVSAVE,35,21,39,14
+    PUSHBUTTON      "LOAD A",IDC_BUTTON_LOAD_A,167,6,34,13
+    PUSHBUTTON      "LOAD B",IDC_BUTTON_LOAD_B,167,21,34,13
+    CONTROL         "",IDC_STATIC_NAME_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,204,22,56,12
+    EDITTEXT        IDC_EDIT_COUNTRY_A,262,7,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COUNTRY_B,262,22,40,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "비교",IDC_BUTTON_COMPARE,303,6,26,25
+    CONTROL         "ALL",IDC_RADIO_ALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,331,8,29,10
+    CONTROL         "PART",IDC_RADIO_PART,"Button",BS_AUTORADIOBUTTON,331,24,34,10
+    CONTROL         "SKILL",IDC_RADIO_EDIT_SKILL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,6,32,14
+    CONTROL         "MOB NPC",IDC_RADIO_EDIT_MOBNPC,"Button",BS_AUTORADIOBUTTON,39,6,46,14
+    CONTROL         "ITEM",IDC_RADIO_EDIT_ITEM,"Button",BS_AUTORADIOBUTTON,85,6,31,14
+    CONTROL         "",IDC_LIST_COMPARE_RESULT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,47,653,440
+    LTEXT           "",IDC_STATIC_NAME_A,204,7,57,12,SS_SUNKEN
+    PUSHBUTTON      "비교대상 ID Csv Save",IDC_BUTTON_CSVSAVE2,75,21,73,14
+    PUSHBUTTON      "비교 대상 설정",IDC_BUTTON_COMPARE_TARGET,367,22,51,14
+END
+
+IDD_COMPARE_TARGET_DIALOG DIALOGEX 0, 0, 430, 286
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "확인",IDOK,373,265,50,14
+    CONTROL         "",IDC_LIST_COMPARE_TARGET,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,416,158
+    CONTROL         "",IDC_LIST_COMPARE_SEARCH,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,196,198,78
+    EDITTEXT        IDC_EDIT_HEAD_SEARCH,12,179,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "찾기",IDC_BUTTON_HEAD_SEARCH,159,179,50,12
+    GROUPBOX        "비교 대상 아이템 이름 찾기",IDC_STATIC,7,167,211,113,BS_FLAT
+    GROUPBOX        "비교 대상 아이템 리스트",IDC_STATIC,224,166,199,96,BS_FLAT
+    CONTROL         "",IDC_LIST_COMPARE,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,230,176,189,82
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041203b5"
+        BEGIN
+            VALUE "CompanyName", "TODO: <회사 이름>"
+            VALUE "FileDescription", "TODO: <파일 설명>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "CompareTool.exe"
+            VALUE "LegalCopyright", "TODO: (c) <회사 이름>.  All rights reserved."
+            VALUE "OriginalFilename", "CompareTool.exe"
+            VALUE "ProductName", "TODO: <제품 이름>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "변환", 0x412, 949
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_COMPARETOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 660
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 487
+    END
+
+    IDD_COMPARE_TARGET_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "CompareTool 정보(&A)..."
+END
+
+#endif    // 한국어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 중국어(대만) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
+#pragma code_page(950)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMPARETOOL_DIALOG DIALOGEX 0, 0, 667, 493
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "CompareTool"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_COMPARE_RESULT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,46,653,415
+    PUSHBUTTON      "NEW",IDC_BUTTON_NEW,7,21,26,14
+    PUSHBUTTON      "CSV SAVE",IDC_BUTTON_CSVSAVE,35,21,39,14
+    PUSHBUTTON      "LOAD A",IDC_BUTTON_LOAD_A,167,6,34,13
+    PUSHBUTTON      "LOAD B",IDC_BUTTON_LOAD_B,167,21,34,13
+    CONTROL         "",IDC_STATIC_NAME_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,204,22,56,12
+    EDITTEXT        IDC_EDIT_COUNTRY_A,262,7,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COUNTRY_B,262,22,40,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Compare",IDC_BUTTON_COMPARE,303,6,37,25
+    CONTROL         "ALL",IDC_RADIO_ALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,343,8,29,10
+    CONTROL         "PART",IDC_RADIO_PART,"Button",BS_AUTORADIOBUTTON,343,24,34,10
+    CONTROL         "SKILL",IDC_RADIO_EDIT_SKILL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,6,32,14
+    CONTROL         "MOB NPC",IDC_RADIO_EDIT_MOBNPC,"Button",BS_AUTORADIOBUTTON,39,6,46,14
+    CONTROL         "ITEM",IDC_RADIO_EDIT_ITEM,"Button",BS_AUTORADIOBUTTON,85,6,31,14
+    LTEXT           "",IDC_STATIC_NAME_A,204,7,57,12,SS_SUNKEN
+    PUSHBUTTON      "Compare ID Csv Save",IDC_BUTTON_CSVSAVE2,75,21,73,14
+    PUSHBUTTON      "Set Compare Target",IDC_BUTTON_COMPARE_TARGET,379,22,73,14
+END
+
+IDD_COMPARE_TARGET_DIALOG DIALOGEX 0, 0, 430, 286
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,373,265,50,14
+    CONTROL         "",IDC_LIST_COMPARE_TARGET,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,416,158
+    CONTROL         "",IDC_LIST_COMPARE_SEARCH,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,196,198,78
+    EDITTEXT        IDC_EDIT_HEAD_SEARCH,12,179,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "SEARCH",IDC_BUTTON_HEAD_SEARCH,159,179,50,12
+    GROUPBOX        "Search Compare Item",IDC_STATIC,7,167,211,113,BS_FLAT
+    GROUPBOX        "Compare Target List",IDC_STATIC,224,166,199,96,BS_FLAT
+    CONTROL         "",IDC_LIST_COMPARE,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,230,176,189,82
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COMPARETOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 660
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 486
+    END
+
+    IDD_COMPARE_TARGET_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 중국어(대만) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 영어(미국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMPARE_TARGET_DIALOG DIALOGEX 0, 0, 430, 286
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,373,265,50,14
+    CONTROL         "",IDC_LIST_COMPARE_TARGET,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,416,158
+    CONTROL         "",IDC_LIST_COMPARE_SEARCH,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,12,196,198,78
+    EDITTEXT        IDC_EDIT_HEAD_SEARCH,12,179,144,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "SEARCH",IDC_BUTTON_HEAD_SEARCH,159,179,50,12
+    GROUPBOX        "Search Compare Item",IDC_STATIC,7,167,211,113,BS_FLAT
+    GROUPBOX        "Compare Target List",IDC_STATIC,224,166,199,96,BS_FLAT
+    CONTROL         "",IDC_LIST_COMPARE,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,230,176,189,82
+END
+
+IDD_COMPARETOOL_DIALOG DIALOGEX 0, 0, 667, 468
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "CompareTool"
+FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_LIST_COMPARE_RESULT,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_OWNERDRAWFIXED | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,46,653,415
+    PUSHBUTTON      "NEW",IDC_BUTTON_NEW,7,21,26,14
+    PUSHBUTTON      "CSV SAVE",IDC_BUTTON_CSVSAVE,35,21,39,14
+    PUSHBUTTON      "LOAD A",IDC_BUTTON_LOAD_A,167,6,34,13
+    PUSHBUTTON      "LOAD B",IDC_BUTTON_LOAD_B,167,21,34,13
+    CONTROL         "",IDC_STATIC_NAME_B,"Static",SS_LEFTNOWORDWRAP | SS_SUNKEN | WS_GROUP,204,22,56,12
+    EDITTEXT        IDC_EDIT_COUNTRY_A,262,7,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_COUNTRY_B,262,22,40,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Compare",IDC_BUTTON_COMPARE,303,6,37,25
+    CONTROL         "ALL",IDC_RADIO_ALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,343,8,29,10
+    CONTROL         "PART",IDC_RADIO_PART,"Button",BS_AUTORADIOBUTTON,343,24,34,10
+    CONTROL         "SKILL",IDC_RADIO_EDIT_SKILL,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,6,32,14
+    CONTROL         "MOB NPC",IDC_RADIO_EDIT_MOBNPC,"Button",BS_AUTORADIOBUTTON,39,6,46,14
+    CONTROL         "ITEM",IDC_RADIO_EDIT_ITEM,"Button",BS_AUTORADIOBUTTON,85,6,31,14
+    LTEXT           "",IDC_STATIC_NAME_A,204,7,57,12,SS_SUNKEN
+    PUSHBUTTON      "Compare ID Csv Save",IDC_BUTTON_CSVSAVE2,75,21,73,14
+    PUSHBUTTON      "Set Compare Target",IDC_BUTTON_COMPARE_TARGET,379,22,73,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_COMPARE_TARGET_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 423
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 279
+    END
+
+    IDD_COMPARETOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 660
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 461
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 영어(미국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#pragma code_page(949)
+#include "res\CompareTool.rc2"  // Microsoft Visual C++에서 편집되지 않은 리소스
+#include "afxres.rc"         // 표준 구성 요소
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

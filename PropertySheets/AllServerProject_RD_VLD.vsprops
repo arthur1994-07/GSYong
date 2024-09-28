@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="AllServerProject_RD_VLD"
+	InheritedPropertySheets=".\AllProject_ReleaseD_Common.vsprops"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)=Include&quot;;&quot;$(SolutionDir)=DaumCrypt&quot;;&quot;$(SolutionDir)=TBB/include&quot;"
+		PreprocessorDefinitions="TIXML_USE_TICPP;"
+		BufferSecurityCheck="false"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		IgnoreDefaultLibraryNames=""
+	/>
+</VisualStudioPropertySheet>

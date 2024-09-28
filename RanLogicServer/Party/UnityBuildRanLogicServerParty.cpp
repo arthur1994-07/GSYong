@@ -1,0 +1,7 @@
+#include "pch.h"
+#include "GLPartyAgent.cpp"
+#include "GLPartyField.cpp"
+#include "GLPartyManagerField.cpp"
+#include "GLPartyManagerAgent.cpp"
+#include "./MessageProcedure/MessageProcedureField.cpp"
+#include "GLPartyTenderManagerField.cpp"

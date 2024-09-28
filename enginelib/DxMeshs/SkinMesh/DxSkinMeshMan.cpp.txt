@@ -1,0 +1,252 @@
+#include "stdafx.h"
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include "../../../SigmaCore/Log/LogMan.h"
+#include "../../../SigmaCore/String/StringUtils.h"
+#include "../../../SigmaCore/String/StringUtil.h"
+#include "../../../SigmaCore/String/StringFormat.h"
+#include "../../../SigmaCore/File/StringFile.h"
+#include "../../../SigmaCore/Loading/NSLoadingDirect.h"
+
+#include "../../LoadingTimeCheck.h"
+#include "../../Common/StlFunctions.h"
+
+#include "../../DxTools/RENDERPARAM.h"
+#include "./_new/DxSkinMesh9_CPU.h"
+#include "./_new/DxSkinMesh9_NORMAL.h"
+#include "./_new/DxSkinMesh9_HLSL.h"
+
+#include "DxSkinMeshManager.h"
+
+// ----------------------------------------------------------------------------
+#include "../../../SigmaCore/DebugInclude.h"
+// ----------------------------------------------------------------------------
+
+
+DxSkinMeshMan& DxSkinMeshManager::GetInstance()
+{
+	static DxSkinMeshMan Instance;
+	return Instance;
+}
+
+DxSkinMeshMan::DxSkinMeshMan(void)
+{
+	memset( m_szPath, 0, sizeof(char)*MAX_PATH );
+}
+
+DxSkinMeshMan::~DxSkinMeshMan(void)
+{
+}
+
+DxSkinMesh9* DxSkinMeshMan::FindSkinMesh(const std::string& SkinMesh)
+{
+	SKINMESHMAP_ITER iter = m_SkinMeshMap.find(SkinMesh);
+	if (iter != m_SkinMeshMap.end())
+        return iter->second;
+    else
+	    return NULL;
+}
+
+DxSkinMesh9* DxSkinMeshMan::LoadSkinMesh(const std::string& SkinMesh, const std::string& Skeleton, LPDIRECT3DDEVICEQ pd3dDevice, const BOOL bThread)
+{
+	if (SkinMesh.empty() || Skeleton.empty())
+        return NULL;
+    
+    HRESULT hr;
+    DxSkinMesh9* pSkinMesh;
+
+    std::string strFileName(SkinMesh);
+    sc::string::lowerString(strFileName);
+
+    std::string strSkeleton(Skeleton);
+	sc::string::lowerString(strSkeleton);
+
+	pSkinMesh = FindSkinMesh(strFileName);
+	if (pSkinMesh)
+	{
+		pSkinMesh->AddRef();
+		return pSkinMesh;
+	}
+
+	// 모드를 확인 후 작업한다.
+	switch (RENDERPARAM::emCharRenderTYPE)
+	{
+	case EMCRT_SOFTWARE:
+		pSkinMesh = new DxSkinMesh9_CPU;
+		break;
+	case EMCRT_NORMAL:
+		pSkinMesh = new DxSkinMesh9_NORMAL;
+		break;
+	case EMCRT_VERTEX:
+	case EMCRT_PIXEL:
+		pSkinMesh = new DxSkinMesh9_HLSL;
+		break;
+	};
+	
+	hr = pSkinMesh->OnCreateSkin(pd3dDevice, strFileName.c_str(), strSkeleton.c_str(), bThread);
+	if (FAILED(hr))
+	{
+		delete pSkinMesh;
+		return NULL;
+	}
+
+	// 리스트에 삽입
+	m_SkinMeshMap.insert(SKINMESHMAP_VALUE(strFileName,pSkinMesh));
+	return pSkinMesh;
+}
+
+#ifdef LOADING_TIME_CHECK
+#include <boost/timer.hpp>
+#endif
+
+BOOL DxSkinMeshMan::PreLoad ( const char* szSkinList, LPDIRECT3DDEVICEQ pd3dDevice, const BOOL bThread )
+{
+
+#ifdef LOADING_TIME_CHECK
+    boost::timer LoadingTotalTimer;
+    LoadingTotalTimer.restart();
+
+    boost::timer LoadingSectionTimer;
+    LoadingSectionTimer.restart();
+#endif
+
+	CString strPath;
+	strPath = GetPath();
+	strPath += szSkinList;	
+
+	sc::CStringFile StrFile;
+	if ( !StrFile.Open ( strPath.GetString() ) )
+        return FALSE;
+	
+    std::vector<std::string> SplitVec;
+    SplitVec.reserve(2);
+
+	CString strLine;
+	while (StrFile.GetNextLine(strLine))
+	{
+		std::string OrigianlStr(strLine.GetString());
+        if (OrigianlStr.empty())
+            continue;
+
+        SplitVec.clear();
+        boost::split(SplitVec, OrigianlStr, boost::algorithm::is_any_of("\t ,"), boost::algorithm::token_compress_on);
+
+		if (SplitVec.size() != 2)
+			continue;
+
+        sc::string::lowerString(SplitVec[0]); // skin
+		sc::string::lowerString(SplitVec[1]); // bone
+
+        //---------------------------------------------------//
+        NSLoadingDirect::FrameMoveRender( FALSE );
+        //---------------------------------------------------//
+
+		DxSkinMesh9* pSkinMesh = LoadSkinMesh(SplitVec[0], SplitVec[1], pd3dDevice, FALSE);
+		if (!pSkinMesh)
+		{
+			CString strMessage;
+			strMessage.Format("DxSkinMeshMan::PreLoad() [%s] LoadSkinMesh Failed.", SplitVec[0].c_str());
+			MessageBox(NULL, strMessage, "ERROR", MB_OK);			
+			continue;
+		}
+
+        //---------------------------------------------------//
+        NSLoadingDirect::FrameMoveRender( FALSE );
+        //---------------------------------------------------//
+
+		m_PreLoadSkinMeshMap.insert(SKINMESHMAP_VALUE(SplitVec[0], pSkinMesh));
+        
+#ifdef LOADING_TIME_CHECK
+        sc::writeLogInfo(sc::string::format("Loading DxSkinMeshMan::PreLoad %1% %2% %3% %4% sec", SplitVec[0], SplitVec[1], LoadingSectionTimer.elapsed(), LoadingTotalTimer.elapsed()));
+        LoadingSectionTimer.restart();
+#endif
+
+	}
+
+	return TRUE;
+}
+
+HRESULT DxSkinMeshMan::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	return S_OK;
+}
+
+HRESULT DxSkinMeshMan::RestoreDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	return S_OK;
+}
+
+HRESULT DxSkinMeshMan::InvalidateDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+
+	return S_OK;
+}
+
+HRESULT DxSkinMeshMan::DeleteDeviceObjects()
+{
+	SKINMESHMAP_ITER iter = m_SkinMeshMap.begin();
+	SKINMESHMAP_ITER iter_end = m_SkinMeshMap.end();
+	for ( ; iter!=iter_end; ++iter )
+	{
+		(*iter).second->OnSkinDestroyDevice ();
+		(*iter).second->OnSkinCleanUp ();
+	}
+
+	std::for_each ( m_SkinMeshMap.begin(), m_SkinMeshMap.end(), std_afunc::DeleteMapObject() );
+	m_SkinMeshMap.clear();
+
+	return S_OK;
+}
+
+HRESULT DxSkinMeshMan::CleanUp ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	InvalidateDeviceObjects ( pd3dDevice );
+	DeleteDeviceObjects();
+
+	return S_OK;
+}
+
+HRESULT DxSkinMeshMan::DoInterimClean ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	SKINMESHLIST listInterimClean;
+	
+	// 제거할 리스트 작성.
+	//
+	{
+		SKINMESHMAP_ITER iter = m_SkinMeshMap.begin();
+		SKINMESHMAP_ITER iter_end = m_SkinMeshMap.end();
+		for ( ; iter!=iter_end; ++iter )
+		{
+			// 사전 로딩 리스트에 있는 파일 제외.
+			//
+			SKINMESHMAP_ITER found = m_PreLoadSkinMeshMap.find ( (*iter).first );
+			if ( found!=m_PreLoadSkinMeshMap.end() )	continue;
+
+			//	제거 리스트에 등록.
+			listInterimClean.push_back ( (*iter).second );
+		}
+	}
+
+	// 데이터 정리.
+	//
+	{
+		SKINMESHLIST_ITER iter = listInterimClean.begin();
+		SKINMESHLIST_ITER iter_end = listInterimClean.end();
+		for ( ; iter!=iter_end; ++iter )
+		{
+			DxSkinMesh9* pSkinMesh = (*iter);
+			std::string strname = pSkinMesh->GetSkinFileName();
+
+			//	데이터 삭제.
+			pSkinMesh->OnSkinDestroyDevice ();
+			pSkinMesh->OnSkinCleanUp ();
+			SAFE_DELETE(pSkinMesh);
+
+			//	로드 파일 리스트에서 제거.
+			SKINMESHMAP_ITER iter_del = m_SkinMeshMap.find ( strname );
+			if ( iter_del!=m_SkinMeshMap.end() )	m_SkinMeshMap.erase ( iter_del );
+		}
+	}
+
+	return S_OK;
+}

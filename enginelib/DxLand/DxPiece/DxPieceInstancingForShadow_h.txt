@@ -1,0 +1,44 @@
+//#pragma once
+//
+//#include <vector>
+//
+//struct PieceParameter;
+//class DxStaticAniFrame;
+//
+//class DxPieceInstancingForShadow
+//{
+//private:
+//	struct INSTANCEDATA_POS
+//	{
+//		D3DXVECTOR3 m_vMatrix1;
+//		D3DXVECTOR3 m_vMatrix2;
+//		D3DXVECTOR3 m_vMatrix3;
+//		D3DXVECTOR4 m_vMatrix4;
+//	};
+//
+//	IDirect3DVertexBuffer9* g_pInstanceDataVB;
+//
+//private:
+//	DxStaticAniFrame*					m_rStaticAniFrame;		// 참조만 한다.
+//	std::vector<const PieceParameter*>	m_vecpPieceParameter;	// 참조만 한다.
+//	DWORD								m_dwRefCount;			// 맵에 셋팅된 갯수
+//
+//public:
+//	void Insert( const PieceParameter* pParameter );
+//	void CreateVB( LPDIRECT3DDEVICEQ pd3dDevice );
+//
+//	void Reset();
+//	void InsertDataToVB();
+//	void RenderCascadeShadowOpaque( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void RenderCascadeShadowHardAlpha( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void RenderCascadeShadowOpaque_Instancing( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void RenderCascadeShadowHardAlpha_Instancing( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void AddRef();
+//
+//	void OnResetDevice( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void OnLostDevice();
+//
+//public:
+//	DxPieceInstancingForShadow( DxStaticAniFrame* pStaticAniFrame );
+//	~DxPieceInstancingForShadow();
+//};

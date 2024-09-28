@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Gfx_R"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="&quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfx_as2.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfx_as3.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfx_air.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfx.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfxrender_d3d9.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfx_ime.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/Lib/Release/libgfxexpat.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/LibExternal/jpeg_8d/Release/libjpeg.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/LibExternal/pcre/Release/pcre.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/LibExternal/zlib_1.2.7/Release/zlib.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/LibExternal/libpng_1.5.13/Release/libpng.lib&quot; &quot;$(SolutionDir)../RanThirdParty/GFx/LibExternal/freetype-2.4.10/objs/win32/vc2008/freetype2410.lib&quot;"
+	/>
+</VisualStudioPropertySheet>

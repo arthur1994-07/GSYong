@@ -1,0 +1,618 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 중립 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(949)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 222, 61
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About ServerManager"
+FONT 10, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "Ran Online, Server Manager.",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (c) MIN COMMUNICATIONS, INC.",IDC_STATIC,40,25,150,8
+    DEFPUSHBUTTON   "OK",IDOK,85,38,50,16,WS_GROUP
+END
+
+IDD_DLG_JOB_BROADCAST_MESSAGE DIALOGEX 0, 0, 339, 253
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Broadcast message"
+FONT 10, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    LTEXT           "Hour",IDC_STATIC,8,9,19,8
+    COMBOBOX        IDC_COMBO_HOUR,32,7,24,127,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Min",IDC_STATIC,59,10,12,8
+    COMBOBOX        IDC_COMBO_MIN,73,7,25,128,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Type",IDC_STATIC,100,9,17,8
+    COMBOBOX        IDC_COMBO_TYPE,122,7,111,54,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "All Server",IDC_SEND_TYPE1,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,11,23,40,12
+    CONTROL         "Each Group",IDC_SEND_TYPE2,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,9,37,48,23
+    CONTROL         "#1",IDC_SVR_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,60,35,23,13
+    CONTROL         "#2",IDC_SVR_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,88,35,25,13
+    CONTROL         "#3",IDC_SVR_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,114,35,21,13
+    CONTROL         "#4",IDC_SVR_CHECK4,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,35,23,13
+    CONTROL         "#5",IDC_SVR_CHECK5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,164,35,20,13
+    CONTROL         "#6",IDC_SVR_CHECK6,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,189,35,23,13
+    CONTROL         "#7",IDC_SVR_CHECK7,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,215,35,21,13
+    CONTROL         "#8",IDC_SVR_CHECK8,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,238,35,23,13
+    CONTROL         "#9",IDC_SVR_CHECK9,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,263,35,23,13
+    CONTROL         "#10",IDC_SVR_CHECK10,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,287,35,23,13
+    CONTROL         "#11",IDC_SVR_CHECK11,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,60,48,23,13
+    CONTROL         "#12",IDC_SVR_CHECK12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,88,48,23,13
+    CONTROL         "#13",IDC_SVR_CHECK13,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,114,48,23,13
+    CONTROL         "#14",IDC_SVR_CHECK14,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,48,23,13
+    CONTROL         "#15",IDC_SVR_CHECK15,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,164,48,23,13
+    CONTROL         "#16",IDC_SVR_CHECK16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,190,48,23,13
+    CONTROL         "#17",IDC_SVR_CHECK17,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,215,48,23,13
+    CONTROL         "#18",IDC_SVR_CHECK18,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,239,48,23,13
+    CONTROL         "#19",IDC_SVR_CHECK19,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,263,48,23,13
+    CONTROL         "#20",IDC_SVR_CHECK20,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,287,48,23,13
+    LTEXT           "Message",IDC_STATIC,7,63,37,8
+    EDITTEXT        IDC_EDIT_BROADCAST_MESSAGE,7,76,173,152,ES_MULTILINE | ES_WANTRETURN | WS_VSCROLL
+    CONTROL         "",IDC_MONTHCALENDAR1,"SysMonthCal32",MCS_NOTODAY | MCS_NOTODAYCIRCLE | WS_TABSTOP,187,76,86,94
+    DEFPUSHBUTTON   "OK",IDOK,7,232,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,119,232,50,14
+END
+
+IDD_DLG_MESSAGE DIALOGEX 0, 0, 294, 59
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Send Message"
+FONT 10, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_EDIT1,7,19,280,15,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,38,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,237,38,50,14
+    LTEXT           "Type Message (Max : 50)",IDC_STATIC,7,7,280,8
+END
+
+IDD_SERVERMANAGER_DIALOG DIALOGEX 0, 0, 683, 375
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "ServerManager"
+MENU IDR_MENU1
+FONT 9, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_IPADDRESS,"SysIPAddress32",WS_TABSTOP,50,9,77,15
+    EDITTEXT        IDC_EDIT_PORT,151,9,22,14,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
+    PUSHBUTTON      "Connect",IDC_BTN_CONNECT,180,9,37,14
+    EDITTEXT        IDC_EDIT_REFRESH_RATE,252,9,21,14,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
+    PUSHBUTTON      "Apply",IDC_BUTTON1,277,10,34,14
+    EDITTEXT        IDC_EDIT_MSG1,373,10,173,12,ES_MULTILINE
+    PUSHBUTTON      "Send",IDC_BTN_MSG_SND,591,10,22,12
+    CONTROL         "Each Group",IDC_SEND_TYPE2,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,11,64,44,14
+    CONTROL         "All Server",IDC_SEND_TYPE1,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,10,80,45,12
+    CONTROL         "#1",IDC_SVR_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,57,65,25,10
+    CONTROL         "#2",IDC_SVR_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,88,65,25,10
+    CONTROL         "#3",IDC_SVR_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,65,25,10
+    CONTROL         "#4",IDC_SVR_CHECK4,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,150,65,25,10
+    CONTROL         "#5",IDC_SVR_CHECK5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,181,65,25,10
+    CONTROL         "#6",IDC_SVR_CHECK6,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,65,25,10
+    CONTROL         "#7",IDC_SVR_CHECK7,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,243,65,25,10
+    CONTROL         "#8",IDC_SVR_CHECK8,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,274,65,25,10
+    CONTROL         "",IDC_LIST_SERVER,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,114,358,178
+    LTEXT           "Address",IDC_STATIC,20,13,28,8
+    LTEXT           "Port",IDC_STATIC,134,13,14,12
+    CONTROL         "",IDC_LED1,"Static",SS_BLACKFRAME,7,9,12,13
+    LTEXT           "Refresh",IDC_STATIC,223,13,27,8
+    LTEXT           "",IDC_STATIC_HISTO,162,36,144,15,SS_SUNKEN
+    LTEXT           "Max",IDC_STATIC,14,39,15,8
+    LTEXT           "Current",IDC_STATIC,84,39,26,8
+    GROUPBOX        "User",IDC_STATIC,7,27,304,28
+    LTEXT           "",IDC_STATIC_MAX,32,36,47,13,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT,115,37,43,12,SS_SUNKEN,WS_EX_RTLREADING
+    PUSHBUTTON      "Schedule",IDC_BTN_JOB_SCHEDULE,318,10,50,12,WS_DISABLED
+    EDITTEXT        IDC_EDIT_CONSOLE,7,297,361,68,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL
+    PUSHBUTTON      "SMS Test",IDC_BUTTON4,318,25,50,11
+    GROUPBOX        "Server",IDC_STATIC,7,55,361,40
+    PUSHBUTTON      "10",IDC_VIEW10_BUTTON,562,10,14,12
+    PUSHBUTTON      "19",IDC_VIEW20_BUTTON,577,10,14,12
+    PUSHBUTTON      "1",IDC_VIEW1_BUTTON,548,10,14,12
+    PUSHBUTTON      "Server State",IDC_SVRSTATE_BUTTON,319,39,49,12
+    CONTROL         "Tracing List",IDC_TRACING_BUTTON,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP,639,10,42,12
+    PUSHBUTTON      "ADD",IDC_ADD_BUTTON,621,24,26,11
+    PUSHBUTTON      "DELETE",IDC_DEL_BUTTON,648,24,33,11
+    EDITTEXT        IDC_TRACING_EDIT,496,24,56,11,ES_AUTOHSCROLL
+    CONTROL         "",IDC_LIST_TRACING,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,445,40,237,285,WS_EX_LEFTSCROLLBAR
+    CONTROL         "UserNum",IDC_ADD_TYPE_CHECK,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP,461,24,34,11
+    PUSHBUTTON      "Clear",IDC_BTN_MSG_CLEAR,615,10,22,12
+    EDITTEXT        IDC_EDIT_MSG17,374,249,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG18,374,264,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG19,374,280,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG20,374,294,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG3,374,40,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG4,374,55,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG5,374,70,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG6,374,85,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG7,374,100,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG8,374,115,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG9,374,129,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG10,374,144,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG11,374,160,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG12,374,175,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG13,374,189,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG14,374,204,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG15,374,220,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG16,374,235,213,12,ES_MULTILINE
+    EDITTEXT        IDC_EDIT_MSG2,373,25,64,12,ES_MULTILINE
+    CONTROL         "#9",IDC_SVR_CHECK9,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,305,65,25,10
+    CONTROL         "#10",IDC_SVR_CHECK10,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,336,65,29,10
+    CONTROL         "#11",IDC_SVR_CHECK11,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,57,80,29,10
+    CONTROL         "#12",IDC_SVR_CHECK12,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,88,80,29,10
+    CONTROL         "#13",IDC_SVR_CHECK13,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,119,80,29,10
+    CONTROL         "#14",IDC_SVR_CHECK14,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,150,80,29,10
+    CONTROL         "#15",IDC_SVR_CHECK15,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,181,80,29,10
+    CONTROL         "#16",IDC_SVR_CHECK16,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,212,80,29,10
+    CONTROL         "#17",IDC_SVR_CHECK17,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,243,80,29,10
+    CONTROL         "#18",IDC_SVR_CHECK18,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,274,80,29,10
+    CONTROL         "#19",IDC_SVR_CHECK19,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,305,80,29,10
+    CONTROL         "#20",IDC_SVR_CHECK20,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,336,80,29,10
+    PUSHBUTTON      "Run",IDC_BUTTON_AUTO_EVENT,10,96,180,14
+    EDITTEXT        IDC_TRACING_TIME_EDIT,595,24,24,12,ES_AUTOHSCROLL
+    LTEXT           "time(hour) :",IDC_TRACING_TIME_STATIC,555,25,39,8
+    PUSHBUTTON      "Inspection Reward Policy",IDC_BUTTON_OPEN_INSPE_DIALOG,194,96,171,14
+END
+
+IDD_SERVERVIEW_DIALOG DIALOGEX 0, 0, 177, 125
+STYLE DS_SETFONT | DS_SETFOREGROUND | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Server State"
+FONT 8, "MS Shell Dlg", 400, 0, 0x81
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,3,103,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,120,103,50,14
+    CONTROL         "Pin",IDC_BTN_PIN,"Button",BS_OWNERDRAW | WS_TABSTOP,0,0,17,14
+    LTEXT           "Max",IDC_STATIC,8,29,14,8
+    LTEXT           "Current",IDC_STATIC,7,41,24,8
+    LTEXT           "",IDC_STATIC_USER,62,25,104,27,SS_SUNKEN
+    GROUPBOX        "User",IDC_STATIC,4,17,166,40
+    GROUPBOX        "Ram",IDC_STATIC,4,60,166,39
+    LTEXT           "Max",IDC_STATIC,9,71,14,8
+    LTEXT           "Current",IDC_STATIC,9,85,24,8
+    LTEXT           "Static",IDC_STATIC_RAM,63,70,102,24,SS_SUNKEN
+END
+
+IDD_DLG_JOB_SCHEDULE DIALOGEX 0, 0, 314, 154
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Job Schedule"
+FONT 10, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,272,7,35,14
+    CONTROL         "",IDC_LIST_JOB,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,23,300,124,WS_EX_LEFTSCROLLBAR
+    PUSHBUTTON      "BroadCast Message",IDC_BTN_BROADCAST_MESSAGE_ADD,7,7,72,14
+    PUSHBUTTON      "Export",IDC_SCH_EXPORT,85,7,30,14
+    PUSHBUTTON      "Import",IDC_SCH_IMPORT,117,7,30,14
+END
+
+IDD_SVERSTATE_DIALOG DIALOGEX 0, 0, 183, 369
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Server State"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,65,351,50,14
+    LTEXT           "Max",IDC_STATIC,132,7,17,9
+    LTEXT           "Current",IDC_STATIC,76,7,31,9
+    LTEXT           "",IDC_STATIC_MAX1,121,20,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT1,65,20,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX2,121,38,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT2,65,38,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX3,121,55,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT3,65,55,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX4,121,71,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT4,65,71,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX5,121,86,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT5,65,86,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX6,121,103,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT6,65,103,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX7,121,119,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT7,65,119,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX8,121,135,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT8,65,135,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "Server Numer",IDC_STATIC,14,7,45,10
+    LTEXT           "",IDC_STATIC_SVRNUM1,20,20,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM2,20,38,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM3,20,55,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM4,20,71,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM5,20,86,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM6,20,103,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM7,20,119,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM8,20,135,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM9,20,151,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM10,20,167,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM11,20,182,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM12,20,199,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM13,20,215,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM14,20,232,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM15,20,249,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM16,20,266,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM17,20,282,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM18,20,298,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM19,20,315,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_SVRNUM20,20,331,20,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT9,65,151,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT10,65,167,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT11,65,182,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT12,65,199,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT13,65,215,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT14,65,232,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT15,65,249,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT16,65,266,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT17,65,282,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT18,65,298,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT19,65,315,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_CRT20,65,331,50,14,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX9,121,151,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX10,121,167,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX11,121,182,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX12,121,199,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX13,121,215,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX14,121,232,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX15,121,249,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX16,121,266,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX17,121,282,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX18,121,298,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX19,121,315,55,15,SS_SUNKEN,WS_EX_RTLREADING
+    LTEXT           "",IDC_STATIC_MAX20,121,331,55,15,SS_SUNKEN,WS_EX_RTLREADING
+END
+
+IDD_INSPECTION_REWARD_POLICY DIALOGEX 0, 0, 237, 254
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Inspection Reword Policy"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Close",IDCANCEL,177,230,50,14
+    CONTROL         "",IDC_LIST_SERVER_GROUP,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,16,14,205,90
+    EDITTEXT        IDC_EDIT2,102,150,29,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "Minute",IDC_STATIC,133,137,22,8
+    LTEXT           "Minute",IDC_STATIC,133,153,22,8
+    PUSHBUTTON      "Confirm",IDC_BUTTON2,165,136,49,28
+    LTEXT           "~",IDC_STATIC,89,137,8,8
+    EDITTEXT        IDC_EDIT3,102,134,29,14,ES_RIGHT | ES_AUTOHSCROLL
+    CTEXT           "Current Time",IDC_STATIC,26,135,57,13,WS_BORDER
+    LTEXT           "Reword",IDC_STATIC,75,153,26,8
+    GROUPBOX        "Reword Setting",IDC_STATIC,16,118,204,97
+    PUSHBUTTON      "Apply",IDC_BUTTON1,165,176,50,32,WS_DISABLED
+    EDITTEXT        IDC_EDIT4,26,176,138,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT5,111,194,52,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "[Reset]",IDC_BUTTON3,188,109,31,12
+    PUSHBUTTON      "Send",IDC_BUTTON5,129,230,48,14,WS_DISABLED
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 215
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 54
+    END
+
+    IDD_DLG_JOB_BROADCAST_MESSAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 332
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 246
+    END
+
+    IDD_DLG_MESSAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 287
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 52
+    END
+
+    IDD_SERVERMANAGER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 674
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 368
+    END
+
+    IDD_SERVERVIEW_DIALOG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 170
+        BOTTOMMARGIN, 118
+    END
+
+    IDD_DLG_JOB_SCHEDULE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 307
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 147
+    END
+
+    IDD_SVERSTATE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 176
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 362
+    END
+
+    IDD_INSPECTION_REWARD_POLICY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 230
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 247
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP1             BITMAP                  "res\\bmp00001.bmp"
+IDB_LEDS                BITMAP                  "res\\bmp00002.bmp"
+IDB_MATRIXLARGE         BITMAP                  "res\\matrixla.bmp"
+IDB_MATRIXSMALL         BITMAP                  "res\\matrixsm.bmp"
+IDB_MATRIXTINY          BITMAP                  "res\\matrixti.bmp"
+IDB_PP_PINNED           BITMAP                  "res\\pp_pinne.bmp"
+IDB_PP_PINNEDEDGE       BITMAP                  "res\\bmp00003.bmp"
+IDB_PP_UNPINNED         BITMAP                  "res\\pp_unpin.bmp"
+IDB_PP_UNPINNEDEDGE     BITMAP                  "res\\bmp00004.bmp"
+IDB_STATEBITMAP         BITMAP                  "res\\statebit.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_SERVER_LIST_MENU MENU 
+BEGIN
+    POPUP "Context Menu"
+    BEGIN
+        MENUITEM "Open",                        138
+        MENUITEM SEPARATOR
+        MENUITEM "Notice Message",              ID_CONTEXTMENU_MESSAGE
+        MENUITEM "Pause",                       ID_CONTEXTMENU_PAUSE
+        MENUITEM "Pause (5 min)",               ID_CONTEXTMENU_PAUSE_5
+        MENUITEM "Resume",                      ID_CONTEXTMENU_RESUME
+        MENUITEM "ReStart",                     ID_CONTEXTMENU_RESTART
+        MENUITEM "ReStart (5 min)",             ID_CONTEXTMENU_RESTART_5
+        MENUITEM "Stop (5 min)",                ID_CONTEXTMENU_STOP_5
+        MENUITEM "Stop",                        ID_CONTEXTMENU_STOP
+    END
+END
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "File(&F)"
+    BEGIN
+        MENUITEM "New",                         ID_Menu
+        MENUITEM "Exit(&X)",                    ID_134
+    END
+    POPUP "Server(&S)"
+    BEGIN
+        MENUITEM "Refresh",                     ID_133
+    END
+END
+
+IDR_SERVER_JOB_MENU MENU 
+BEGIN
+    POPUP "Job Menu"
+    BEGIN
+        MENUITEM "ADD",                         ID_JOB_ADD
+        MENUITEM "EDIT",                        ID_JOB_EDIT
+        MENUITEM "DELETE",                      ID_JOB_DELETE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "ServerManager Info(&A)..."
+    IDS_STRING102           "Connect OK"
+    IDS_STRING103           "Connection Failed"
+    IDS_STRING104           "Already Registered"
+    IDS_STRING105           "Server Registered"
+    IDS_STRING106           "OK"
+    IDS_STRING107           "Not responsed"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_CONTEXTMENU_MESSAGE  "Open Server status"
+END
+
+#endif    // 중립 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_LEDS                BITMAP                  "res\\leds.bmp"
+IDB_STATEBITMAP         BITMAP                  "res\\state.bmp"
+IDB_BITMAP1             BITMAP                  "res\\bitmap1.bmp"
+IDB_PP_UNPINNEDEDGE     BITMAP                  "res\\pin4.bmp"
+IDB_PP_PINNEDEDGE       BITMAP                  "res\\pin2.bmp"
+IDB_PP_UNPINNED         BITMAP                  "res\\pin3.bmp"
+IDB_PP_PINNED           BITMAP                  "res\\pin1.bmp"
+IDB_MATRIXTINY          BITMAP                  "res\\matrixsettinyblue.bmp"
+IDB_MATRIXSMALL         BITMAP                  "res\\matrixsetsmallblue.bmp"
+IDB_MATRIXLARGE         BITMAP                  "res\\matrixsetblue.bmp"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#include ""res\\ServerManager.rc2""  // Microsoft Visual C++에서 편집되지 않은 리소스\r\n"
+    "#include ""afxres.rc""         // 표준 구성 요소\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\ServerManager.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041203b5"
+        BEGIN
+            VALUE "CompanyName", "MIN COMMUNICATIONS, INC."
+            VALUE "FileDescription", "ServerManager"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "ServerManager.exe"
+            VALUE "LegalCopyright", "Copyright (C) MIN COMMUNICATIONS, INC."
+            VALUE "OriginalFilename", "ServerManager.exe"
+            VALUE "ProductName", "ServerManager"
+            VALUE "ProductVersion", "Version 1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x412, 949
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "ServerManager 정보(&A)..."
+    IDS_STRING102           "연결에 성공했습니다"
+    IDS_STRING103           "연결에 실패했습니다"
+    IDS_STRING104           "이미등록되어 있습니다"
+    IDS_STRING105           "서버를 등록하였습니다"
+    IDS_STRING106           "정상"
+    IDS_STRING107           "응답없음"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_CONTEXTMENU_MESSAGE  "서버상태 열기"
+END
+
+#endif    // 한국어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#pragma code_page(949)
+#include "res\ServerManager.rc2"  // Microsoft Visual C++에서 편집되지 않은 리소스
+#include "afxres.rc"         // 표준 구성 요소
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

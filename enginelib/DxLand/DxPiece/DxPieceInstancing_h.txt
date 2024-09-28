@@ -1,0 +1,62 @@
+//#pragma once
+//
+//#include <vector>
+//#include "./DxPieceDef.h"
+//#include "../../DxTools/RENDERPARAM.h"
+//
+//class DxPiece;
+//class DxStaticAniFrame;
+//
+//class DxPieceInstancing
+//{
+//private:
+//	struct INSTANCEDATA
+//	{
+//		D3DXVECTOR4 m_vVC_AC0XY;				// TEXTURE1
+//		D3DXVECTOR4 m_vMatrix1_AC0W;			// TEXTURE2
+//		D3DXVECTOR4 m_vMatrix2_LMOffsetX;		// TEXTURE3
+//		D3DXVECTOR4 m_vMatrix3_LMOffsetY;		// TEXTURE4
+//		D3DXVECTOR4 m_vMatrix4;					// TEXTURE5
+//		D3DXVECTOR4 m_vAmbientCube_0Z_12_3X;	// TEXTURE6
+//		D3DXVECTOR4 m_vAmbientCube_3YZ_45;		// TEXTURE7
+//	};
+//
+//	D3DXVECTOR3	m_vMax;
+//	D3DXVECTOR3	m_vMin;
+//	D3DXVECTOR3	m_vCenter;
+//	float		m_fRadius;
+//	float		m_fAlpha;
+//
+//	TnL_MODE m_emGroundQulityPREV;
+//
+//	IDirect3DVertexBuffer9* g_pInstanceDataVB;
+//
+//private:
+//	DxStaticAniFrame*		m_rStaticAniFrame;	// 참조만 한다.
+//	std::vector<DxPiece*>	m_vecrPiece;		// 참조만 한다.
+//
+//public:
+//	BOOL Insert( DxPiece* pPiece );
+//	void CreateVB( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void CalculateAABB();
+//
+//	const size_t GetSize() const	{ return m_vecrPiece.size(); }
+//	void ExportPiece( VEC_PIECE& vecPIECE ) const;
+//
+//	// Instancing 조건이 만족이 안되면 FALSE 를 줄 수도 있다.
+//	BOOL FrameMove_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, float fElapsedTime );
+//	void RenderOpaque_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV );
+//	void RenderHardAlpha_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV );
+//	void RenderEffFrame_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV, BOOL bLBuffer );
+//	void RenderDecal_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV );
+//	void RenderDecalPass2_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV );
+//	void RenderWaterCustomSoftAlpha_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV );
+//	void RenderEff_Instancing( LPDIRECT3DDEVICEQ pd3dDevice, const CLIPVOLUME &sCV, DxStaticMeshLightMap* pStaticMeshLightMap );
+//
+//	void OnResetDevice( LPDIRECT3DDEVICEQ pd3dDevice );
+//	void OnLostDevice();
+//
+//public:
+//	DxPieceInstancing( DxStaticAniFrame* pStaticAniFrame );
+//	~DxPieceInstancing();
+//};

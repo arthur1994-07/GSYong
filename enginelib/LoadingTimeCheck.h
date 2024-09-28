@@ -1,0 +1,9 @@
+#ifndef _LOADING_TIME_CHECK_H_
+#define _LOADING_TIME_CHECK_H_
+
+#pragma once
+
+#define LOADING_TIME_CHECK
+#undef  LOADING_TIME_CHECK
+
+#endif // _LOADING_TIME_CHECK_H_

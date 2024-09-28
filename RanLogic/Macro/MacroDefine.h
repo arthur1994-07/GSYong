@@ -1,0 +1,11 @@
+
+#pragma once
+
+namespace MACRO
+{
+	enum LOG_STATE{
+		MACROLOG_STATE_START,
+		MACROLOG_STATE_END,
+		MACROLOG_STATE_BUY,
+	};
+}

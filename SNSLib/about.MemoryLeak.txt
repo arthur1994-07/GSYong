@@ -1,0 +1,20 @@
+Re: curl_global_init() and curl_global_cleanup() Results in Memory	Leaks
+
+On Thursday 27 of August 2009 12:07:07 Shlomi Fish wrote:
+> ==2671== LEAK SUMMARY:
+> ==2671==    definitely lost: 0 bytes in 0 blocks.
+> ==2671==      possibly lost: 0 bytes in 0 blocks.
+> ==2671==    still reachable: 864 bytes in 12 blocks.
+> ==2671==         suppressed: 0 bytes in 0 blocks.
+
+It's not definitely lost, but only reachable on application's exit. You can 
+see from the backtrace that the memory is allocated in the system libraries, 
+not in libcurl. I don't think it's a bug even there if the memory is not 
+growing during application's life time. And these functions should be called 
+only once.
+
+For example on Fedora 11 libcurl uses NSS for SSL. Once you call PR_Socket() 
+you have possible lost 48B. But if you call PR_Socket() in the loop, it 
+doesn't grow.
+
+Kamil

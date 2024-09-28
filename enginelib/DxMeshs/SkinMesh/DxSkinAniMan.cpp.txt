@@ -1,0 +1,995 @@
+#include "stdafx.h"
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <algorithm>
+#include "../../../SigmaCore/Log/LogMan.h"
+#include "../../../SigmaCore/String/StringUtils.h"
+#include "../../../SigmaCore/String/StringUtil.h"
+#include "../../../SigmaCore/String/StringFormat.h"
+#include "../../../SigmaCore/File/FileUtil.h"
+#include "../../../SigmaCore/File/StringFile.h"
+#include "../../../SigmaCore/File/SerialFile.h"
+#include "../../../SigmaCore/Util/EBTime.h"
+#include "../../../SigmaCore/Loading/NSLoadingDirect.h"
+
+#include "../../Common/StlFunctions.h"
+#include "../../DxEffect/Effani/DxEffAni.h"
+#include "../../DxCommon/dsutil.h"
+#include "../../DxTools/DxViewPort.h"
+#include "../../DxSound/DxSoundMan.h"
+#include "DxSkinAnimationManager.h"
+
+// ----------------------------------------------------------------------------
+#include "../../../SigmaCore/DebugInclude.h"
+// ----------------------------------------------------------------------------
+
+namespace COMMENT
+{
+	TSTRING ANI_MAINTYPE[AN_TYPE_SIZE] =
+	{
+		_T("경계 -Lookout"),
+		_T("휴식 -Rest"),
+		_T("걷기 -Walk"),
+		_T("뛰기 -Run"),
+		_T("공격 -Attack"),
+		_T("충격 -Shock"),
+		_T("쓰러지기 -Down"),
+
+		_T("생성 -Create"),
+		_T("대화 -Conversation"),
+		
+		_T("스킬 -Skill-A"),
+		_T("몸짓 -Gesture"),
+		_T("충격[MIX] -Shock[MIX]"),
+
+		_T("경계[SP부족] -Lookout[SP_lack]"),
+
+		_T("대련[승리] -Fight[win]"),
+		_T("대련[패배] -Fight[lose]"),
+		_T("특수 -Speciality"),
+
+		_T("스킬 -Skill-B"),
+		_T("스킬 -Skill-C"),
+		_T("스킬 -Skill-D"),
+		_T("스킬 -Skill-E"),
+		
+		_T("채집"),
+
+		_T("BT - 5"),
+		_T("BT - 7"),
+		_T("BT - 9"),
+		_T("EV - 1"),
+
+		_T("비행"), // 주병진
+		_T("스킬 -Skill-F"), // 과학부
+
+        _T("스킬 -Skill-G"),
+        _T("스킬 -Skill-H"),
+	};
+
+	TSTRING ANI_VEHICLE_MAINTYPE[AN_VEHICLE_SIZE] =
+	{
+		_T("Stay"),
+		_T("Walk"),
+		_T("Booster On"),
+		_T("Run"),
+		_T("Down"),
+		_T("Shock"),
+		_T("Attack"),
+
+		_T("Skill_A"),
+		_T("Skill_B"),
+		_T("Skill_C"),
+		_T("Skill_D"),
+
+		_T("Anim_001"),
+		_T("Anim_002"),
+		_T("Anim_003"),
+		_T("Anim_004"),
+		_T("Anim_005"),
+	};
+
+	TSTRING ANI_ATTBONE_MAINTYPE[AN_ATTBONE_SIZE] =
+	{
+		_T("Stay"),
+		_T("Attack_001"),
+		_T("Attack_002"),
+		_T("Attack_003"),
+		_T("Attack_004"),
+		_T("Attack_005"),
+
+		_T("SAnim_001"),
+		_T("SAnim_002"),
+		_T("SAnim_003"),
+		_T("SAnim_004"),
+		_T("SAnim_005"),
+		_T("SAnim_006"),
+		_T("SAnim_007"),
+		_T("SAnim_008"),
+		_T("SAnim_009"),
+		_T("SAnim_010"),
+		_T("SAnim_011"),
+		_T("SAnim_012"),
+	};
+	
+	TSTRING ANI_SUBTYPE[AN_SUB_00_SIZE] =
+	{
+		_T("00 맨손 -Empty Hands"),
+		_T("01 한손검 -One Hand Sword"),
+		_T("02 양손검 -Two Hand Sword"),
+		_T("03 쌍검 -Two Sword"),
+		_T("04 단검 -Dagger"),
+		_T("05 창 -Spear"),
+		_T("06 활 -Bow"),
+		_T("07 투척 -Throw"),
+		_T("08 마법 -Magic"),
+		_T("09 양손검 대형 -Two Hand Big Sword"),
+
+		_T("10 몽둥이 -Club"),
+	
+		_T("11 한손도 -One Hand KATANA"),
+		_T("12 양손도 -Two Hand KATANA"),
+		_T("13 양손도 대형 -Two Hand Big KATANA"),
+		_T("14 쌍도 -Two KATANA"),
+
+		_T("15 권법 -kung fu"),
+
+		_T("16 빗자루 -Broom"),
+
+		_T("17 호버"),
+
+		_T("18 권총"),
+		_T("19 소총"),
+
+        _T("20 해머 - Hammer"),
+        _T("21 듀얼 스피어 - Dual spear"),
+        _T("22 사이드 - Side"),
+
+		_T("SUB_23"),
+		_T("SUB_24"),
+		_T("SUB_25"),
+		_T("SUB_26"),
+		_T("SUB_27"),
+		_T("SUB_28"),
+		_T("SUB_29"),
+		_T("SUB_30"),
+		_T("SUB_31"),
+		_T("SUB_32"),
+		_T("SUB_33"),
+		_T("SUB_34"),
+		_T("SUB_35"),
+		_T("SUB_36"),
+		_T("SUB_37"),
+		_T("SUB_38"),
+		_T("SUB_39"),
+
+		_T("SUB_40"),
+		_T("SUB_41"),
+		_T("SUB_42"),
+		_T("SUB_43"),
+		_T("SUB_44"),
+		_T("SUB_45"),
+		_T("SUB_46"),
+		_T("SUB_47"),
+		_T("SUB_48"),
+		_T("SUB_49"),
+
+		_T("SUB_50"),
+		_T("SUB_51"),
+		_T("SUB_52"),
+		_T("SUB_53"),
+		_T("SUB_54"),
+		_T("SUB_55"),
+		_T("SUB_56"),
+		_T("SUB_57"),
+		_T("SUB_58"),
+		_T("SUB_59"),
+
+		_T("SUB_60"),
+		_T("SUB_61"),
+		_T("SUB_62"),
+		_T("SUB_63"),
+		_T("SUB_64"),
+		_T("SUB_65"),
+		_T("SUB_66"),
+		_T("SUB_67"),
+		_T("SUB_68"),
+		_T("SUB_69"),
+
+		_T("SUB_70"),
+		_T("SUB_71"),
+		_T("SUB_72"),
+		_T("SUB_73"),
+		_T("SUB_74"),
+		_T("SUB_75"),
+		_T("SUB_76"),
+		_T("SUB_77"),
+		_T("SUB_78"),
+		_T("SUB_79"),
+
+		_T("SUB_80"),
+		_T("SUB_81"),
+		_T("SUB_82"),
+		_T("SUB_83"),
+		_T("SUB_84"),
+		_T("SUB_85"),
+		_T("SUB_86"),
+		_T("SUB_87"),
+		_T("SUB_88"),
+		_T("SUB_89"),
+
+		_T("SUB_90"),
+		_T("SUB_91"),
+		_T("SUB_92"),
+		_T("SUB_93"),
+		_T("SUB_94"),
+		_T("SUB_95"),
+		_T("SUB_96"),
+		_T("SUB_97"),
+		_T("SUB_98"),
+		_T("SUB_99"),
+	};
+
+	TSTRING ANI_SUBTYPE_00[AN_SUB_00_SIZE] =
+	{
+		_T("SUB_00"),
+		_T("SUB_01"),
+		_T("SUB_02"),
+		_T("SUB_03"),
+		_T("SUB_04"),
+		_T("SUB_05"),
+		_T("SUB_06"),
+		_T("SUB_07"),
+		_T("SUB_08"),
+		_T("SUB_09"),
+		_T("SUB_10"),
+		_T("SUB_11"),
+		_T("SUB_12"),
+		_T("SUB_13"),
+		_T("SUB_14"),
+		_T("SUB_15"),
+		_T("SUB_16"),
+		_T("SUB_17"),
+		_T("SUB_18"),
+		_T("SUB_19"),
+
+		_T("SUB_20"),
+		_T("SUB_21"),
+		_T("SUB_22"),
+		_T("SUB_23"),
+		_T("SUB_24"),
+		_T("SUB_25"),
+		_T("SUB_26"),
+		_T("SUB_27"),
+		_T("SUB_28"),
+		_T("SUB_29"),
+		_T("SUB_30"),
+		_T("SUB_31"),
+		_T("SUB_32"),
+		_T("SUB_33"),
+		_T("SUB_34"),
+		_T("SUB_35"),
+		_T("SUB_36"),
+		_T("SUB_37"),
+		_T("SUB_38"),
+		_T("SUB_39"),
+
+		_T("SUB_40"),
+		_T("SUB_41"),
+		_T("SUB_42"),
+		_T("SUB_43"),
+		_T("SUB_44"),
+		_T("SUB_45"),
+		_T("SUB_46"),
+		_T("SUB_47"),
+		_T("SUB_48"),
+		_T("SUB_49"),
+
+		_T("SUB_50"),
+		_T("SUB_51"),
+		_T("SUB_52"),
+		_T("SUB_53"),
+		_T("SUB_54"),
+		_T("SUB_55"),
+		_T("SUB_56"),
+		_T("SUB_57"),
+		_T("SUB_58"),
+		_T("SUB_59"),
+
+		_T("SUB_60"),
+		_T("SUB_61"),
+		_T("SUB_62"),
+		_T("SUB_63"),
+		_T("SUB_64"),
+		_T("SUB_65"),
+		_T("SUB_66"),
+		_T("SUB_67"),
+		_T("SUB_68"),
+		_T("SUB_69"),
+
+		_T("SUB_70"),
+		_T("SUB_71"),
+		_T("SUB_72"),
+		_T("SUB_73"),
+		_T("SUB_74"),
+		_T("SUB_75"),
+		_T("SUB_76"),
+		_T("SUB_77"),
+		_T("SUB_78"),
+		_T("SUB_79"),
+
+		_T("SUB_80"),
+		_T("SUB_81"),
+		_T("SUB_82"),
+		_T("SUB_83"),
+		_T("SUB_84"),
+		_T("SUB_85"),
+		_T("SUB_86"),
+		_T("SUB_87"),
+		_T("SUB_88"),
+		_T("SUB_89"),
+
+		_T("SUB_90"),
+		_T("SUB_91"),
+		_T("SUB_92"),
+		_T("SUB_93"),
+		_T("SUB_94"),
+		_T("SUB_95"),
+		_T("SUB_96"),
+		_T("SUB_97"),
+		_T("SUB_98"),
+		_T("SUB_99"),
+	};
+
+	TSTRING ANI_SUBTYPE_01[AN_SUB_00_SIZE] =
+	{
+		_T("성공"),
+		_T("실패"),
+		_T("채집_01"),
+		_T("SUB_03"),
+		_T("SUB_04"),
+		_T("SUB_05"),
+		_T("SUB_06"),
+		_T("SUB_07"),
+		_T("SUB_08"),
+		_T("SUB_09"),
+		_T("SUB_10"),
+		_T("SUB_11"),
+		_T("SUB_12"),
+		_T("SUB_13"),
+		_T("SUB_14"),
+		_T("SUB_15"),
+		_T("SUB_16"),
+		_T("SUB_17"),
+		_T("SUB_18"),
+		_T("SUB_19"),
+
+		_T("SUB_20"),
+		_T("SUB_21"),
+		_T("SUB_22"),
+		_T("SUB_23"),
+		_T("SUB_24"),
+		_T("SUB_25"),
+		_T("SUB_26"),
+		_T("SUB_27"),
+		_T("SUB_28"),
+		_T("SUB_29"),
+		_T("SUB_30"),
+		_T("SUB_31"),
+		_T("SUB_32"),
+		_T("SUB_33"),
+		_T("SUB_34"),
+		_T("SUB_35"),
+		_T("SUB_36"),
+		_T("SUB_37"),
+		_T("SUB_38"),
+		_T("SUB_39"),
+
+		_T("SUB_40"),
+		_T("SUB_41"),
+		_T("SUB_42"),
+		_T("SUB_43"),
+		_T("SUB_44"),
+		_T("SUB_45"),
+		_T("SUB_46"),
+		_T("SUB_47"),
+		_T("SUB_48"),
+		_T("SUB_49"),
+
+		_T("SUB_50"),
+		_T("SUB_51"),
+		_T("SUB_52"),
+		_T("SUB_53"),
+		_T("SUB_54"),
+		_T("SUB_55"),
+		_T("SUB_56"),
+		_T("SUB_57"),
+		_T("SUB_58"),
+		_T("SUB_59"),
+
+		_T("SUB_60"),
+		_T("SUB_61"),
+		_T("SUB_62"),
+		_T("SUB_63"),
+		_T("SUB_64"),
+		_T("SUB_65"),
+		_T("SUB_66"),
+		_T("SUB_67"),
+		_T("SUB_68"),
+		_T("SUB_69"),
+
+		_T("SUB_70"),
+		_T("SUB_71"),
+		_T("SUB_72"),
+		_T("SUB_73"),
+		_T("SUB_74"),
+		_T("SUB_75"),
+		_T("SUB_76"),
+		_T("SUB_77"),
+		_T("SUB_78"),
+		_T("SUB_79"),
+
+		_T("SUB_80"),
+		_T("SUB_81"),
+		_T("SUB_82"),
+		_T("SUB_83"),
+		_T("SUB_84"),
+		_T("SUB_85"),
+		_T("SUB_86"),
+		_T("SUB_87"),
+		_T("SUB_88"),
+		_T("SUB_89"),
+
+		_T("SUB_90"),
+		_T("SUB_91"),
+		_T("SUB_92"),
+		_T("SUB_93"),
+		_T("SUB_94"),
+		_T("SUB_95"),
+		_T("SUB_96"),
+		_T("SUB_97"),
+		_T("SUB_98"),
+		_T("SUB_99"),
+	};
+
+	TSTRING ANI_SUBTYPE_02[AN_SUB_00_SIZE] =
+	{
+		_T("끌어오기"),
+		_T("밀어내기"),
+		_T("진격_01"),
+		_T("SUB_03"),
+		_T("SUB_04"),
+		_T("SUB_05"),
+		_T("SUB_06"),
+		_T("SUB_07"),
+		_T("SUB_08"),
+		_T("SUB_09"),
+		_T("SUB_10"),
+		_T("SUB_11"),
+		_T("SUB_12"),
+		_T("SUB_13"),
+		_T("SUB_14"),
+		_T("SUB_15"),
+		_T("SUB_16"),
+		_T("SUB_17"),
+		_T("SUB_18"),
+		_T("SUB_19"),
+
+		_T("SUB_20"),
+		_T("SUB_21"),
+		_T("SUB_22"),
+		_T("SUB_23"),
+		_T("SUB_24"),
+		_T("SUB_25"),
+		_T("SUB_26"),
+		_T("SUB_27"),
+		_T("SUB_28"),
+		_T("SUB_29"),
+		_T("SUB_30"),
+		_T("SUB_31"),
+		_T("SUB_32"),
+		_T("SUB_33"),
+		_T("SUB_34"),
+		_T("SUB_35"),
+		_T("SUB_36"),
+		_T("SUB_37"),
+		_T("SUB_38"),
+		_T("SUB_39"),
+
+		_T("SUB_40"),
+		_T("SUB_41"),
+		_T("SUB_42"),
+		_T("SUB_43"),
+		_T("SUB_44"),
+		_T("SUB_45"),
+		_T("SUB_46"),
+		_T("SUB_47"),
+		_T("SUB_48"),
+		_T("SUB_49"),
+
+		_T("SUB_50"),
+		_T("SUB_51"),
+		_T("SUB_52"),
+		_T("SUB_53"),
+		_T("SUB_54"),
+		_T("SUB_55"),
+		_T("SUB_56"),
+		_T("SUB_57"),
+		_T("SUB_58"),
+		_T("SUB_59"),
+
+		_T("SUB_60"),
+		_T("SUB_61"),
+		_T("SUB_62"),
+		_T("SUB_63"),
+		_T("SUB_64"),
+		_T("SUB_65"),
+		_T("SUB_66"),
+		_T("SUB_67"),
+		_T("SUB_68"),
+		_T("SUB_69"),
+
+		_T("SUB_70"),
+		_T("SUB_71"),
+		_T("SUB_72"),
+		_T("SUB_73"),
+		_T("SUB_74"),
+		_T("SUB_75"),
+		_T("SUB_76"),
+		_T("SUB_77"),
+		_T("SUB_78"),
+		_T("SUB_79"),
+
+		_T("SUB_80"),
+		_T("SUB_81"),
+		_T("SUB_82"),
+		_T("SUB_83"),
+		_T("SUB_84"),
+		_T("SUB_85"),
+		_T("SUB_86"),
+		_T("SUB_87"),
+		_T("SUB_88"),
+		_T("SUB_89"),
+
+		_T("SUB_90"),
+		_T("SUB_91"),
+		_T("SUB_92"),
+		_T("SUB_93"),
+		_T("SUB_94"),
+		_T("SUB_95"),
+		_T("SUB_96"),
+		_T("SUB_97"),
+		_T("SUB_98"),
+		_T("SUB_99"),
+	};
+
+	TSTRING ANI_SUBTYPE_03[AN_SUB_00_SIZE] =
+	{
+		_T("운전자_탑승"),			// 0
+		_T("운전자_서기"),			// 1
+		_T("운전자_이동(걷기)"),	// 2
+		_T("운전자_이동(뛰기)"),	// 3
+		_T("운전자_부스터 사용"),	// 4
+		_T("운전자_죽음"),			// 5
+		_T("보조자_탑승"),			// 6
+		_T("보조자_서기"),			// 7
+		_T("보조자_이동(걷기)"),	// 8
+		_T("보조자_이동(뛰기)"),	// 9
+		_T("보조자_부스터 사용"),	// 10
+		_T("보조자_죽음"),			// 11
+
+		_T("SUB_12"),
+		_T("SUB_13"),
+		_T("SUB_14"),
+		_T("SUB_15"),
+		_T("SUB_16"),
+		_T("SUB_17"),
+		_T("SUB_18"),
+		_T("SUB_19"),
+
+		_T("SUB_20"),
+		_T("SUB_21"),
+		_T("SUB_22"),
+		_T("SUB_23"),
+		_T("SUB_24"),
+		_T("SUB_25"),
+		_T("SUB_26"),
+		_T("SUB_27"),
+		_T("SUB_28"),
+		_T("SUB_29"),
+		_T("SUB_30"),
+		_T("SUB_31"),
+		_T("SUB_32"),
+		_T("SUB_33"),
+		_T("SUB_34"),
+		_T("SUB_35"),
+		_T("SUB_36"),
+		_T("SUB_37"),
+		_T("SUB_38"),
+		_T("SUB_39"),
+
+		_T("SUB_40"),
+		_T("SUB_41"),
+		_T("SUB_42"),
+		_T("SUB_43"),
+		_T("SUB_44"),
+		_T("SUB_45"),
+		_T("SUB_46"),
+		_T("SUB_47"),
+		_T("SUB_48"),
+		_T("SUB_49"),
+
+		_T("SUB_50"),
+		_T("SUB_51"),
+		_T("SUB_52"),
+		_T("SUB_53"),
+		_T("SUB_54"),
+		_T("SUB_55"),
+		_T("SUB_56"),
+		_T("SUB_57"),
+		_T("SUB_58"),
+		_T("SUB_59"),
+
+		_T("SUB_60"),
+		_T("SUB_61"),
+		_T("SUB_62"),
+		_T("SUB_63"),
+		_T("SUB_64"),
+		_T("SUB_65"),
+		_T("SUB_66"),
+		_T("SUB_67"),
+		_T("SUB_68"),
+		_T("SUB_69"),
+
+		_T("SUB_70"),
+		_T("SUB_71"),
+		_T("SUB_72"),
+		_T("SUB_73"),
+		_T("SUB_74"),
+		_T("SUB_75"),
+		_T("SUB_76"),
+		_T("SUB_77"),
+		_T("SUB_78"),
+		_T("SUB_79"),
+
+		_T("SUB_80"),
+		_T("SUB_81"),
+		_T("SUB_82"),
+		_T("SUB_83"),
+		_T("SUB_84"),
+		_T("SUB_85"),
+		_T("SUB_86"),
+		_T("SUB_87"),
+		_T("SUB_88"),
+		_T("SUB_89"),
+
+		_T("SUB_90"),
+		_T("SUB_91"),
+		_T("SUB_92"),
+		_T("SUB_93"),
+		_T("SUB_94"),
+		_T("SUB_95"),
+		_T("SUB_96"),
+		_T("SUB_97"),
+		_T("SUB_98"),
+		_T("SUB_99"),
+
+	};
+
+	//주병진 Start
+	TSTRING ANI_SUBTYPE_FLY[AN_SUB_FLY_SIZE] =
+	{
+		_T("비행준비"),
+		_T("비행-저속"),
+		_T("비행-고속"),
+		_T("비행완료"),
+		_T("SUB_04"),
+		_T("SUB_05"),
+		_T("SUB_06"),
+		_T("SUB_07"),
+		_T("SUB_08"),
+		_T("SUB_09"),
+	};
+	//주병진 End
+
+	TSTRING STRIKE_EFF[EMSF_SIZE] =
+	{
+		_T("NULL"),
+		_T("SELFBODY"),
+		_T("TARGET")
+	};
+}
+
+CRITICAL_SECTION		DxSkinAniMan::m_criticalCONT;
+
+DxSkinAniMan& DxSkinAnimationManager::GetInstance()
+{
+	static DxSkinAniMan Instance;
+	return Instance;
+}
+
+DxSkinAniMan::DxSkinAniMan(void) :
+	m_dwBinFileThreadID(0),
+	m_hBinFileThread(NULL)
+{
+	memset( m_szPath, 0, sizeof(char)*MAX_PATH );
+
+	InitializeCriticalSection(&m_criticalCONT);
+	InitializeCriticalSection(&m_criticalLOAD);
+}
+
+DxSkinAniMan::~DxSkinAniMan(void)
+{
+	DeleteCriticalSection(&m_criticalLOAD);
+	DeleteCriticalSection(&m_criticalCONT);
+}
+
+void DxSkinAniMan::OneTimeSceneInit ( char* szPath )
+{
+	StringCchCopy( m_szPath, MAX_PATH, szPath );
+}
+
+void DxSkinAniMan::CleanUp ()
+{
+	EnterCriticalSection(&m_criticalCONT);
+	{
+		if ( !m_mapAnimCont.empty() )
+		{
+			std::for_each ( m_mapAnimCont.begin(), m_mapAnimCont.end(), std_afunc::DeleteMapObject() );
+			m_mapAnimCont.clear ();
+		}
+	}
+	LeaveCriticalSection(&m_criticalCONT);
+}
+
+DxSkinAnimation* DxSkinAniMan::FindAnim(const std::string& FileName)
+{
+	DxSkinAnimation* pAnimCon = NULL;
+
+	EnterCriticalSection(&m_criticalCONT);
+	{
+		ANIMCONTMAP_ITER iter = m_mapAnimCont.find(FileName);
+		if (iter != m_mapAnimCont.end())
+            pAnimCon = iter->second;
+	}
+	LeaveCriticalSection(&m_criticalCONT);
+
+	return pAnimCon;
+}
+
+bool DxSkinAniMan::SetBinAnim( const char *szFileName, DxSkinAnimation::SANILIST &listANI, DxSkinAnimation::SANILIST &listANIUPBODY )
+{
+	bool bOK(false);
+
+	EnterCriticalSection(&m_criticalCONT);
+	{
+		ANIMCONTMAP_ITER iter = m_mapAnimCont.find ( TSTRING(szFileName) );
+		if ( iter!=m_mapAnimCont.end() )
+		{
+			bOK = true;
+			DxSkinAnimation* pCONTAINER = (*iter).second;
+
+			pCONTAINER->SetAnimFromList ( listANI, listANIUPBODY );
+		}
+	}
+	LeaveCriticalSection(&m_criticalCONT);
+
+
+	return bOK;
+}
+
+DxSkinAnimation* DxSkinAniMan::LoadAnimContainer(
+    const std::string& FileName,
+    const std::string& Skeleton,
+    LPDIRECT3DDEVICEQ pd3dDevice,
+    bool bREPRESH /*=false*/ )
+{	
+	if (FileName.empty() || Skeleton.empty())
+        return NULL;
+    
+    HRESULT hr;	
+    std::string strFileName(FileName);
+    sc::string::lowerString(strFileName);
+
+    std::string strSkeleton(Skeleton);
+	sc::string::lowerString(strSkeleton);
+
+	// 이미 로드된 경우.
+	DxSkinAnimation* pAnim;
+    pAnim = FindAnim(strFileName);
+	if ( pAnim )
+	{
+		pAnim->AddRef();
+		return pAnim;
+	}
+
+	//CDebugSet::ToListView ( "DxSkinAnimation '%s' Load", strFileName.GetString() );
+
+	// 설정 파일 읽기 시도.
+	bool bValidCfgFile(true);
+
+	//STRUTIL::ChangeExt(strFileName.GetString(), _T(".x"), strCfgFile, _T(".cfg"));
+    std::string strCfgFile(sc::file::changeFileExt(strFileName, "cfg"));
+
+	SANIMCONINFO AnimInfo;
+	if ( AnimInfo.LoadFile(strCfgFile, pd3dDevice))
+	{
+        std::string strINFO_Skeleton(AnimInfo.m_SkeletionName);
+        sc::string::lowerString(strINFO_Skeleton);
+		if ( strINFO_Skeleton != strSkeleton )
+		{
+            std::string Msg(
+                sc::string::format(
+                    "Incorrect bone name %1% %2% %3%",
+                    strCfgFile,
+                    strINFO_Skeleton,
+                    Skeleton));			
+            CDebugSet::ToLogFile(Msg);
+		}
+	}
+	else
+	{
+		bValidCfgFile = false;
+		AnimInfo.SetName(strFileName);
+		AnimInfo.SetSkeletonName(strSkeleton);
+	}
+
+	// 에니메이션 로드.
+	//
+	pAnim = new DxSkinAnimation;
+	hr = pAnim->SetInfo ( AnimInfo, pd3dDevice );
+	if ( FAILED(hr) )
+	{
+		SAFE_DELETE(pAnim);
+		return NULL;
+	}
+
+	hr = pAnim->CreateAnimationData ( AnimInfo, pd3dDevice, bREPRESH );
+	if ( FAILED(hr) )
+	{
+		SAFE_DELETE(pAnim);
+		return NULL;
+	}
+
+	// if cfg file not created
+	if ( !bValidCfgFile )
+	{
+		pAnim->SANIMCONINFO::SaveFile(strCfgFile.c_str());
+	}
+
+	// 리스트에 삽입.
+	//
+	EnterCriticalSection(&m_criticalCONT);
+	{
+        m_mapAnimCont.insert(ANIMCONTMAP_VALUE(pAnim->m_Name, pAnim));
+	}
+	LeaveCriticalSection(&m_criticalCONT);
+
+	return pAnim;
+}
+
+BOOL DxSkinAniMan::SaveAnimConInfo(const std::string& FileName)
+{
+	// 이미 로드된 경우.
+	DxSkinAnimation* pAnim;
+    pAnim = FindAnim(FileName);
+	if (!pAnim)
+        return FALSE;
+    
+	//STRUTIL::ChangeExt(szFileName, ".x", strCfgFile, ".cfg");
+    std::string strCfgFile(sc::file::changeFileExt(FileName, "cfg"));
+
+	pAnim->SaveFile(strCfgFile.c_str());
+	return TRUE;
+}
+
+BOOL DxSkinAniMan::PreLoad ( TCHAR* szAniContList, LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	CString strPath;
+	strPath = GetPath();
+	strPath += szAniContList;	
+
+//	float __fOldTime = sc::DXUtil_Timer ( sc::TIMER_GETAPPTIME );
+
+	sc::CStringFile StrFile;
+	if ( !StrFile.Open ( strPath.GetString() ) )
+        return FALSE;
+
+    std::vector<std::string> SplitVec;
+    SplitVec.reserve(2);
+	
+    CString strLine;
+	while ( StrFile.GetNextLine(strLine) )
+	{
+        std::string OrigianlStr(strLine.GetString());
+        if (OrigianlStr.empty())
+            continue;
+
+        SplitVec.clear();
+        boost::split(SplitVec, OrigianlStr, boost::algorithm::is_any_of("\t ,"), boost::algorithm::token_compress_on);        
+		
+		if (SplitVec.size() != 2 || SplitVec[0].empty() || SplitVec[1].empty())
+            continue;
+
+        sc::string::lowerString(SplitVec[0]);
+        sc::string::lowerString(SplitVec[1]);
+
+        //---------------------------------------------------//
+        NSLoadingDirect::FrameMoveRender( FALSE );
+        //---------------------------------------------------//
+
+		DxSkinAnimation* pAnimCont = LoadAnimContainer(
+                                        SplitVec[0],
+                                        SplitVec[1],
+                                        pd3dDevice);
+		if (!pAnimCont)
+		{
+			CString strMessage;
+			strMessage.Format(
+                "DxSkinAniMan::PreLoad() [%s] LoadAnimContainer Failed.",
+                SplitVec[0].c_str());
+			MessageBox(NULL, strMessage, "ERROR", MB_OK);			
+			continue;
+		}
+
+        m_mapPreLoadAnimCont.insert(ANIMCONTMAP_VALUE(SplitVec[0], pAnimCont));
+	}
+
+//	float __fNowTime = sc::DXUtil_Timer ( sc::TIMER_GETAPPTIME ) - __fOldTime;
+//	CDebugSet::ToLogFile ( "PreLoad : %f", __fNowTime );
+
+	return TRUE;
+}
+
+HRESULT DxSkinAniMan::DoInterimClean ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	ANIMCONTLIST listInterimClean;
+	
+	// 제거할 리스트 작성.
+	//
+	EnterCriticalSection(&m_criticalCONT);
+	{
+		ANIMCONTMAP_ITER found;
+		ANIMCONTMAP_ITER iter = m_mapAnimCont.begin();
+		ANIMCONTMAP_ITER iter_end = m_mapAnimCont.end();
+		for ( ; iter!=iter_end; ++iter)
+		{
+			// 사전 로딩 리스트에 있는 파일 제외.
+			//
+			found = m_mapPreLoadAnimCont.find ( (*iter).first );
+			if (found!=m_mapPreLoadAnimCont.end())
+                continue;
+
+			//	제거 리스트에 등록.
+			listInterimClean.push_back ( (*iter).second );
+		}
+	}
+	LeaveCriticalSection(&m_criticalCONT);
+
+	// 데이터 정리.
+	//
+	EnterCriticalSection(&m_criticalCONT);
+	{
+		ANIMCONTLIST_ITER iter = listInterimClean.begin();
+		ANIMCONTLIST_ITER iter_end = listInterimClean.end();
+		for ( ; iter!=iter_end; ++iter)
+		{
+			DxSkinAnimation* pAnimCont = (*iter);
+            std::string strname(pAnimCont->m_Name);
+
+			//	데이터 삭제.
+			SAFE_DELETE(pAnimCont);
+
+			//	로드 파일 리스트에서 제거.
+			ANIMCONTMAP_ITER iter_del = m_mapAnimCont.find ( strname );
+			if (iter_del != m_mapAnimCont.end())
+                m_mapAnimCont.erase(iter_del);
+		}
+	}
+	LeaveCriticalSection(&m_criticalCONT);
+
+	return S_OK;
+}
+
+
+

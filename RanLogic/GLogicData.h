@@ -1,0 +1,1529 @@
+#ifndef _GLOGIC_DATA_H_
+#define _GLOGIC_DATA_H_
+
+#pragma once
+
+#include "../SigmaCore/File/SFileSystem.h"
+#include "../EngineLib/DxMeshs/SkinMesh/DxSkinAnimationManager.h"
+
+#include "./Party/GLPartyDefine.h"
+#include "./Character/GLCharData.h"	//<---
+#include "./Inventory/GLInventory.h"
+#include "./Pet/GLPet.h"
+#include "./Vehicle/GLVEHICLE.h"
+#include "./Summon/GLSUMMON.h"	//<---
+#include "./GLCDMDefine.h"	//<---
+#include "./Product/GLProductRecipe.h"
+
+class DxSkinDataDummy;
+
+enum GLCONST
+{
+	MAX_SERVERCHAR		= MAX_ONESERVERCHAR_NUM,
+	MAX_SELECTCHAR		= 3, // Ä³¸¯ÅÍ ¼±ÅÃ È­¸é¿¡¼­ º¸ÀÌ´Â ÃÖ´ë Ä³¸¯ÅÍÀÇ ¼ö, ÇöÀç 3°³
+	MAX_VIEWRANGE		= 300, // ÃÖ´ë ¹üÀ§ (ÆÄÆ¼¿ø ³¢¸® ÀÎÁ¢ÇÑ°¡?...)
+
+	MAX_HEAD			= 64,
+	MAX_HAIR			= 64,
+
+	MAX_SCHOOL			= 10,
+	MAX_LEVEL			= 310,
+
+	MAX_CLUBSTORAGE		= 6,
+	MAX_CLUBRANK		= 10,
+
+	GRADE_NORMAL		= 4,
+	GRADE_HIGH			= 9,
+	GRADE_LIMIT_MAX		= 200, //Mars 20170622 é_·ÅÎïÆ·×î¸ßµÈ¼‰
+
+	MAX_SERIALIZED_CHAR_SIZE =	36864,	//36 * 1024
+};
+
+enum GLENALBE_NEW_CLASS
+{
+    RESTRICT_SCIENTIST_NEW_CLASS	= 0, // °úÇÐºÎ, ÀÎ¼úºÎ, ¸¶¼úºÎ Á¦ÇÑ.
+    RESTRICT_ASSASSIN_NEW_CLASS	= 1, // ÀÎ¼úºÎ, ¸¶¼úºÎ Á¦ÇÑ.
+    RESTRICT_TRICKER_NEW_CLASS	= 2, // ¸¶¼úºÎ Á¦ÇÑ.
+	RESTRICT_ACTOR_NEW_CLASS	= 3, // ¿¬±ØºÎ
+    NO_RESTRICT_NEW_CLASS		= 4, // Á¦ÇÑ ¾øÀ½.
+};
+
+//	Note : Ä³¸¯ÅÍ Á¾·ùº° ±âº» »ó¼ö.
+//
+struct GLCONST_CHARCLASS
+{
+	float				fWALKVELO;		//	Ä³¸¯ÀÇ °È±â ¼Óµµ.
+	float				fRUNVELO;		//	Ä³¸¯ÀÇ ¶Ù±â ¼Óµµ.
+
+	float				fHP_STR;		//	str(Ã¼·Â) -> HP È¯»ê ºñÀ².
+	float				fMP_SPI;		//	spi(Á¤½Å) -> MP È¯»ê ºñÀ².
+	float				fSP_STA;		//	sta(±Ù·Â) -> SP È¯»ê ºñÀ².
+	float				fHIT_DEX;		//	dex(¹ÎÃ¸) -> HIT rate È¯»ê ºñÀ².
+	float				fAVOID_DEX;		//	dex(¹ÎÃ¸) -> AVOID rate È¯»ê ºñÀ².
+	float				fDEFENSE_DEX;	//	dex(¹ÎÃ¸) -> DEFENSE È¯»ê ºñÀ².
+
+	float				fPA_POW;		//	pow(Èû) -> PA(°ÝÅõÄ¡) È¯»ê ºñÀ².
+	float				fPA_DEX;		//	dex(¹ÎÃ¸) -> PA(°ÝÅõÄ¡) È¯»ê ºñÀ².
+
+	float				fSA_POW;		//	pow(Èû) -> SA(»ç°ÝÄ¡) È¯»ê ºñÀ².
+	float				fSA_DEX;		//	dex(¹ÎÃ¸) -> SA(»ç°ÝÄ¡) È¯»ê ºñÀ².
+
+	float				fMA_DEX;		//	dex(¹ÎÃ¸) -> MA(¸¶¹ýÄ¡) È¯»ê ºñÀ².
+	float				fMA_SPI;		//	spi(Á¤½Å) -> MA(¸¶¹ýÄ¡) È¯»ê ºñÀ².
+	float				fMA_INT;		//	int(Áö·Â) -> MA(¸¶¹ýÄ¡) È¯»ê ºñÀ².
+
+	float				fCONV_AP;		//	È¯»ê ±âº» °ø°Ý·Â.
+	float				fCONV_DP;		//	È¯»ê ±âº» ¹æ¾î·Â.
+	float				fCONV_PA;		//	È¯»ê ±âº» °ÝÅõÄ¡.
+	float				fCONV_SA;		//	È¯»ê ±âº» »ç°ÝÄ¡.
+
+	SCHARSTATS		sBEGIN_STATS;									// ´É·ÂÄ¡ ÃÊ±â ¼öÄ¡.
+	FCHARSTATS			sLVLUP_STATS;									// ·¹º§ Áõ°¡ ´ç ±âº» ´É·ÂÄ¡ Áõ°¡ ¼öÄ¡.
+
+	WORD				wBEGIN_AP;		//	ÃÊ±â °ø°Ý·Â.
+	WORD				wBEGIN_DP;		//	ÃÊ±â ¹æ¾î·Â.
+	WORD				wBEGIN_PA;		//	ÃÊ±â °ÝÅõÄ¡.
+	WORD				wBEGIN_SA;		//	ÃÊ±â »ç°ÝÄ¡.
+
+	float				fLVLUP_AP;		//	·¦¾÷´ç °ø°Ý·Â Áõ°¡.
+	float				fLVLUP_DP;		//	·¦¾÷´ç ¹æ¾î·Â Áõ°¡.
+	float				fLVLUP_PA;		//	·¦¾÷´ç °ÝÅõÄ¡ Áõ°¡.
+	float				fLVLUP_SA;		//	·¦¾÷´ç »ç°ÝÄ¡ Áõ°¡.
+
+	//	¿¡´Ï¸ÞÀÌ¼Ç Á¤º¸. ( ½Ã°£/½ºÅÇ )
+	//	server ¿¡¼­¸¸ ÇÊ¿äÇÑ Á¤º¸.
+	VECANIATTACK		m_ANIMATION[AN_TYPE_SIZE][AN_SUB_00_SIZE];
+
+	DWORD				dwHEADNUM;
+	DWORD				dwHEADNUM_SELECT;
+	std::string			strHEAD_CPS[MAX_HEAD];
+
+	DWORD				dwHAIRNUM;
+	DWORD				dwHAIRNUM_SELECT;
+	std::string			strHAIR_CPS[MAX_HAIR];
+
+	std::string			strCLASS_EFFECT;
+
+	DxSkinDataDummy*	m_pSkinDataDummy;
+
+	void LoadAniSet ( char* szSkinObj, bool bToolmode = false );
+	void ClearAniSet ();
+
+	BOOL LOADFILE ( const char* szFileName );
+
+	GLCONST_CHARCLASS () :
+		fWALKVELO(12),
+		fRUNVELO(34),
+
+		fHP_STR(0),
+		fMP_SPI(0),
+		fSP_STA(0),
+		fHIT_DEX(0),
+		fAVOID_DEX(0),
+		fPA_POW(0),
+		fSA_DEX(0),
+
+		fMA_DEX(0),
+		fMA_SPI(0),
+		fMA_INT(0),
+
+		fCONV_AP(0),
+		fCONV_DP(0),
+		fCONV_PA(0),
+		fCONV_SA(0),
+
+		wBEGIN_AP(0),
+		wBEGIN_DP(0),
+		wBEGIN_PA(0),
+		wBEGIN_SA(0),
+
+		fLVLUP_AP(0),
+		fLVLUP_DP(0),
+		fLVLUP_PA(0),
+		fLVLUP_SA(0),
+
+		dwHEADNUM(0),
+		dwHEADNUM_SELECT(0),
+
+		dwHAIRNUM(0),
+		dwHAIRNUM_SELECT(0),
+		m_pSkinDataDummy(NULL)
+	{
+	}
+
+	GLCONST_CHARCLASS ( float _fHP_STR, float _fMP_SPI, float _fSP_STA, float _fHIT_DEX,
+		float _fAVOID_DEX, float _fDEFENSE_DEX, float _fPA_POW, float _fSA_DEX,
+		SCHARSTATS _fBEGIN_STATS, FCHARSTATS _fLVLUP_STATS,
+		WORD _wBEGIN_AP, WORD _wBEGIN_DP, WORD _wBEGIN_PA, WORD _wBEGIN_SA,
+		float _fLVLUP_AP, float _fLVLUP_DP, float _fLVLUP_PA, float _fLVLUP_SA ) 
+		: fWALKVELO(12.0f)
+		, fRUNVELO(34)
+		
+		, fHP_STR(_fHP_STR)
+		, fMP_SPI(_fMP_SPI)
+		, fSP_STA(_fSP_STA)
+		, fHIT_DEX(_fHIT_DEX)
+		, fAVOID_DEX(_fAVOID_DEX)
+		, fDEFENSE_DEX(_fDEFENSE_DEX)
+		, fPA_POW(_fPA_POW)
+		, fSA_DEX(_fSA_DEX)
+		
+		, sBEGIN_STATS(_fBEGIN_STATS)
+		, sLVLUP_STATS(_fLVLUP_STATS)
+		, wBEGIN_AP(_wBEGIN_AP)
+		, wBEGIN_DP(_wBEGIN_DP)
+		, wBEGIN_PA(_wBEGIN_PA)
+		, wBEGIN_SA(_wBEGIN_SA)
+		
+		, fLVLUP_AP(_fLVLUP_AP)
+		, fLVLUP_DP(_fLVLUP_DP)
+		, fLVLUP_PA(_fLVLUP_PA)
+		, fLVLUP_SA(_fLVLUP_SA)
+		, m_pSkinDataDummy(NULL)
+	{
+	}
+
+	GLCONST_CHARCLASS::~GLCONST_CHARCLASS();
+
+private:
+	//	´ëÀÔ ¿¬»êÀÌ ¸øÀÏ¾î³ª°Ô ¿øÃµÀûÀ¸·Î ¸·ÇôÀÖÀ½.
+	GLCONST_CHARCLASS& operator= ( GLCONST_CHARCLASS &Input )	{ GASSERT(0); };	
+};
+
+struct GLCLUBRANK
+{
+	DWORD	m_dwMasterLvl;
+	DWORD	m_dwLivingPoint;
+	DWORD	m_dwPay;
+	DWORD	m_dwMember;
+
+	GLCLUBRANK () :
+		m_dwMasterLvl(0),
+		m_dwLivingPoint(0),
+		m_dwPay(0),
+		m_dwMember(0)
+	{
+	}
+
+	GLCLUBRANK ( DWORD dwMLvl, DWORD dwLP, DWORD dwPY, DWORD dwMem ) :
+		m_dwMasterLvl(dwMLvl),
+		m_dwLivingPoint(dwLP),
+		m_dwPay(dwPY),
+		m_dwMember(dwMem)
+	{
+	}
+};
+
+struct SPLAYERKILL
+{
+	DWORD		dwLEVEL;
+	DWORD		dwNAME_COLOR;
+	int			nPKPOINT;
+	std::string	strNAME;
+	float		fPK_EXP_RATE;
+
+	DWORD		dwITEM_DROP_NUM;
+	float		fITEM_DROP_RATE;
+
+	float		fSHOP_2BUY_RATE;
+	float		fSHOP_2SALE_RATE;
+
+	SPLAYERKILL () :
+		dwLEVEL(0),
+		dwNAME_COLOR(0),
+		nPKPOINT(0),
+		fPK_EXP_RATE(0),
+
+		dwITEM_DROP_NUM(0),
+		fITEM_DROP_RATE(0),
+
+		fSHOP_2BUY_RATE(0),
+		fSHOP_2SALE_RATE(0)
+	{
+	}
+
+	SPLAYERKILL ( DWORD _dwLEVEL, DWORD _dwNAME_COLOR, int _nPKPOINT, std::string _strNAME, float _fPK_EXP_RATE,
+		DWORD _dwITEM_DROP_NUM, float _fITEM_DROP_RATE, float _fSHOP_2BUY_RATE, float _fSHOP_2SALE_RATE ) :
+		dwLEVEL(_dwLEVEL),
+		dwNAME_COLOR(_dwNAME_COLOR),
+		nPKPOINT(_nPKPOINT),
+		strNAME(_strNAME),
+		fPK_EXP_RATE(_fPK_EXP_RATE),
+
+		dwITEM_DROP_NUM(_dwITEM_DROP_NUM),
+		fITEM_DROP_RATE(_fITEM_DROP_RATE),
+
+		fSHOP_2BUY_RATE(_fSHOP_2BUY_RATE),
+		fSHOP_2SALE_RATE(_fSHOP_2SALE_RATE)
+	{
+	}
+
+	SPLAYERKILL ( const SPLAYERKILL &value )
+	{
+		operator= ( value );
+	}
+
+	SPLAYERKILL& operator= ( const SPLAYERKILL &value )
+	{
+		dwLEVEL = value.dwLEVEL;
+		dwNAME_COLOR = value.dwNAME_COLOR;
+		nPKPOINT = value.nPKPOINT;
+		strNAME = value.strNAME;
+		fPK_EXP_RATE = value.fPK_EXP_RATE;
+
+		dwITEM_DROP_NUM = value.dwITEM_DROP_NUM;
+		fITEM_DROP_RATE = value.fITEM_DROP_RATE;
+
+		fSHOP_2BUY_RATE = value.fSHOP_2BUY_RATE;
+		fSHOP_2SALE_RATE = value.fSHOP_2SALE_RATE;
+
+		return *this;
+	}
+};
+
+struct SSTATPOINT_BYLEVEL
+{
+	DWORD dwLevel;
+	DWORD dwStatPoint;
+
+	SSTATPOINT_BYLEVEL ( )
+		: dwLevel ( 0 )
+		, dwStatPoint ( 0 )
+	{
+
+	}
+
+	SSTATPOINT_BYLEVEL ( DWORD _dwLevel, DWORD _dwStatPoint )
+		: dwLevel ( _dwLevel )
+		, dwStatPoint ( _dwStatPoint )
+	{
+
+	}
+};
+
+//	Note : Ä³¸¯ÅÍ °øÅë ±âº» »ó¼ö.
+//
+namespace GLCONST_CHAR
+{
+	enum
+	{
+		DIE_DECEXP_NUM	= 31,
+		SCREEN_EFFECT_NUM = 3,
+		CAMERA_EFFECT_NUM = 5,
+		EMITEMLEVEL_NUM = 6,
+	};
+
+	extern BOOL			bTESTSERVER;			// Å×½ºÆ® ¼­¹ö¿¡¸¸ Àû¿ë.
+	extern INT			nUI_KEYBOARD;			// ÀÎÅÍÆäÀÌ½º Å°º¸µå ¼³Á¤
+	extern INT			nUI_DEFAULTKEYTYPE;		// ±âº» Å°Å¸ÀÔ
+	extern BOOL			bBATTLEROYAL;			// ¹èÆ²·Î¾â
+	extern INT			nMAX_FRIEND_NUMBER;		// ÃÖ´ë Ä£±¸, Â÷´Ü ¸ñ·Ï °³¼ö
+    extern INT          nMAX_FRIEND_LIST;       // Ãß°¡ÇÒ ¼ö ÀÖ´Â Ä£±¸ ¸ñ·Ï ¼ö //2012-07-31 by cwBack
+    extern INT          nMAX_FRIEND_GROUP;      // »ý¼ºÇÒ ¼ö ÀÖ´Â ±×·ì ¼ö //2012-09-05 bt cwBack
+    extern INT          nMAX_FRIEND_BLOCK;      // Â÷´ÜÇÒ ¼ö ÀÖ´Â Â÷´Ü ¸ñ·Ï ¼ö //2012-07-31 by cwBack
+	extern WORD			wLEVEL_FOR_EXTREME;		// ±Ø°­ºÎ¸¦ »ý¼ºÇÏ±â À§ÇØ ¸¸Á·µÇ¾î¾ß ÇÏ´Â ·¹º§(lv.190)
+	extern WORD			wSTART_LEVEL_FOR_EXTREME; // ±Ø°­ºÎ ½ÃÀÛ ·¹º§
+	extern WORD			wLEVEL_FOR_ACTOR;		// º¯¼úºÎ »ý¼º ¸¸Á· ·¹º§;
+    extern BYTE         ExcessExpProcessType;   // ÃÊ°ú °æÇèÄ¡ Ã³¸® Å¸ÀÔ. 0 : »ç¿ë¾ÈÇÔ 1 : ±Ø°­ºÎ¸¸ 2 : ¸ðµÎ
+
+	//	Note : ÀÏ¹Ý »ó¼ö.
+	//
+	extern float		fFIELD_NEXTPICK;		//	¸ã¿¡ ÀÖ´Â ¾ÆÀÌÅÛ(µ·) ÁÖÀ»¶§ Ã³À½ ¸Þ½ÃÁö Àü¼ÛÈÄ ´ÙÀ½ °¡´É ½Ã°£.
+	extern WORD			wSERVER_NORMAL;
+	extern WORD			wSERVER_CONGEST;
+	extern WORD			wSERVER_NOVACANCY;
+
+	//---------------------------------------------------------------------------------------[ÄÉ¸¯ÅÍ ±âº»]
+	extern WORD			wSCHOOLNUM;
+	extern std::string	strSCHOOLNAME[MAX_SCHOOL];
+	extern SNATIVEID	nidSTARTMAP[MAX_SCHOOL];
+	extern DWORD		dwSTARTGATE[MAX_SCHOOL];
+	extern float		fCHAR_HEIGHT[GLCI_NUM_ACTOR];
+
+    extern WORD         wENABLE_NEW_CLASS;  // ½Å±Ô Å¬·¡½º ¿ÀÇÂ Á¦ÇÑÀ» À§ÇÑ ¼³Á¤ °ª.
+
+	//---------------------------------------------------------------------------------------[]
+	extern BOOL			bPARTY_2OTHERSCHOOL;
+	extern BOOL			bCLUB_2OTHERSCHOOL;
+
+    //---------------------------------------------------------------------------------------[Ã¤ÆÃ µµ¹è¹æÁö]
+    extern float fCHAT_OVERINPUT_TIMER; // µµ¹è ¹æÁö ±â´É Áß ÀÌÀü ÀÔ·Â ½Ã°£°ú Â÷ÀÌ °ª(ÃÊ).
+    extern WORD wCHAT_OVERINPUT_CANCEL_TIMER; // µµ¹è ¹æÁö ±â´É Áö¼Ó½Ã°£(ÃÊ).
+    extern int nCHAT_OVERINPUT_COUNT; // µµ¹è ¹æÁö ±â´É Áß ÀÌÀü ÀÔ·Â ¹®ÀÚ¿­ ¿¬¼Ó ÀÔ·Â Çã¿ë È½¼ö.
+
+    //---------------------------------------------------------------------------------------[ºÎÈ° Ã¢ ÃßÃµ ¾ÆÀÌÅÛ ±â´É]
+    extern SNATIVEID   nidREBIRTH_RECOMMEND_ITEM;    // ºÎÈ° Ã¢¿¡¼­ ÃßÃµµÇ´Â ¾ÆÀÌÅÛ ÀÌ¹ÌÁöÀÇ ID.
+    extern std::string strREBIRTH_RECOMMEND_ITEM;    // ºÎÈ° Ã¢¿¡¼­ ÃßÃµµÇ¾î Æ÷ÀÎÆ® »óÁ¡À¸·Î °Ë»öµÉ ¾ÆÀÌÅÛÀÇ ÀÌ¸§.
+    extern WORD wAUTO_REBIRTH_TIMER; // ºÎÈ° Ã¢¿¡¼­ ÀÚµ¿ ºÎÈ° ½Ã°£.
+
+    //---------------------------------------------------------------------------------------[NPC ´ëÈ­ Ã¢ ÃßÃµ ¾ÆÀÌÅÛ ±â´É]
+    extern SNATIVEID nidDIALOGUE_RECOMMEND_ITEM;    // NPC ´ëÈ­ Ã¢¿¡¼­ ÃßÃµµÇ´Â ¾ÆÀÌÅÛ ÀÌ¹ÌÁöÀÇ ID.
+    extern std::string strDIALOGUE_RECOMMEND_ITEM;    // NPC ´ëÈ­ Ã¢¿¡¼­ ÃßÃµµÇ¾î Æ÷ÀÎÆ® »óÁ¡À¸·Î °Ë»öµÉ ¾ÆÀÌÅÛÀÇ ÀÌ¸§.
+
+    //---------------------------------------------------------------------------------------[ÀÚ¸®ºñ¿ò]
+    extern float fBECOME_AWAY_TIME; // ÀÔ·ÂÀÌ ¾øÀ» ½Ã ÀÚ¸®ºñ¿ò ±îÁö °É¸®´Â ½Ã°£(ÃÊ).
+    extern int nAWAY_GESTURE_NUMBER;    // ÀÚ¸®ºñ¿ò ½Ã¿¡ Ä³¸¯ÅÍ°¡ ÃëÇÒ Á¦½ºÃÄ ¹øÈ£.
+
+    //---------------------------------------------------------------------------------------[¹ÙÀÌÅ© Å¾½Â½Ã Àû¿ë¾ÈÇÏ´Â È¿°úµé]
+    extern WORD wNON_APPLY_QBOX_ON_VEHICLE_NUM;
+    extern WORD wNON_APPLY_QBOX_ON_VEHICLE[QUESTION_SIZE]; // Å» °Í Å¾½Â½Ã¿¡ Àû¿ë ¾È ÇÒ QBOX.
+    extern WORD wNON_APPLY_SKILL_TYPE_ON_VEHICLE_NUM;
+    extern WORD wNON_APPLY_SKILL_TYPE_ON_VEHICLE[SKILL::FOR_TYPE_SIZE]; // Å» °Í Å¾½Â½Ã¿¡ Àû¿ë ¾È ÇÒ ½ºÅ³ Å¸ÀÔµé.
+    extern WORD wNON_APPLY_SKILL_IMPACT_ON_VEHICLE_NUM;
+    extern WORD wNON_APPLY_SKILL_IMPACT_ON_VEHICLE[EIMPACTA_SIZE]; // Å» °Í Å¾½Â½Ã¿¡ Àû¿ë ¾È ÇÒ ½ºÅ³ È¿°úµé.
+    extern WORD wNON_APPLY_SKILL_SPEC_ON_VEHICLE_NUM;
+    extern WORD wNON_APPLY_SKILL_SPEC_ON_VEHICLE[EMSPECA_NSIZE]; // Å» °Í Å¾½Â½Ã¿¡ Àû¿ë ¾È ÇÒ ½ºÅ³ Æ¯¼öÈ¿°úµé.
+
+    extern WORD wMaxRebuyList;
+    extern float fRebuyMultiplePrice;
+    extern WORD wMinRebuyPrice;
+
+	//	extern float		fDISPRICE;				//	¾ÆÀÌÅÛ ÀçÆÇ¸Å °¡°Ý.
+	extern WORD			wMAXITEM_AGE;			//	ITEM, ÃÖ´ë Áö¼Ó½Ã°£.
+	extern WORD			wMAXITEM_HOLD;			//	ITEM, ÀÓ½Ã ¼ÒÀ¯ÀÚ º¸È£ ½Ã°£.
+	extern WORD			wMAXMOB_TRACKING;		//	ÃÖ´ë ¸÷ ¸ôÀÌ ¼ö.
+
+	extern WORD			wMAX_LEVEL;				//	·¹¹ë ÃÖ´ë Á¦ÇÑ.
+	extern WORD			wMAX_EXTREME_LEVEL;		//	±Ø°­ºÎ ·¹¹ë ÃÖ´ë Á¦ÇÑ.
+	extern WORD			wLVL_STATS_P;			//	·¾¾÷´ç ½ºÅÈ Æ÷ÀÎÆ® ºÎ¿©°ª.
+	extern WORD			wLVL_2ndSTATS_P;			//	·¾¾÷´ç ½ºÅÈ Æ÷ÀÎÆ® ºÎ¿©°ª.
+	extern float		fLVL_EXP_G;				//	·¾¾÷ °æÇèÄ¡ »êÃâ¿¡ ÇÊ¿äÇÑ È¯»ê ÆÑÅÍ.
+	extern float		fLVL_EXP_S;				//	·¾¾÷ °æÇèÄ¡ »êÃâ¿¡ ÇÊ¿äÇÑ È¯»ê ÆÑÅÍ.
+	extern float		fKILL_EXP_RATE;			//	"ÃÑÈ¹µæ °¡´É °æÇèÄ¡" * Á×ÀÏ¶§ °æÇèÄ¡.
+
+
+	extern float		fDIE_DECEXP[DIE_DECEXP_NUM];	//	»ç¸Á½Ã °æÇèÄ¡ °¨»ê Á¤µµ.
+
+	extern float		fDIE_RECOVERYEXP[DIE_DECEXP_NUM];	// °æÇèÄ¡ º¹±¸ ºñÀ²
+	extern float		fEXP_RATE_MONEY[DIE_DECEXP_NUM];	// °æÇèÄ¡ º¹±¸ ºñ¿ë
+
+	extern float		fREC_EXP_RATE;			//	»ó´ë¹æÀ» È¸º¹½ÃÄÑ ÁÙ¶§ È¹µæÇÏ´Â °æÇèÄ¡ÀÇ ¹èÀ².
+
+	//---------------------------------------------------------------------------------------[¿¬¸¶]
+
+	//extern WORD			wGRADE_MAX;				// ¿¬¸¶ ÇÒ¼ö ÀÖ´Â µî±Þ Á¦ÇÑÄ¡ 
+	//extern WORD			wGRADE_MAX_REGI;		// ¿¬¸¶ ÇÒ¼ö ÀÖ´Â µî±Þ Á¦ÇÑÄ¡(ÀúÇ×) 
+
+	//extern WORD			wDAMAGE_GRADE;			//	ÇÑ µî±Þ´ç Áõ°¡ °ø°Ý·Â ¼öÄ¡.
+	//extern WORD			wDEFENSE_GRADE;			//	ÇÑ µî±Þ´ç Áõ°¡ ¹æ¾î·Â ¼öÄ¡.
+
+	//extern float		fDAMAGE_GRADE;			//	ÇÑ µî±Þ´ç Áõ°¡À² °ø°Ý·Â ¼öÄ¡.
+	//extern float		fDEFENSE_GRADE;			//	ÇÑ µî±Þ´ç Áõ°¡À² ¹æ¾î·Â ¼öÄ¡.
+
+	//extern float		fDAMAGE_GRADE_TOP[GRADE_LIMIT_MAX-GRADE_HIGH];		// ÃÖ»óÀ§ µî±Þ °ø°Ý·Â Áõ°¡À²
+	//extern float		fDEFENSE_GRADE_TOP[GRADE_LIMIT_MAX-GRADE_HIGH];	// ÃÖ»óÀ§ µî±Þ ¹æ¾î·Â Áõ°¡À²
+	//extern	WORD		wUSE_GRADE_NUM[GRADE_LIMIT_MAX-GRADE_HIGH];			// ÃÖ»óÀ§ µî±Þ ÇÊ¿äÇÑ ¿¬¸¶Á¦ °¹¼ö
+
+	//extern WORD			wRESIST_FIRE_GRADE;		//	ÇÑ µî±Þ´ç Áõ°¡ ÀúÇ×(È­) ¼öÄ¡.
+	//extern WORD			wRESIST_ICE_GRADE;		//	ÇÑ µî±Þ´ç Áõ°¡ ÀúÇ×(ºù) ¼öÄ¡.
+	//extern WORD			wRESIST_ELEC_GRADE;		//	ÇÑ µî±Þ´ç Áõ°¡ ÀúÇ×(Àü) ¼öÄ¡.
+	//extern WORD			wRESIST_POISON_GRADE;	//	ÇÑ µî±Þ´ç Áõ°¡ ÀúÇ×(µ¶) ¼öÄ¡.
+	//extern WORD			wRESIST_SPIRIT_GRADE;	//	ÇÑ µî±Þ´ç Áõ°¡ ÀúÇ×(Á¤) ¼öÄ¡.
+
+	//---------------------------------------------------------------------------------------
+	extern WORD			wLVL_SKILL_P;			//	·¾¾÷´ç ½ºÅ³ Æ÷ÀÎÆ® ºÎ¿©°ª.
+	extern WORD			wLVL_2ndSKILL_P;			//	·¾¾÷´ç ½ºÅ³ Æ÷ÀÎÆ® ºÎ¿©°ª.
+
+	extern WORD			wMAXATRANGE_SHORT;		//	±ÙÁ¢ °ø°Ý°Å¸®.
+	extern float		fPUSHPULL_VELO;			//	¹Ð°Å³ª ´ç±æ¶§ ÀÌµ¿ ¼Óµµ.
+
+	extern int		nHitRateMinimum;			// ÃÖÀú ¸íÁß·ü;
+	extern int		nHitRateMaximum;		    // ÃÖ´ë ¸íÁß·ü;
+	extern float	fHitRatePercentUnit;		// ¸íÁß·ÂÀ» ¹éºÐ·ü·Î º¯È¯½Ã Àû¿ë½ÃÅ³ ´ÜÀ§;
+	extern float	fAvoidRatePercentUnit;		// È¸ÇÇ·ÂÀ» ¹éºÐ·ü·Î º¯È¯½Ã Àû¿ë½ÇÅ³ ´ÜÀ§;
+	extern float	fAttackSuccesRate_LvScale;	// °ø°Ý¼º°ø·ü °ø½Ä¿¡¼­ »ç¿ëµÇ´Â ·¹º§ Á¶Á¤ »ó¼ö°ª;
+    extern float		fMOB_TRACING;			//	¸÷ ÃßÀû °Å¸®.
+    extern float		fNPC_INTERACTION_RANGE;  //  NPC¿Í »óÈ£ÀÛ¿ë ÇÒ ¼ö ÀÖ´Â °Å¸®;
+    extern float		fNPC_INTERACTION_ADJUST; //  NPC¿Í »óÈ£ÀÛ¿ëÀ» ÇÒ¶§ ¿ÀÂ÷ º¸Á¤ ¹üÀ§ (»óÁ¡, Äù½ºÆ®, °³Á¶ µîÀº ¸» °Å´Â À§Ä¡º¸´Ù Á¶±Ý ³Ë³ËÇÏ°Ô ¿äÈ¿¼º ÆÇÁ¤);
+	extern float		fLOW_SEED_DAMAGE;		//	damage µé¾î°¥¶§ ÃÖÀú ¼ö¿ë damage.
+	extern float		fCONFT_SPTY_EXP;		//	ÇÐ±³ ´ë·Ã ½Â¸®½Ã¿¡ ÀüÃ¼ °æÇèÄ¡ ºÐ¹è.
+
+	extern WORD			wBODYRADIUS;			//	Ä³¸¯ÀÇ ¸öÃ¼ ¹Ý°æ.
+
+	// fREACT_VALID_SCALE ±âÁ¸ ¹üÀ§ º¸Á¤ ºñÀ² °ªÀÎµ¥ ´ëºÎºÐ ±¹°¡µéÀÌ 30.0f·Î µÇ¾î ÀÖ´Ù;
+	// ÃÖÁ¾ ¹üÀ§¿¡ °öÇØÁö´Â °ªÀÎÁö¶ó, ¹üÀ§¿¡ ´ëÇÑ À¯È¿¼º ÆÇÁ¤À» ¾ÈÇÏ°Ú´Ù´Â ÀÇ¹Ì·Î »ç¿ëµÇ°í ÀÖÀ½;
+	extern float		fREACT_VALID_SCALE;		//	¾×¼ÇÀÇ À¯È¿ °Å¸® ÆÑÅÍ.
+
+	extern float		fATTACK_RANGE_ADJUST_RATE; // ÀÏ¹Ý °ø°Ý ¹üÀ§ º¸Á¤ ºñÀ²;
+
+	extern float		fUNIT_TIME;			    //	È¸º¹ ´ÜÀ§ ½Ã°£ (Actor ÀüÃ¼);
+	extern float		fHP_INC_PER;			//	Ä³¸¯ÅÍ ´ÜÀ§½Ã°£´ç HP È¸º¹À²(%);
+	extern float		fMP_INC_PER;		    //	Ä³¸¯ÅÍ ´ÜÀ§½Ã°£´ç MP È¸º¹À²(%);
+	extern float		fSP_INC_PER;		    //	Ä³¸¯ÅÍ ´ÜÀ§½Ã°£´ç SP È¸º¹À²(%);
+
+	extern float		fHP_INC;				//	Ä³¸¯ÅÍ ´ÜÀ§½Ã°£´ç HP È¸º¹·®;
+	extern float		fMP_INC;				//	Ä³¸¯ÅÍ ´ÜÀ§½Ã°£´ç MP È¸º¹·®;
+	extern float		fSP_INC;				//	Ä³¸¯ÅÍ ´ÜÀ§½Ã°£´ç SP È¸º¹·®;
+
+	extern float		fRESIST_PHYSIC_G;		//	¹°¸® °ø°Ý½Ã ¼Ó¼º ÀúÇ×Ä¡ Àû¿ë ºñÀ².
+	extern float		fRESIST_G;				//	¼Ó¼º ÀúÇ×Ä¡ Àû¿ë ºñÀ².
+	extern float		fREGIST_MAX_G;		// ¼Ó¼º ÀúÇ×Ä¡ ÃÖ´ë Àû¿ë ºñÀ²;
+	extern float		fRESIST_MAX_CROW;		// ¼Ó¼º ÀúÇ×Ä¡ ÃÖ´ë Àû¿ë ºñÀ²(Crow);
+	extern WORD			wBASIC_DIS_SP;			//	±âº» ¼Ò¸ð SP.
+
+	extern float		fLOWSP_MOTION;			//	½ºÅÂ¹Ì³ª (%) º¸´Ù ÀÛÀ»¶§ ¸ð¼Ç Ã³¸®.
+	extern float		fLOWSP_DAMAGE;			//	½ºÅÂ¹Ì³ª ºÎÁ·½Ã Damage °¨¼Ò.
+	extern float		fLOWSP_HIT_DROP;		//	½ºÅÂ¹Ì³ª ºÎÁ·½Ã ¸íÁßÀ² °¨¼Ò.
+	extern float		fLOWSP_AVOID_DROP;		//	½ºÅÂ¹Ì³ª ºÎÁ·½Ã È¸ÇÇÀ² °¨¼Ò.
+	extern DWORD		dwACCEPT_LOWERSTATS;	//	stats ºÎÁ·ºÐÀ» ½ºÅÂ¹Ì³ª·Î Ä¿¹öÇÒ ¼ö ÀÖ´Â °¡¿ë ÇÑµµ. ( °ø°Ý ¹«±â¿¡ ÇÑÇÔ. )
+
+	extern float		fDAMAGE_DEC_RATE;		//	´ë¹ÌÁö °¨¼ÒÀ².
+	extern float		fDAMAGE_GRADE_K;			//	(±âº»°ø°Ý+¿¬¸¶µî±Þ) ´ë¹ÌÁö ¹Ý¿µÀ².
+	extern float		fDAMAGE_DEC_MAX_G;		// ÃÖ´ë µ¥¹ÌÁö Èí¼öÀ²;
+
+	extern DWORD		dwCRITICAL_DAMAGE;		//	Å©¸®Æ¼ÄÃ µ¥¹ÌÁö ºñÀ²
+	extern DWORD		dwCRITICAL_MAX;			//	Å©¸®Æ¼ÄÃ È®·ü MAX
+	extern DWORD		dwCRUSHING_BLOW_DAMAGE;	//  °­ÇÑÅ¸°Ý µ¥¹ÌÁö ºñÀ²
+	extern DWORD		dwCRUSHING_BLOW_MAX;	//  °­ÇÑÅ¸°Ý È®·ü max
+	extern float		fCRUSH_BLOW_RANGE;		//  °­ÇÑÅ¸°Ý½Ã ¹Ð·Á³ª´Â °Å¸® ( ¾ÆÀÌÅÛ ) 	
+
+	extern DWORD		dwReleaseStigmaDistance;	// ³«ÀÎ È¿°ú ÇØÁ¦ °Å¸®(µðÆúÆ®);
+
+	extern SNATIVEID	sProductMotionID;		// Á¶ÇÕ ½Ã ÃëÇÒ ¸ð¼Ç ID
+	extern FLOAT		fReferCharDelay;		// Ä³¸¯ÅÍ Á¤º¸º¸±â ¿äÃ» µô·¹ÀÌ
+
+	//---------------------------------------------------------------------------------------
+	extern std::string	sInvenExItemSearch;		// ÀÎº¥Åä¸® È®ÀåÄ«µå °Ë»ö¾î
+	extern WORD			wInvenDefaultLine;		// ÀÎº¥Åä¸® ±âº» ÁÙ¼ö
+	extern WORD			wInvenExtendLine;		// ÀÎº¥Åä¸® È®Àå °¡´ÉÇÑ ÃÖ´ë ÁÙ¼ö(EInvenTotalLine - wInvenDefaultLine - EInvenPremiumLine)
+	extern WORD			wInvenExtendEventLine;	// ÀÎº¥Åä¸® ±âº» È®Àå ÁÙ¼ö(Ä³¸¯ÅÍ »ý¼º ½Ã Àû¿ë)
+
+	//---------------------------------------------------------------------------------------
+	extern float		fTrash_SellCostPer;		// ÈÞÁöÅë ÀÌ¿ëºñ 1¼øÀ§ (°ÔÀÓ¸Ó´Ï)
+	extern DWORD		wTrash_Cost;			// ÈÞÁöÅë ÀÌ¿ëºñ 2¼øÀ§ (°ÔÀÓ¸Ó´Ï)
+	extern DWORD		wTrash_Point;			// ÈÞÁöÅë ÀÌ¿ëºñ 3¼øÀ§ (ÀÎ°ÔÀÓ Ä³½Ã)
+
+	extern int			nBrightMAX;				// Äù½ºÆ® º¸»ó ¼ºÇâ ÃÖ´ë°ª
+	extern int			nBrightMIN;				// Äù½ºÆ® º¸»ó ¼ºÇâ ÃÖ¼Ò°ª
+
+	//	Note : ----------------------------------------------------------------´ë·Ã
+	extern float		fCONFRONT_TIME;			//	´ë·Ã Á¦ÇÑ ½Ã°£.
+	extern float		fCONFRONT_ELAP;			//	¿¬¼Ó ´ë·Ã ¹æÁö Áö¿¬ ½Ã°£.
+	extern DWORD		dwCONFRONT_MAX;			//	¿¬¼Ó ´ë·Ã ÃÑ °¡´É È½¼ö.
+	extern float		fCONFRONT_RESET;		//	¿¬¼Ó ´ë·Ã ¹æÁö ¸®¼Â ½Ã°£.
+	extern float		fCONFRONT_ONE_DIST;		//	´ë·Ã °Å¸® Á¦ÇÑ. ( 0ÀÏ °æ¿ì ¹«ÇÑ´ë. )
+	extern float		fCONFRONT_PY_DIST;		//	´ë·Ã °Å¸® Á¦ÇÑ. ( 0ÀÏ °æ¿ì ¹«ÇÑ´ë. )
+	extern float		fCONFRONT_CLB_DIST;		//	´ë·Ã °Å¸® Á¦ÇÑ. ( 0ÀÏ °æ¿ì ¹«ÇÑ´ë. )
+
+	extern int			nCONFRONT_WIN_LP;		//	´ë·Ã ½Â¸®½Ã living point ( »ýÈ° Á¡¼ö ).
+	extern int			nCONFRONT_LOSS_LP;		//	´ë·Ã ÆÐ¹è½Ã living point ( »ýÈ° Á¡¼ö ).
+
+	extern int			nCONFRONT_CLB_WIN_LP;	//	Å¬·´ ´ë·Ã ½Â¸®½Ã living point
+	extern int			nCONFRONT_CLB_LOSS_LP;	//	Å¬·´ ´ë·Ã ÆÐ¹è½Ã living point
+
+	//	Note : ----------------------------------------------------------------´ë·Ã
+	enum { EMCONFT_RC_TYPENUM = 10, EMCONFT_STATE_TYPENUM = 8 };
+	extern WORD			wCONFT_RC_TYPE[EMCONFT_RC_TYPENUM];			//	´ë·Ã È¸º¹¾à »ç¿ë°¡´É È½¼ö.
+	extern float		fCONFT_STATE_TYPE[EMCONFT_STATE_TYPENUM];	//	´ë·Ã Ã¼·Â È®´ë ºñÀ².
+
+	extern WORD			wCONFRONT_SCHOOL_LIMIT_NUM;					//	ÇÐ±³°£ ´ë·Ã ÃÖ¼Ò ÀÎ¿ø.
+	extern WORD			wCONFRONT_SCHOOL_LIMIT_LEVEL;				//	ÇÐ±³°£ ´ë·Ã ÃÖ¼Ò ·¹º§.
+	extern float		fCONFRONT_SCHOOL_EXP_SCALE;					//	ÇÐ±³°£ ´ë·Ã½Ã ½Àµæ °æÇèÄ¡ Áõ°¡À².
+
+	extern WORD			wCONFRONT_SCHOOL_WIN_NUM;
+	extern WORD			wCONFRONT_SCHOOL_WIN_RATE;
+	extern float		fCONFRONT_SCHOOL_GENITEM;
+
+	//	Note : ----------------------------------------------------------------pk
+	enum { EMPK_STATE_LEVEL = 5, };
+	extern BOOL			bPK_MODE;				//	pk on/off.
+	extern BOOL			bPKLESS;				//  Àý´ëÀûÀÎ PK on/off.
+	extern int			nPK_LIMIT_LEVEL;		//	pk Á¦ÇÑ ·¹º§.
+	extern int			nPK_LIMIT_DX_LEVEL;		//	pk ·¹º§¿¡ µû¸¥ Á¦ÇÑ.
+	extern int			nPK_TRY_BRIGHT_POINT;	//	pk ½Ãµµ½Ã Æ÷ÀÎÆ®.
+	extern int			nPK_KILL_BRIGHT_POINT;	//	pk Á×¿´À» °æ¿ì Æ÷ÀÎÆ®.
+	extern int			nPK_TRY_LIVING_POINT;	//	pk ½Ãµµ½Ã Æ÷ÀÎÆ®.
+	extern int			nPK_KILL_LIVING_POINT;	//	pk Á×¿´À» °æ¿ì Æ÷ÀÎÆ®.
+	extern float		fNONPK_ITEM_DROP;		//	non pk ½Ã ¾ÆÀÌÅÛ µå·ÓÀ².
+	extern float		fPK_ITEM_DROP;			//	pk ½Ã ¾ÆÀÌÅÛ µå·ÓÀ².
+
+	//	 ( pk level : 0 ~ 4 )
+	//	0 - ÀÏ¹ÝÇÐ»ý
+	//	1 - ºÒ·®ÇÐ»ý
+	//	2 - »ìÀÎÀÚ
+	//	3 - »ìÀÎ¸¶
+	//	4 - »ìÀÎ±Í
+	extern DWORD		dwPK_RECALL_ENABLE_LEVEL;	//	±ÍÈ¯ »ç¿ë °¡´É ·¹º§ ¼³Á¤.
+	extern DWORD		dwPK_DRUG_ENABLE_LEVEL;		//	È¸º¹¾à »ç¿ë °¡´É ·¹º§ ¼³Á¤.
+
+
+	extern float		fPK_JUSTNESS_TIME;		//	¹Ý°Ý °¡´ÉÇÑ Á¤´ç¹æÀ§ ½Ã°£.
+	extern float		fPK_SAFE_TIME;			//	pk ¾ÈÀü ½Ã°£.
+
+	extern float		fCDM_SAFE_TIME_ACCRUE[CDM_ACCRUE_COUNT];	//	CDMÀü¿ë ¾ÈÀü ½Ã°£.
+	extern float		fCDM_SAFE_TIME_MOVE_SPEED;					//	CDMÀü¿ë ¾ÈÀü ½Ã°£ ÀÌµ¿¼Óµµ °¨¼Ò·® ( 0.0f ~ 1.0f )
+
+	extern DWORD		dwPK_NORMAL_NAME_COLOR;	//	pk ¼öÄ¡°¡ ¾øÀ»¶§ ÀÌ¸§ »ö±ò.
+	extern float		fPK_POINT_DEC_RATE;		//	pk ¼öÄ¡ °¨¼ÒÀ². ( ½Ã°£´ç. )
+	extern float		fPK_POINT_DEC_PHY;		//  pk µ¥¹ÌÁö °¨¼ÒÀ² ( ¹°¸® ).
+	extern float		fPK_POINT_DEC_MAGIC;	//  pk µ¥¹ÌÁö °¨¼ÒÀ² ( ¸¶¹ý ).
+
+	extern float		fReductionRate_PVP_PHY_P_Damage;			// PVP °¨¼ÒÀ² ( °ø°Ý·Â, °ÝÅõÄ¡ );
+	extern float		fReductionRate_PVP_PHY_S_Damage;			// PVP °¨¼ÒÀ² ( °ø°Ý·Â, »ç°ÝÄ¡ );
+	extern float		fReductionRate_PVP_MAGIC_Damage;			// PVP °¨¼ÒÀ² ( °ø°Ý·Â, ±â·ÂÄ¡ );
+	extern float		fReductionRate_PVP_PHY_Defense;				// PVP °¨¼ÒÀ² ( ¹æ¾î·Â );
+	extern float		fReductionRate_PVP_MAGIC_Resistance;		// PVP °¨¼ÒÀ² ( ÀúÇ× );
+
+	extern SPLAYERKILL	sPK_STATE[EMPK_STATE_LEVEL];
+    extern int          nNON_PK_CONNECT_BRIGHT_POINT; //! non pk Ã¤³Î Á¢¼Ó°¡´É ÃÖÇÏ ¼ºÇâÁ¡¼ö
+
+	//	Note : ----------------------------------------------------------------»óÅÂÀÌ»ó
+	enum { EMSTATEBLOW_LEVEL_SIZE = 10, EMSTATEBLOW_LEVEL_BASE = 1, };
+	extern int			nSTATEBLOW_LEVEL[EMSTATEBLOW_LEVEL_SIZE];
+
+	//	Note : ----------------------------------------------------------------°æÇèÄ¡ Table
+	//
+	enum { EXPTABLE_SIZE = 52, EXPTABLE_LVL = 19, EXPBASEINDEX = 10, EXP_LVL_STEP = 5,
+		EXPTABLE_RANGE = 61,  EXPTABLE_RANGE_BASE = 30 };
+	extern WORD			wEXPTABLE[EXPTABLE_SIZE][EXPTABLE_LVL];
+	extern float		fEXP_RATE_TABLE[EXPTABLE_RANGE];
+
+	extern LONGLONG		lnEXP_MAX_TABLE[MAX_LEVEL];
+	extern LONGLONG		lnEXP_MAX_TABLE_2nd[MAX_LEVEL];
+	extern DWORD		dwEXP_PC_TABLE[MAX_LEVEL];
+
+	//	Note : ----------------------------------------------------------------DPS Meter;
+	extern float		fDPS_TurnToPeaceModeInterval;
+
+	//	Note : ----------------------------------------------------------------ÆÄÆ¼.
+	extern float		fPARTYEXPRANGE;				//	°æÇèÄ¡ ¼ö½ÅÀÌ °¡´ÉÇÑ ÃÖ´ë °Å¸®.
+	extern float		fPARTYEXP_S;						//	ÆÄÆ¼ °æÇèÄ¡ ºÐ¹è½Ã ·¹º§Â÷ÀÌ¿¡ µû¸¥ °¨¼ÒºñÀ².
+	extern float		fPartyTenderTime;					// ÀÔÂû Á¦ÇÑ ½Ã°£(ÆÄÆ¼)
+	extern float		fExpeditionTenderTime;				// ÀÔÂû Á¦ÇÑ ½Ã°£(¿øÁ¤´ë);
+	extern float		fUPartyTenderTime;
+	extern float		fUExpeditionTenderTime;
+	extern float		fPartyTenderRange;					// ÀÔÂû °¡´É ¹üÀ§(ÆÄÆ¼);
+	extern float		fExpeditionTenderRange;			// ÀÔÂû °¡´É ¹üÀ§(¿øÁ¤´ë);	
+	extern float		fExpeditionDecreaseExpRate;		// °æÇèÄ¡ °¨¼Ò ºñÀ²(¿øÁ¤´ë);
+	extern float		fSwapSlotBlankInterval;				// ÀÚ¸® ÀÌµ¿ È°¼ºÈ­½Ã ½½·Ô ±ô¹ÚÀÓ ½Ã°£ °£°Ý;
+	extern WORD	aPARTYEXP_ONE[MAXPARTY];
+	extern WORD	aPARTYKILLEXP_ONE[MAXPARTY];
+	extern DWORD	dwPARTY_INVITE_MAX_WAIT_TIME; // ÆÄÆ¼ ÃÊ´ë½Ã ÀÀ´ä ´ë±â ½Ã°£;	
+	extern DWORD	dwExpeditionCheckReadyTime;	// ÁØºñ È®ÀÎ Á¦ÇÑ ½Ã°£(30ÃÊ); 
+
+	//	Note : ----------------------------------------------------------------Å¬·´
+	extern DWORD		dwCLUB_PARTYNUM;			//	Å¬·´ Ã¢¼³½Ã ÃÖ¼Ò ÆÄÆ¼(ÃÊ±â) ÀÎ¿ø.
+	extern DWORD		dwCLUB_DISSOLUTION_DAY;		//	Å¬·´ ÇØÃ¼ À¯º¸ ÀÏ.
+	extern DWORD		dwCLUB_JOINBLOCK_DAY;		//	Å¬·´ Å»Åð½Ã °¡ÀÔ Á¦ÇÑ ÀÏ.
+	extern DWORD		dwMAX_CLUBRANK;
+	extern GLCLUBRANK	sCLUBRANK[MAX_CLUBRANK];	//	Å¬·´ ·©Å©º° »ó¼ö.
+	extern DWORD		dwCLUB_AUTHORITY;			//	Å¬·´¸¶½ºÅÍ À§ÀÓ Á¦ÇÑ ½Ã°£			
+	extern DWORD		dwCLUB_ALLIANCE_SEC;		//	Å¬·´ µ¿¸Í Å»Åð, Á¦¸í½Ã Àç°¡ÀÔ ÀçÇÑ½Ã°£.
+	extern DWORD		dwCLUB_ALLIANCE_DIS;		//	Å¬·´ µ¿¸Í ÇØÃ¼½Ã °á¼º ÀçÇÑ½Ã°£.
+	extern DWORD		dwCLUB_ALLIANCE_NUM;		//	Å¬·´ µ¿¸Í ÃÖ´ë ¼ýÀÚ.
+
+	extern BOOL 		bCLUB_BATTLE;				//	Å¬·´ ¹èÆ² °¡´É ¿©ºÎ
+	extern DWORD		dwCLUB_BATTLE_MAX;			//  Å¬·´ ¹èÆ² µ¿½Ã ÁøÇà °¹¼ö
+	extern DWORD		dwCLUB_BATTLE_RANK;			//  Å¬·´ ¹èÆ² ·©Å© Á¦ÇÑ
+	extern DWORD		dwCLUB_BATTLE_TIME;			//  Å¬·´ ¹èÆ² ½Ã°£(ºÐ)
+	extern DWORD		dwCLUB_BATTLE_TIMEMIN;		//	Å¬·´ ¹èÆ² ÃÖ¼Ò½Ã°£(ºÐ)
+	extern DWORD		dwCLUB_BATTLE_TIMEMAX;		//	Å¬·´ ¹èÆ² ÃÖ´ë½Ã°£(ºÐ)
+	extern DWORD		dwCLUB_BATTLE_GUID_TIME;	//  Å¬·´ ¹èÆ² ¼±µµÀü Á¦¾à ½Ã°£(ºÐ)
+	extern DWORD		dwCLUB_BATTLE_DIS_TIME;		//  Å¬·´ ¹èÆ² ÈÞÀü ¹× Ç×º¹ °¡´ÉÇÑ ½Ã°£(ºÐ)
+	extern BOOL			bCLUB_BATTLE_ALLIANCE;		//  Å¬·´ ¹èÆ²½Ã µ¿¸Í ÀÚµ¿ Âü°¡ ±â´É
+
+	extern BOOL			bCLUB_DEATHMATCH;			//	Å¬·´ µ¥½º¸ÅÄ¡ °¡´É ¿©ºÎ
+	extern DWORD		dwCLUB_DEATHMATCH_MEM;		//	Å¬·´ µ¥½º¸ÅÄ¡ °¡´É ¸â¹ö¼ö
+	extern DWORD		dwCLUB_DEATHMATCH_RANK;		//	Å¬·´ µ¥½º¸ÅÄ¡ °¡´É ·©Å©
+
+    extern DWORD        dwCLUB_CHANGE_CLUB_MARK_LIMIT_TIME; // Å¬·´ ¸¶Å© º¯°æ Á¦ÇÑ ½Ã°£(ÃÊ).
+
+	extern DWORD		dwClubMarkARGB;				// Å¬·´ ¸¶Å© RGB;
+	extern std::vector< DWORD > vecClubMarkARGB;
+
+	//	Note : ----------------------------------------------------------------¼±µµÀü
+	extern float		fMAX_COMMISSION;			//	ÃÖ´ë ¼±µµ Áö¿ª ¼ö¼ö·á Á¦ÇÑ.
+	extern float		fDEFAULT_COMMISSION;		//	ºñ ¼±µµ Áö¿ªÀÇ ¼ö¼ö·á.
+	extern float		fEARNING_RATE;				//	¼ö¼ö·á ¼öÀÍÀ².
+	extern float		fEARNING_RATE_NPC;			//	NPC ¼ÒÈ¯ ¼ö¼ö·á ¼öÀÍÀ².
+	extern float		fCDCERTIFY_DIST;			//	ÀÎÁõ °¡´É °Å¸®.
+	extern float		fCDCERTIFY_DIST2;			//	ÀÎÁõ °¡´É °Å¸®.
+	extern float		fCDCERTIFY_TIME;			//	ÀÎÁõ ¼Ò¿ä ½Ã°£.
+
+	//	Note : ----------------------------------------------------------------¹èÀ² Á¶Á¤
+	extern float		fEXP_SCALE;					//	Note : °æÇèÄ¡ ¹èÀ².
+    extern float		fITEM_DROP_SCALE;			//	Note : ¾ÆÀÌÅÆ µå·ÓÀ².
+    extern float		fITEM_DROP_LOWER_SCALE;		//	Note : Èñ±Í ¾ÆÀÌÅÆ µå·ÓÀ².
+	extern float		fMONEY_DROP_SCALE;			//	Note : µ· µå·ÓÀ².
+
+    extern float        fITEM_DROP_SPECIFIC_GRADE_SCALE; //  Note : Æ¯Á¤ ¾ÆÀÌÅÛ µî±Þ µå·ÓÀ².(µî±ÞÀº genitem¿¡¼­ ¼³Á¤)
+    extern WORD         wITEM_DROP_SPECIFIC_GRADE;       //  Note : µå·ÓÀ²À» Áõ°¡½ÃÅ³ Æ¯Á¤ ¾ÆÀÌÅÛÀÇ µî±Þ
+
+
+	//	Note : ---------------------------------------------------------------- ÀÌº¥Æ® Á¶Á¤¿ë ¹èÀ²
+	extern float		fEVENT_EXP_SCALE;					//	Note : ÀÌº¥Æ® °æÇèÄ¡ ¹èÀ².
+	extern float		fEVENT_ITEM_DROP_SCALE;			//	Note : ÀÌº¥Æ® ¾ÆÀÌÅÆ µå·ÓÀ².
+	extern float		fEVENT_MONEY_DROP_SCALE;			//	Note : ÀÌº¥Æ® µ· µå·ÓÀ².
+
+	//	Note : ----------------------------------------------------------------ÇÐ¿ø ÇÁ¸® pk
+	extern bool			bSCHOOL_FREE_PK_ALWAYS;		//	ÇÐ¿ø°£ ÇÁ¸® pk Ç×»ó °¡´É ¿©ºÎ.
+	extern bool			bSCHOOL_FREE_PK;			//	ÇÐ¿ø°£ ÇÁ¸® pk on/off.
+	extern bool			bSCHOOL_FREE_PK_TIME_REAL;	//	ÇÐ¿ø°£ ÇÁ¸® pk ¼³Á¤ ½Ã°£ ( on : ½ÇÁ¦ ½Ã°£, off : °ÔÀÓ½Ã°£ )
+	extern bool			bSCHOOL_FREE_PK_Z_FORCED;	//	ÇÐ¿ø°£ ÇÁ¸® pk °­Á¦ °ø°Ý.
+	extern DWORD		dwSCHOOL_FREE_PK_TIME_START;//	ÇÐ¿ø°£ ÇÁ¸® pk ½ÃÀÛ ½Ã°£.
+	extern DWORD		dwSCHOOL_FREE_PK_TIME_TERM;	//	ÇÐ¿ø°£ ÇÁ¸® pk Áö¼Ó ½Ã°£.
+	extern float		fSCHOOL_FREE_PK_ITEM_DROP;	//	ÇÐ¿ø°£ ÇÁ¸® pk ¾ÆÀÌÅÛ µå·ÓÀ² °¡»ê°ª. ( ±âº» µå·ÓÀ² + °¡»ê°ª. )
+	//	Note : ----------------------------------------------------------------
+
+	//	Note : ----------------------------------------------------------------±â´É ¼³Á¤.
+	//extern bool			bENCHANT_TERMINATE_ITEM;	//	ÀÎÃ¾Æ®½Ã ¾ÆÀÌÅÛ ÆÄ¼Õ °¡´É.
+	extern bool			bMONEY_DROP2FIELD;			//	µ· ¹Ù´Ú¿¡ ¹ö¸®±â °¡´É ¿©ºÎ.
+
+	//	Note : ----------------------------------------------------------------¿¬¸¶ È®À².
+	//extern float		fGRADE_RATE[GRADE_LIMIT_MAX];
+	//extern float		fGRADE_RESET_RATE[GRADE_LIMIT_MAX];
+	//extern float		fGRADE_TERMINATE_RATE[GRADE_LIMIT_MAX];
+	//extern float        fGRADE_ITEMOPTION_INC_GRINDINGRATE[GRADE_LIMIT_MAX];  // °­È­ÁÖ Áõ°¡ È®·ü
+	//extern int			nGRADE_ITEMOPTION_ANTIRESET[GRADE_LIMIT_MAX];		  // ¿ÏÈ­ÁÖ ¸®¼Â °¨¼Ò ´Ü°è 
+	extern float		fGRADE_EVENT_RATE;
+
+
+	//	Note : ---------------------------------------------------------------- Á¶ÇÕ(Á¦Á¶) °ü·Ã hsshin
+	extern bool			bUnableProductType[Product::ETypeTotal];
+	extern bool			bPublicStudyProductType[Product::ETypeTotal];
+	extern DWORD		dwStudyPointDefault;
+
+	//	Note : ---------------------------------------------------------------- Ã¤ÆÃ °ü·Ã
+	extern bool			bCHAT_EXTEND;					// Áö¿ª, ÆÄÆ¼¸ðÁý È°¼ºÈ­ ¿©ºÎ
+	extern float		dwCHAT_AREA_CHARGE;				// Áö¿ª Ã¤ÆÃ ¿ä±Ý
+	extern float		dwCHAT_PARTY_RECRUIT_CHARGE;	// ÆÄÆ¼ ¸ðÁý ¿ä±Ý
+	extern float		fCHAT_PARTY_RECRUIT_TIME;		// ÆÄÆ¼ ¸ðÁý °»½Å ½Ã°£
+
+	//	Note : ----------------------------------------------------------------»ç¿îµå
+	extern std::string	strGRINDING_SUCCEED;
+	extern std::string	strGRINDING_FAIL;
+	extern std::string	strGRINDING_RESET;
+	extern std::string	strGRINDING_BROKEN;
+
+	extern std::string	strGAMBLING_SHUFFLE;	// Monster7j
+	extern std::string	strGAMBLING_WIN;		
+	extern std::string	strGAMBLING_LOSE;
+	extern std::string	strDICE_ROLL;
+
+	extern std::string	strITEMDROP_SUIT;
+	extern std::string	strITEMDROP_WAPON;
+	extern std::string	strITEMDROP_SHOES;
+	extern std::string	strITEMDROP_RING;
+	extern std::string	strITEMDROP_QBOX;
+
+	extern std::string	strITEMDROP_SCROLL;
+	extern std::string	strITEMDROP_COIN;
+	extern std::string	strITEMDROP_DRUGS;
+
+	extern std::string	strPICKUP_ITEM;
+	extern std::string	strQITEM_FACT;
+	extern std::string	strQITEM_BGM[QUESTION_SIZE];
+	extern std::string	strITEMDROP_RANK[EMITEM_LEVEL_NSIZE];
+
+	//	Note : ----------------------------------------------------------------È¿°ú
+	extern std::string	strSELECT_CHAR;			//	·Îºñ¿¡¼­ ÄÉ¸¯ÅÍ ¼±ÅÃ½Ã.
+
+	extern std::string	strREBIRTH_EFFECT;		//	Ä³¸¯ ºÎÈ° ÀÌÆÑÆ®.
+	extern std::string	strLEVELUP_EFFECT;		//	·¡¹ë ¾÷ ÀÌÆÑÆ®.
+
+	extern std::string	strSRIKE_ELMT_EFFECT[EMELEMENT_MAXNUM]; //	Å¸°Ý½Ã ÀÌÆÑÆ®.
+	extern std::string	strSTRIKE_ARROW_EFFECT;					// È­»ì Åõ»çÃ¼ ÀÌÆåÆ®;
+	extern std::string	strSTRIKE_BULLET_EFFECT;				// ÃÑ¾Ë Åõ»çÃ¼ ÀÌÆåÆ®;
+
+	extern std::string	strAMBIENT_EFFECT;		//	Å¸°Ý½Ã Ambient ÀÌÆåÆ®
+	extern std::string	strERASE_EFFECT;		//	¸÷ »ç¶óÁö´Â ÀÌÆÑÆ®.
+
+	extern std::string	strERASE_SUMMON_EFFECT;	 //  ¼ÒÈ¯¼ö »ç¶óÁö´Â ÀÌÆåÆ®.
+	extern float		fERASE_SUMMON_BEGIN_TIME; // ¼ÒÈ¯¼ö Áö¿öÁö±â ½ÃÀÛÇÏ´Â ½Ã°£ ( EndTime - fERASE_SUMMON_BEGIN_TIME ºÎÅÍ )
+
+	extern std::string	strSKILL_LEARN_EFFECT;	//	½ºÅ³ ½Àµæ½Ã.
+	extern std::string	strSKILL_UP_EFFECT;		//	½ºÅ³ ¾÷.
+
+	extern std::string strQUEST_START;			//	Äù½ºÆ® ½ÃÀÛ.
+	extern std::string strQUEST_END_SUCCEED;	//	Äù½ºÆ® ¼º°ø.
+	extern std::string strQUEST_END_FAIL;		//	Äù½ºÆ® ½ÇÆÐ.
+
+	extern std::string	strMOB_GEM_EFFECT;		//	¸÷ »ý¼º½Ã ÀÌÆÑÆ®.
+	extern std::string	strMOB_DIE_BLOOD;		//	¸÷ÀÌ Á×¾ú´ÂÁö.
+
+	// PET
+	extern std::string	strPET_GEN_EFFECT;		// ÆÖ »ý¼º½Ã ÀÌÆÑÆ®
+
+	// Vehicle
+	extern std::string  strVEHICLE_GEN_EFFECT;	// Å¾½Â ÀÌÆåÆ®
+
+	extern std::string	strCONFRONT_BOUND;		//	´ë·Ã °æ°è¼± Ç¥½Ã È¿°ú.
+
+	extern std::string	strHALFALPHA_EFFECT;	//	Åõ¸í ÄÉ¸¯ÅÍ.
+
+	extern std::string	strBLOW_NUMB_EFFECT;
+	extern std::string	strBLOW_STUN_EFFECT;
+	extern std::string	strBLOW_STONE_EFFECT;
+	extern std::string	strBLOW_BURN_EFFECT;
+	extern std::string	strBLOW_FROZEN_EFFECT;
+
+	extern std::string	strBLOW_MAD_EFFECT;
+	extern std::string	strBLOW_POISON_EFFECT;
+	extern std::string	strBLOW_CURSE_EFFECT;
+
+	extern std::string	strBLOW_BODY_NUMB_EFFECT;
+	extern std::string	strBLOW_BODY_STUN_EFFECT;
+	extern std::string	strBLOW_BODY_STONE_EFFECT;
+	extern std::string	strBLOW_BODY_BURN_EFFECT;
+	extern std::string	strBLOW_BODY_FROZEN_EFFECT;
+
+	extern std::string	strBLOW_BODY_MAD_EFFECT;
+	extern std::string	strBLOW_BODY_POISON_EFFECT;
+	extern std::string	strBLOW_BODY_CURSE_EFFECT;
+
+	extern std::string strBLOW_EFFECTS[EMBLOW_SIZE];
+	extern std::string strBLOW_BODY_EFFECTS[EMBLOW_SIZE];
+
+    extern std::string strCRUSHING_BLOW_EFFECT;		// °­ÇÑÅ¸°Ý ÀÌÆåÆ®
+    extern std::string strAUTH_EFFECT;              // ÀÎÁõ °øÅë ÀÎÁõ ÀÌÆåÆ®
+    extern std::string strAUTH_SM_EFFECT;		    // ¼º¹®ÇÐ¿ø ÀÎÁõ ÀÌÆåÆ®
+    extern std::string strAUTH_HA_EFFECT;		    // Çö¾ÏÇÐ¿ø ÀÎÁõ ÀÌÆåÆ®
+    extern std::string strAUTH_BH_EFFECT;		    // ºÀÈ²ÇÐ¿ø ÀÎÁõ ÀÌÆåÆ®
+
+	extern std::string strCOMPLETE_NPC_EFFECT;		// ¿Ï·á Äù½ºÆ® ÀÌÆåÆ®
+
+	extern std::string strCLICK_EFFECT;				// ÀÌµ¿ ¿¹Á¤ À§Ä¡ Ç¥½Ã ÀÌÆåÆ®
+	extern std::string strMINE_EFFECT;				// ÀÚ±â ÀÚ½ÅÀÌ ¼ÒÀ¯°¡´ÉÇÑ ¾ÆÀÌÅÛ ÀÌÆåÆ®
+	extern std::string strCURSOR_TARGET_EFFECT;		// Ä¿¼­ ¿À¹ö ´ë»ó ÀÌÆåÆ®
+	extern std::string strTARGET_EFFECT;			// ¼±ÅÃ ´ë»ó ÀÌÆåÆ®
+	extern std::string strTARGET_EFFECT_ENEMY;		// ¼±ÅÃ ´ë»ó ÀÌÆåÆ®(Àû)
+	extern std::string strTARGET_EFFECT_NPC;		// ¼±ÅÃ ´ë»ó ÀÌÆåÆ®(npc)
+	extern std::string strTARGET_EFFECT_ALLIANCE;	// ¼±ÅÃ ´ë»ó ÀÌÆåÆ®(¾Æ±º)
+	extern std::string strARROW_EFFECT_ENEMY;		// È­»ìÇ¥ ÀÌÆåÆ®(Àû)
+	extern std::string strARROW_EFFECT_NPC;			// È­»ìÇ¥ ÀÌÆåÆ®(npc)
+	extern std::string strARROW_EFFECT_ALLIANCE;	// È­»ìÇ¥ ÀÌÆåÆ®(¾Æ±º)
+	extern std::string strSCOPE_TEXTURE_CIRCLE;		// ¹üÀ§ ÀÌÆåÆ® (¿ø)
+	extern std::string strSCOPE_TEXTURE_FANWISE;	// ¹üÀ§ ÀÌÆåÆ® (ºÎÃ¤²Ã)
+	extern std::string strBattleIcon;				// Àû´ë»óÅÂ ¾ÆÀÌÄÜ
+	extern SNATIVEID sBattleIconIndex;				// Àû´ë»óÅÂ ¾ÆÀÌÄÜ ÀÎµ¦½º.
+
+	extern std::string strCA_EFFECT;				// ¹Ý°Ý
+
+    extern std::string strCOMPLATE_ACTIVITY_EFFECT; //  Activity ¿Ï·á
+
+	extern GLCONST_CHARCLASS	cCONSTCLASS[GLCI_NUM_ACTOR];	//	Ä³¸¯ÅÍ Å¬·¡½ºº° »ó¼ö.
+
+	extern std::string strCLASS_INIT[MAX_SCHOOL][GLCI_NUM_ACTOR];
+	extern std::string strJUMPING_CLASS_INIT[MAX_SCHOOL][GLCI_NUM_ACTOR];
+
+	extern std::vector<std::string>	vecGUIDANCE_FILE;
+	extern std::vector<std::string>	vecClubDM_FILE;
+
+	extern WORD	wPK_KILL_Combat_Point;	//	CP Ãß°¡ Æ÷ÀÎÆ®
+	extern BOOL	bCOMBAT_POINT;			//	CP »ç¿ë ¿©ºÎ
+	extern float fIllusionInterval;
+
+    //
+    // ³»±¸µµ
+    extern bool     bDurabilityEmsuit[SUIT_NSIZE];  // Âø¿ë Àåºñ, ¹«±âÀÇ Âø¿ëÀ§Ä¡ Á¤º¸ °ª 	( Æ¯Á¤ Àåºñ(EMSUIT) ºÎÀ§¿¡ ³»±¸µµ ½Ã½ºÅÛÀ» Àû¿ë ¿©ºÎ  )
+    extern WORD     wDurabilityDropDeathPvE;        // »ç¸ÁÇÏ¸é ³»±¸µµ°¡ °¨¼ÒÇÕ´Ï´Ù. (¸÷)
+    extern WORD     wDurabilityDropDeathPvP;        // »ç¸ÁÇÏ¸é ³»±¸µµ°¡ °¨¼ÒÇÕ´Ï´Ù. (»ç¶÷)
+    extern DWORD    dwDurabilityCountLimit;         // ³»±¸µµ´Â Ä«¿îÆÃ¼ö°¡ ¸¸Á·ÇÏ¸é 1 °¨¼ÒÇÕ´Ï´Ù. (ex Ä«¿îÆÃ 1000¸¸ == ³»±¸µµ 1°¨¼Ò )
+    extern DWORD    dwDurabilityDropSkillUse;       // ½ºÅ³À» »ç¿ëÇÏ¸é Áõ°¡ÇÏ´Â Ä«¿îÆ®
+    extern DWORD    dwDurabilityDropHitPvE;	        // ´ë¹ÌÁö 1Point´ç Áõ°¡ÇÏ´Â Ä«¿îÆ® (¸÷)
+    extern DWORD    dwDurabilityDropHitPvP;	        // ´ë¹ÌÁö 1Point´ç Áõ°¡ÇÏ´Â Ä«¿îÆ® (»ç¶÷)
+    extern int      nDurabilityRateTable[DURABILITY_RATE_COUNT];        // ³»±¸µµ ºñÀ²¿¡ µû¸¥ ³»±¸µµ °¨¼ÒÀ²
+    extern int      nDurabilityRatePerformance[DURABILITY_RATE_COUNT];  // ³»±¸µµ °¨¼Ò¿¡ µû¸¥ ¾ÆÀÌÅÛ ´É·ÂÄ¡ ºñÀ²
+
+	extern int      nWPowDurRatePerformance[DURABILITY_RATE_COUNT];  
+	extern int      nWDexDurRatePerformance[DURABILITY_RATE_COUNT];  
+	extern int      nWSpiDurRatePerformance[DURABILITY_RATE_COUNT];  
+	extern int      nWMixDurRatePerformance[DURABILITY_RATE_COUNT];  
+
+// #ifdef _RELEASED
+	extern BYTE		nDurabilityApply[DURABILITY_APPLY_COUNT];
+	extern float	fDurabilityAlarmRemainPer;		// ÀÏÁ¤ ºñÀ² ÀÌÇÏ½Ã Äü¸Þ´º¿¡ ¾Ë¸®±âÀ§ÇÑ ºÎ½ºÆ®ºñÀ² ¼³Á¤, Äü¸Þ´º¿¡¼­ ¾Ë¸°´Ù;
+// #endif
+
+	//! ºÎ°¡´É·Â Ç¥½Ã ¿©ºÎ
+	extern bool		bAdditional_ability;
+
+	//! Ä³¸¯ÅÍ Å¬·¡½ºº° ÃÊ±â ¼³Á¤°ª.
+	extern char	szCharSkin[GLCI_NUM_ACTOR][MAX_PATH];	//	Ä³¸¯º° ÃÊ±â Çü»ó.
+
+	//	Note : Ä³¸¯ÅÍ ´Ü¼øÈ­ º¹Àå
+	//
+	extern char					szManSimpleSkin[EM_SIMPLESKIN_NUM][MAX_PATH];	//	Ä³¸¯º° ´Ü¼øÈ­ ³²ÀÚ º¹Àå Çü»ó. 
+	extern char					szWomenSimpleSkin[EM_SIMPLESKIN_NUM][MAX_PATH];	//	Ä³¸¯º° ´Ü¼øÈ­ ¿©ÀÚ º¹Àå Çü»ó.
+	extern std::string			strCharBoard[GLCI_NUM_ACTOR];	//	Ä³¸¯ÅÍº° ´Ü¼øÈ­ ºôº¸µå ÀÌ¹ÌÁö	
+	extern std::string			strItemLevelIcon[EMITEMLEVEL_NUM];
+
+    extern std::string strIPEventFileName;
+	extern std::string strQuestGroupFileName;
+
+	extern std::vector<DWORD>	vecCTFNotify;
+
+	extern float fCTF_BECOME_AWAY_TIME; // CTF ¿¡¼­ ÀÔ·ÂÀÌ ¾øÀ» ½Ã ÀÚ¸®ºñ¿ò ±îÁö °É¸®´Â ½Ã°£(ÃÊ).
+
+	extern float fPremiumMapExitCheckTime;							// ÇÁ¸®¹Ì¾ö ¸Ê °­Á¦ÅðÀå Ã¼Å© ½Ã°£ (ÃÊ)
+	extern std::vector< DWORD > vecPremiumMapForcedExitNotify;		// ÇÁ¸®¹Ì¾ö ¸Ê °­Á¦ÅðÀå ³²Àº ½Ã°£ ¾Ë¸²
+
+	extern LONGLONG NotifyMoney;	// °ÔÀÓ ¸Ó´Ï º¯È­·® ¾Ë¸² ±âÁØ
+	extern int nDecomposeCost;		// ºÐÇØ½Ã ºñ¿ë;
+	extern float fQBoxPickableTime;	// Q¹Ú½º ÁÝ±â ½Ã°£;
+	extern float fMacro_TermsofClose_LimitTime; // ³²Àº½Ã°£¿¡ µû¸¥ ¸ÅÅ©·Î Á¾·áÁ¶°Ç;
+	extern int nMacro_TermsofClose_Potion; // ³²Àº ¹°¾à¿¡ µû¸¥ ¸ÅÅ©·Î Á¾·áÁ¶°Ç;
+	extern float fMacro_MaxFillTime; // ¹°¾àÀ¸·Î Ã¤¿ï¼öÀÖ´Â ¸ÅÅ©·Î ½Ã°£(´ÜÀ§-ÃÊ);
+
+	extern std::string strScreenEffect[SCREEN_EFFECT_NUM];
+	extern std::string strCameraEffect[CAMERA_EFFECT_NUM];
+	extern std::string strOPItemIcon;
+	extern std::vector< SSTATPOINT_BYLEVEL > vecMaxStatPoint;
+	extern std::vector< SSTATPOINT_BYLEVEL > vecExtremeMaxStatPoint;
+	extern std::vector<INT> vecMacroRemainTimeAlarm;
+
+	extern float	fIgnore_BossDamageMax;				// º¸½º¸÷¿¡°Ô ÇÇ°Ý½Ã µ¥¹ÌÁö Â÷°¨;
+	extern int		nBossFixedDamageMax;				// º¸½º¸÷ °ø°Ý½Ã Ãß°¡ °íÁ¤ µ¥¹ÌÁö;
+	extern float	fIncRCriticalMax_EmergencyMob;		// À§±Þ »óÅÂÀÇ ¸÷¿¡°Ô Å©¸®Æ¼ÄÃ ¹ß»ý·ü Áõ°¡;
+	extern float	fIncRCriticalMax_EmergencyBoss;		// À§±Þ »óÅÂÀÇ º¸½º¿¡°Ô Å©¸®Æ¼ÄÃ ¹ß»ý·ü Áõ°¡;
+	extern float	fDecRDamageMax_EmergencyState;		// À§±Þ »óÅÂÀÏ °æ¿ì µ¥¹ÌÁö °¨¼Ò;
+
+	// ±ä±Þ»óÅÂ ÀüÈ¯ HP Rate;
+	extern float	fEmergency_CharHPR;
+	extern float	fEmergency_MobHPR;
+	extern float	fEmergency_BossHPR;
+	// ±ä±Þ »óÅÂ½Ã ÃÊ´ç ±ôºýÀÓ È½¼ö;
+	extern int		nEmergency_BlinkCount;
+
+	extern float	fIncRExpAddEffectMax;				// °æÇèÄ¡ Áõ°¡À² È¿°ú'¸¦ Áõ°¡½ÃÅ´;
+	extern float	fIncRDropGenMoneyMax;				// µå¶ø¸Ó´Ï Áõ°¡;
+	extern float	fDecRDamageMax_MeleeSkill;			// ¹°¸® ±ÙÁ¢ ½ºÅ³ ÇÇ°Ý½Ã °æ¿ì µ¥¹ÌÁö °¨¼Ò;
+	extern float	fDecRDamageMax_RangeSkill;			// »ç°Ý ½ºÅ³ ÇÇ°Ý½Ã °æ¿ì µ¥¹ÌÁö °¨¼Ò;
+	extern float	fDecRDamageMax_MagicSkill;			// ¸¶¹ý ½ºÅ³ ÇÇ°Ý½Ã °æ¿ì µ¥¹ÌÁö °¨¼Ò;
+	extern int		nInc_HPMax_SoloPlay;				// ¼Ö·ÎÇÃ·¹ÀÌ½Ã HPÁõ°¡ (ÆÄÆ¼°¡ ¾Æ´Ò½Ã);
+	extern int		nInc_HPMax_PartyPlay;				// ÆÄÆ¼ÇÃ·¹ÀÌ½Ã HPÁõ°¡;
+	extern float	fIncR_AtkSpeedMax_SoloPlay;			// ¼Ö·ÎÇÃ·¹ÀÌ½Ã °ø¼ÓÁõ°¡ (ÆÄÆ¼°¡ ¾Æ´Ò½Ã);
+	extern float	fIncR_AtkSpeedMax_PartyPlay;		// ÆÄÆ¼ÇÃ·¹ÀÌ½Ã °ø¼ÓÁõ°¡;
+	
+	extern float	fInc_RandomOp_SkillDurationAddTimeMax;	// ½ºÅ³ µî±Þº° Áö¼Ó½Ã°£ ÃÖ´ë Áõ°¡°ª;
+	extern float	fIncR_RandomOp_SkillDamageAddMax;		// ½ºÅ³ µî±Þº° µ¥¹ÌÁö ÃÖ´ë Áõ°¡À²;
+	extern float	fDecR_SkillDelayTMax;					// ½ºÅ³ µî±Þº° µô·¹ÀÌ ÃÖ´ë °¨¼Ò°ª;
+	extern float	fIncR_CriticalDamageMax;				// Å©¸®Æ¼ÄÃ µ¥¹ÌÁö ÃÖ´ë Áõ°¡À²;
+	extern float	fIncR_CrushingBlowMax;					// °­ÇÑÅ¸°Ý µ¥¹ÌÁö ÃÖ´ë Áõ°¡À²;
+	extern float	fIncR_LifePerKillMax;					// Ã³Ä¡½Ã »ý¸í·Â ÃÖ´ë È¸º¹À²;
+	extern float	fIncR_MPPerKillMax;						// Ã³Ä¡½Ã MP ÃÖ´ë È¸º¹À²;
+	extern float	fIncR_SPPerKillMax;						// Ã³Ä¡½Ã HP+MP+SP ÃÖ´ë È¸º¹À²;
+	extern float	fIncR_HPMPSPPerKillMax;					// Ã³Ä¡½Ã SP ÃÖ´ë È¸º¹À²;
+	extern float	fIncR_AllMPRatioToAttackMax;				// ÀüÃ¼ MP ºñÀ²¸¸Å­ °ø°Ý·ÂÁõ°¡Max;
+	extern float	fIncR_AllSPRatioToHpMax;					// ÀüÃ¼ SP ºñÀ²¸¸Å­ Ã¼·ÂÁõ°¡Max;
+	extern float	fIncR_AllHitRatioToMeleeMax;				// ÀüÃ¼ ¸íÁß ºñÀ²¸¸Å­ °ÝÅõÄ¡ Áõ°¡Max;
+	extern float	fIncR_AllHitRatioToRangeMax;				// ÀüÃ¼ ¸íÁß ºñÀ²¸¸Å­ »ç°ÝÄ¡ Áõ°¡Max;
+	extern float	fIncR_AllHitRatioToMagicMax;				// ÀüÃ¼ ¸íÁß ºñÀ²¸¸Å­ ±â·ÂÄ¡ Áõ°¡;
+
+    BOOL LOADFILE(const std::string& FileName, BOOL bServer=TRUE);
+	BOOL EXP_LOADFILE ( char* szFileName );
+
+	BOOL EXP_PC_LOADFILE ( char* szFileName );
+	BOOL EXP_MAX_LOADFILE ( char* szFileName );
+	BOOL EXP_MAX_2nd_LOADFILE ( char* szFileName );
+
+	BOOL VAID_CHAR_DATA2 ( WORD wSchool, EMCHARINDEX emIndex, const BOOL bJumping = FALSE );
+	SCHARDATA2& GET_CHAR_DATA2 ( WORD wSchool, EMCHARINDEX emIndex, const BOOL bJumping = FALSE );
+
+	inline const char* GETSTRIKE_EFFECT ( EMELEMENT emELEMENT=EMELEMENT_SPIRIT )
+	{
+		GASSERT(emELEMENT>=0);
+		GASSERT(emELEMENT<EMELEMENT_MAXNUM);
+
+		return strSRIKE_ELMT_EFFECT[emELEMENT].c_str();
+	}
+
+    void    SET_EXCESS_EXP_TYPE( BYTE expType );
+    BYTE    GET_EXCESS_EXP_TYPE();
+
+	const char* GETSCHOOLNAME ( WORD wSCHOOL );
+
+	void SET_EVENT_ITEM_SCALE ( float fScale );		//	ÀÌº¥Æ® ¹èÀ² ¼³Á¤
+	float GET_ITEM_SCALE ();						//	µ¥ÀÌÅÍ * ÀÌº¥Æ® ¹èÀ²
+
+	void SET_EVENT_MONEY_SCALE ( float fScale );	//	ÀÌº¥Æ® ¹èÀ² ¼³Á¤
+	float GET_MONEY_SCALE ( const float fAddScale = 0.0f );						//	µ¥ÀÌÅÍ * ÀÌº¥Æ® ¹èÀ²
+
+	void SET_EVENT_EXP_SCALE ( float fScale );		//	ÀÌº¥Æ® ¹èÀ² ¼³Á¤
+	float GET_EXP_SCALE ();							//	µ¥ÀÌÅÍ * ÀÌº¥Æ® ¹èÀ²
+
+	DWORD GETEXP ( int nAttackerLev, int nDefenserLev );
+	float GETEXP_RATE ( int nAttackerLev, int nDefenserLev );
+
+	DWORD GETEXP_PC ( WORD wLev );
+
+    //! non pk Ã¤³Î Á¢¼Ó°¡´É ÃÖÇÏ ¼ºÇâÁ¡¼ö
+    int GetNonPkConnectBrightPoint();
+	// ÇØ´ç ½ºÅ³ÀÇ »ç¿ë Å¬·¡½º Á¤º¸¸¦ ¾òÀ½;
+	EMCLASSINDEX GetClassInfoUsingSkill(SNATIVEID sNID);
+};
+
+struct PETSTYLE
+{
+	std::string	strSTYLE_CPS[MAX_HAIR];
+	WORD		wSTYLE_COLOR[MAX_HAIR];
+	WORD		wSTYLENum;
+
+
+	PETSTYLE () :
+	wSTYLENum(0)
+	{
+		memset( wSTYLE_COLOR,0,sizeof(wSTYLE_COLOR));
+	}
+};
+
+typedef std::vector<PGLPET> VEC_PGLPET;
+typedef std::vector<PETSTYLE> VEC_PET_STYLE;
+
+namespace GLCONST_PET
+{
+	extern VEC_PGLPET pGLPET;
+	extern VEC_PET_STYLE sPETSTYLE;
+
+	extern float		fRunArea;
+	extern float		fWalkArea;
+	extern float		fOwnerDistance;
+	extern int			nMAXVIEWRANGE;
+	extern float		fMaginotLineHP;
+	extern float		fMaginotLineMP;
+	extern float		fMaginotLineSP;
+
+	PGLPET   GetPetData ( int emTYPE );
+	PETSTYLE GetPetStyle ( int emTYPE );
+	bool     IsChangeablePetColor ( int emTYPE );
+
+	static WORD GetPetStyleSize()
+	{
+		 return (WORD) sPETSTYLE.size();
+	}
+
+	static WORD GetPetStyleNum( WORD wIndex )
+	{
+		if( 0 > wIndex || GetPetStyleSize() < wIndex )
+			return 0;
+
+		return sPETSTYLE[ wIndex ].wSTYLENum;
+	}
+};
+
+namespace GLCONST_VEHICLE
+{
+	extern PGLVEHICLE		pGLVEHICLE[VEHICLE_TYPE_SIZE];
+	extern char				szVehicleInit[VEHICLE_TYPE_SIZE][MAX_PATH];
+
+	extern int				nFullDecrVehicle[VEHICLE_TYPE_SIZE]; // Æ÷¸¸°¨ °¨¼ÒÄ¡
+
+	PGLVEHICLE		GetVehicleData ( VEHICLE_TYPE emTYPE );
+
+};
+
+namespace GLCONST_SUMMON
+{
+	extern PGLSUMMON		pGLSUMMON               [SUMMON_TYPE_SIZE];
+	extern FLOAT            fSummonGateDistanceRatio[SUMMON_TYPE_SIZE];	
+	extern DWORD            dwIdleGestureTimeMax    [SUMMON_TYPE_SIZE];
+	extern DWORD            dwIdleGestureTimeMin    [SUMMON_TYPE_SIZE];
+	extern DWORD            dwMaxSummon             [SUMMON_TYPE_SIZE];
+	extern WORD				wMaxMobTracking			[SUMMON_TYPE_SIZE];
+	extern char				szSummonInit            [SUMMON_TYPE_SIZE][MAX_PATH];
+
+	PGLSUMMON GetSummonData ( SUMMON_TYPE emTYPE );
+};
+
+namespace GLCONST_ATTENDANCE
+{
+	struct	ATTEND_REWARD
+	{
+		int				nComboDay;
+		SNATIVEID		idReward;
+
+		ATTEND_REWARD()
+			: nComboDay ( 0 )
+			, idReward( NATIVEID_NULL() )
+		{
+		}
+	};
+
+
+	extern bool		bUse;
+	extern DWORD	dwMAXREWARD;
+	extern DWORD	dwAttendTime;
+	extern std::vector<ATTEND_REWARD>	vecAttendReward;
+
+	BOOL LoadFile(const std::string& strFileName, BOOL bServer);
+};
+
+namespace MINIGAME_ODDEVEN // ¹Ì´Ï °ÔÀÓ, È¦Â¦ °ÔÀÓ
+{
+	const unsigned int MAX_ROUND = 5;
+
+	extern float	fReturnRate[MAX_ROUND];		// ¹è´ç±Ý ¹èÀ² ÀÎ¼ö(ÃÖÁ¾¹è´ç±Ý = ¿ø±Ý*1È¸Â÷ÀÎ¼ö*2È¸Â÷ÀÎ¼ö...)
+	extern float	fSuccessRate[MAX_ROUND];	// ¼º°ø È°·ü
+	extern float	fTimeLimit;					// Á¦ÇÑ ½Ã°£(ÃÊ)
+	extern float	fShuffleTime;				// ¼¯ÀÓ ½Ã°£(ÃÊ)
+	extern UINT		uiMaxBattingMoney;			// ÃÖ´ë ¹èÆÃ °¡´É ±Ý¾×
+};
+
+namespace HAIRCOLOR
+{
+	enum { MAXSEX = 2, MAXHAIRCOLOR = 16 };
+
+	extern WORD wHairColor[MAXSEX][MAX_HAIR];
+
+	extern WORD GetHairColor ( WORD wClass, WORD wStyle ); 
+};
+
+
+namespace MONEYCOLOR
+{
+	enum 
+	{
+		MAX_COLOR = 6,
+	};
+
+    extern DWORD dwTEXT_MONEY_COLOR_BEGIN;
+    extern DWORD dwMONEY_COLOR_DEFAULT;
+	extern DWORD dwMONEY_COLOR[MAX_COLOR];
+
+    extern const DWORD GetMoneyColor (const LONGLONG lnMoney);
+}
+
+namespace ITEM_INFOR_COLOR
+{
+    extern DWORD dwDefault;					// ±âº» ÄÃ·¯.
+    extern DWORD dwItemRank[EMITEM_LEVEL_NSIZE];	// ¹«±â µî±Þ¿¡ µû¸¥ ÄÃ·¯.
+    extern DWORD dwReqWrong; 				// Âø¿ë ¿À·ù ÄÃ·¯.
+    extern DWORD dwInchant1; 				// ±âº» °ø°Ý·Â + ¿¬¸¶ ÇÕ»ê ÄÃ·¯.
+    extern DWORD dwInchant2; 				// ¿¬¸¶ Áõ°¡ ÄÃ·¯.
+    extern DWORD dwEquipCostum;				// ÄÚ½ºÆ¬ ¹× ¿°»ö °¡´É Á¤º¸ ÄÃ·¯.
+    extern DWORD dwRankUp1; 				// ±âº» ´É·ÂÄ¡ + ¿¬¸¶ ÇÕ»ê ÄÃ·¯.
+    extern DWORD dwRankUp2; 				// ¿¬¸¶ Áõ°¡ ÄÃ·¯.
+    extern DWORD dwSPReduce;				// SP Ãß°¡ ¼Ò¸ð ÄÃ·¯.
+    extern DWORD dwAddAbility;				// °¡»ê È¿°ú »ç¿ë ÄÃ·¯.
+    extern DWORD dwRandomAbility;			// ·£´ý ¿É¼Ç »ç¿ë ÄÃ·¯.
+    extern DWORD dwElementalAbility;		// »óÅÂÀÌ»ó »ç¿ë ÄÃ·¯.
+    extern DWORD dwTrade;					// °Å·¡ ¹× ±³È¯ ºÒ°¡ »ç¿ë ÄÃ·¯.
+    extern DWORD dwLimitTime;				// ¾ÆÀÌÅÛ À¯È¿±â°£ »ç¿ë ÄÃ·¯.
+	extern DWORD dwAddDisguise;				// ÄÚ½ºÆ¬ ºÎÂø¿¡ ÀÇÇÑ °¡»ê ¿É¼Ç ÄÃ·¯.
+	extern DWORD dwMoney;					// °ñµå ÅØ½ºÆ® ÄÃ·¯.
+	extern DWORD dwSetItem;					// ¼ÂÆ® ¾ÆÀÌÅÛ ÄÃ·¯.
+
+	//////////////////////////////////////////////////////////////////////////
+
+	// ¿¬¸¶¿¡ °üÇÑ »ö±ò
+	struct ITEM_GRIND
+	{
+		ITEM_GRIND() { RangeStart=0; RangeEnd = 0; GrindColor = 0; }
+		static const int TOTAL_COUNT = 5;
+		int RangeStart;
+		int RangeEnd;
+		DWORD GrindColor;
+	};
+
+	extern ITEM_GRIND dwItemGrind[ITEM_GRIND::TOTAL_COUNT];
+}
+
+namespace SKILL_INFOR_COLOR
+{
+    extern DWORD dwDefault; // ±âº» ÄÃ·¯.
+    extern DWORD dwSkillName; // ½ºÅ³ ÀÌ¸§ »ç¿ë ÄÃ·¯.
+    extern DWORD dwSkillGrade; // ½ºÅ³ µî±Þ »ç¿ë ÄÃ·¯.
+    extern DWORD dwSkillType; // ½ºÅ³ Å¸ÀÔ »ç¿ë ÄÃ·¯.(ÀÏ¹ÝÇü, ÆÐ½ÃºêÇü Ãâ·Â)
+    extern DWORD dwSkillElemental; // ½ºÅ³ ¼Ó¼º »ç¿ë ÄÃ·¯.
+    extern DWORD dwReqWrong; // ½ºÅ³ ½Àµî Á¶°Ç ¿À·ù »ç¿ë ÄÃ·¯.
+    extern DWORD dwSkillRange; // ½ºÅ³ Àû¿ë ¿µ¿ª »ç¿ë ÄÃ·¯.
+    extern DWORD dwAddAbility; // ½ºÅ³ È¿°ú Àû¿ë »ç¿ë ÄÃ·¯.
+    extern DWORD dwElementalAbility; // ½ºÅ³ »óÅÂÀÌ»ó »ç¿ë ÄÃ·¯.
+}
+
+namespace CHAT_INFOR_COLOR
+{
+	extern DWORD CHAT_NORMAL;
+	extern DWORD CHAT_PRIVATE;
+	extern DWORD CHAT_PARTY;
+	extern DWORD CHAT_MASTER;
+	extern DWORD CHAT_GUILD;
+	extern DWORD CHAT_ALLIANCE;
+	extern DWORD CHAT_AREA;
+	extern DWORD CHAT_PARTY_RECRUIT;
+	extern DWORD CHAT_TOALL;
+	extern DWORD CHAT_SYSTEM;
+	extern DWORD CHAT_FACTION;
+	extern DWORD CHAT_CHAR_NAME;
+	extern DWORD CHAT_GM;
+}
+
+struct SENTRYLIMITINFO
+{
+	__time64_t tEntryTime;
+	DWORD	   dwReEntryTime;
+	SNATIVEID  sMapID;
+
+	SENTRYLIMITINFO() : tEntryTime(0), dwReEntryTime(0), sMapID(NATIVEID_NULL())
+	{
+	};
+
+	void SetData( const __time64_t &entryTime, const DWORD &reEntryTime, const SNATIVEID &mapID )
+	{
+		tEntryTime		= entryTime;
+		dwReEntryTime	= reEntryTime;
+		sMapID			= mapID;
+	}
+
+	bool IsEntryLimitEnd()
+	{
+		CTime CurTime	= CTime::GetCurrentTime();
+		CTime EntryTime = tEntryTime;
+
+		CTimeSpan timeSpan = CurTime - EntryTime;
+
+		if( timeSpan.GetTotalSeconds() > dwReEntryTime*60 ) return TRUE;
+
+		return FALSE;
+	}
+
+	int GetEntryLimitMinutes()
+	{
+		CTime CurTime	= CTime::GetCurrentTime();
+		CTime EntryTime = tEntryTime;
+
+		CTimeSpan timeSpan = CurTime - EntryTime;
+
+
+		int nEntryLimitTime = dwReEntryTime - (int)timeSpan.GetTotalMinutes();
+		if( nEntryLimitTime == 0 ) nEntryLimitTime = 1;
+
+		return nEntryLimitTime;
+	}
+
+};
+
+//
+//mjeon.Post.Send
+//
+
+struct SPOSTINFO
+{
+	LONGLONG			llPostID;	
+	int					iDesign;
+
+	BYTE				byChargePayment;	
+	BYTE				byPostClass;
+	BYTE				byPostState;
+	BYTE				byPostType;	
+
+	char				Title[POST_MAX_TITLE_LENGTH];
+	char				Content[POST_MAX_CONTENT_LENGTH];
+	//char				SendDate[20]; //CurrentTime	//yyyy-mm-dd hh:mm:ss
+	//char				RecvDate[20];
+	//char				ReturnDate[20];
+	//char				RecvBackDate[20];
+	//char				DeleteDate[20];
+
+	LONGLONG			llAttachMoney;
+	LONGLONG			llCharge;
+
+	int					nReqID;			//This ID's scope is valid only for the Sender.
+
+	int					iSender;
+	int					iRecver;
+	DWORD				dwUserNum;
+	int					nUserNumRecver;	//Recver's UserNum
+
+	char				SenderName[CHR_ID_LENGTH +1];
+	char				RecverName[CHR_ID_LENGTH +1];
+
+    BOOL				bAttach01;	// Sender attached a item ?
+	WORD				xAttach01;	// x-axis in inventory.
+	WORD				yAttach01;	// y-axis in inventory.
+	WORD				nAttach01;	// item count
+	SNATIVEID			idAttach01;	// item id
+	
+	WORD				wLevel;			// For sp_InsertChaLastInfo()
+	LONGLONG			llRestMoney;	// Cha's original money - attachedMoney
+
+	DWORD				dwPostFee;		// Post Fee
+};
+
+
+//
+//mjeon.post.get
+//
+struct SAPOST
+{
+    enum { 
+        SAPOST_CHAR_LENGTH = CHR_ID_LENGTH + 3,
+    };
+
+	LONGLONG			m_llPostID;
+		
+	BYTE				m_byPostState;
+	BYTE				m_byPostType;	
+	BYTE				m_byPostClass;
+	BYTE				m_byChargePayment;
+
+	int					m_iSender;
+	int					m_iRecver;
+	
+	int					m_iDesign;
+
+	char				m_Title[POST_MAX_TITLE_LENGTH];
+	char				m_Content[POST_MAX_CONTENT_LENGTH];
+
+    __time64_t          m_SendDate; // CurrentTime
+    __time64_t          m_RecvDate;
+    __time64_t          m_ReturnDate;
+    __time64_t          m_RecvBackDate;
+    __time64_t          m_DeleteDate;
+
+	char				m_SenderName[SAPOST_CHAR_LENGTH];	//+3 : to avoid margin
+	char				m_RecverName[SAPOST_CHAR_LENGTH];	//+3 : to avoid margin
+
+	LONGLONG			m_llAttachMoney;
+	LONGLONG			m_llCharge;
+	
+	SITEMCUSTOM			m_sAttach01;
+
+	BYTE				m_byMoneyAccept;
+	BYTE				m_byAttach01Accept;
+
+    SAPOST()
+    {
+        m_llPostID = 0;
+        m_byPostState = 0;
+        m_byPostType = 0;
+        m_byPostClass = 0;
+        m_byChargePayment = 0;
+        m_iSender = 0;
+        m_iRecver = 0;
+        m_iDesign = 0;
+
+        m_SendDate = 0;
+        m_RecvDate = 0;
+        m_ReturnDate = 0;
+        m_RecvBackDate = 0;
+        m_DeleteDate = 0;
+
+        memset(m_Title, 0, POST_MAX_TITLE_LENGTH);
+        memset(m_Content, 0, POST_MAX_CONTENT_LENGTH);
+        memset(m_SenderName, 0, SAPOST_CHAR_LENGTH); //+3 : to avoid margin
+        memset(m_RecverName, 0, SAPOST_CHAR_LENGTH); //+3 : to avoid margin
+
+        m_llAttachMoney = 0;
+        m_llCharge = 0;
+
+        m_byMoneyAccept = 0;
+        m_byAttach01Accept = 0;
+    }
+
+    void SetTitle(const std::string& Data)
+    {
+        StringCchCopy(m_Title, POST_MAX_TITLE_LENGTH, Data.c_str());
+    }
+
+    void SetContent(const std::string& Data)
+    {
+        StringCchCopy(m_Content, POST_MAX_CONTENT_LENGTH, Data.c_str());
+    }
+
+    void SetSenderName(const std::string& Data)
+    {
+        StringCchCopy(m_SenderName, SAPOST_CHAR_LENGTH, Data.c_str()); //+3 : to avoid margin
+    }
+
+    void SetRecverName(const std::string& Data)
+    {
+        StringCchCopy(m_RecverName, SAPOST_CHAR_LENGTH, Data.c_str()); //+3 : to avoid margin
+    }
+};
+
+
+//
+//mjeon.post.state
+//
+struct SAPOSTSTATE
+{
+    enum { 
+        POST_NAME_LENGTH = CHR_ID_LENGTH + 3,
+    };
+
+	LONGLONG			llPostID;
+
+	BYTE				byPostState;
+	BYTE				byPostType;	
+	BYTE				byPostClass;	
+
+	int					iSender;
+	int					iRecver;
+
+	int					iDesign;
+
+	LONGLONG			llCharge;
+
+    __time64_t          SendDate;
+    __time64_t          RecvDate;
+    __time64_t          ReturnDate;
+    __time64_t          RecvBackDate;
+    __time64_t          DeleteDate;    // Optional
+
+	char				SenderName[POST_NAME_LENGTH];	//+3 : to avoid margin
+	char				RecverName[POST_NAME_LENGTH];	//+3 : to avoid margin
+
+    SAPOSTSTATE()
+    {
+        llPostID = 0;
+
+        byPostState = 0;
+        byPostType = 0;
+        byPostClass = 0;
+
+        iSender = 0;
+        iRecver = 0;
+
+        iDesign = 0;
+
+        llCharge = 0;
+
+        SendDate = 0;
+        RecvDate = 0;
+        ReturnDate = 0;
+        RecvBackDate = 0;
+        DeleteDate = 0;    //Optional
+
+        memset(SenderName, 0, POST_NAME_LENGTH);	//+3 : to avoid margin
+        memset(RecverName, 0, POST_NAME_LENGTH);	//+3 : to avoid margin
+    }
+
+    void SetSenderName(const std::string& Name)
+    {
+        StringCchCopy(SenderName, POST_NAME_LENGTH, Name.c_str());
+    }
+
+    void SetRecverName(const std::string& Name)
+    {
+        StringCchCopy(RecverName, POST_NAME_LENGTH, Name.c_str());
+    }
+};
+
+
+//
+//mjeon.sns.facebook.auth
+//
+struct SFACEBOOK
+{	
+	int		ChaNum;
+	char	SKey[SNS_MAX_SKEY_LENGTH];	
+	char	UID[SNS_MAX_UID_LENGTH];
+
+private:
+	friend class boost::serialization::access;
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & ChaNum;
+		ar & SKey;
+		ar & UID;
+	}
+};
+
+
+//
+//mjeon.sns.twitter.auth
+//
+struct STWITTER
+{	
+	int		ChaNum;
+	char	AToken[SNS_MAX_TOKEN_LENGTH];
+	char	ATokenS[SNS_MAX_TOKEN_LENGTH];
+	char	UID[SNS_MAX_UID_LENGTH];
+
+private:
+	friend class boost::serialization::access;
+	template <typename Archive>
+	void serialize(Archive &ar, const unsigned int version)
+	{
+		ar & ChaNum;
+		ar & AToken;
+		ar & ATokenS;
+		ar & UID;
+	}
+};
+
+
+//
+//mjeon.activity
+//
+struct ACTIVITY_SYNC	//basic-unit of Activity sync between server and client (used in msg)
+{
+	DWORD	dwID;
+	DWORD	dwStatus;
+	DWORD	dwValue;
+};
+
+
+//
+//mjeon.activity.title
+//
+struct TITLE_SYNC	//basic-unit of Activity sync between server and client (used in msg)
+{
+	UINT	nIndex;
+	DWORD	dwClass;
+	BOOL	bSelected;
+	char	szTitle[EM_TITLEID_MAXLENGTH];		//XML-ID of the title
+};
+
+
+#define CTF_MAXSIZE_OF_BUFF_ARRAY_4_GLMSG   10
+#define CTF_PLAYER_NUM_LIMIT_PER_SCHOOL		100	//Script¿¡¼­ ¼³Á¤ÇÏ´Â °¢ ÇÐ¿ø º° CTF PlayerÀÇ ÀÎ¿ø ¼ö´Â ÀÌ °ªÀ» ³Ñ¾î¼­´Â ¾ÈµÈ´Ù.
+#define CTF_RANKERS_NUM_4_NOTIFY			10	//CTFÅëÇÕ UI¿¡ Ãâ·ÂµÇ´Â ·©Ä¿Á¤º¸¸¦ ÃÖ´ë ¸î¸í±îÁö Àü¼ÛÇÒ°ÍÀÎ°¡?
+
+enum EMCTF_REWARD_BUFF_TYPE
+{
+	EMCTF_REWARD_BUFF_TYPE_NULL	   = 0,
+    EMCTF_REWARD_BUFF_TYPE_PLAYER  = 1,
+    EMCTF_REWARD_BUFF_TYPE_SCHOOL  = 2,
+	EMCTF_REWARD_BUFF_TYPE_DEFAULT = 3,
+};
+
+struct CTF_REWARD_BUFF
+{
+    DWORD   dwID;
+    WORD    wLevel;
+
+	CTF_REWARD_BUFF()
+		: dwID(UINT_MAX)
+		, wLevel(0)
+	{
+	}
+
+	CTF_REWARD_BUFF(DWORD _dwID, WORD _wLevel)
+		:dwID(_dwID)
+		,wLevel(_wLevel)
+	{
+	}
+};
+
+typedef std::vector<CTF_REWARD_BUFF>	VCTF_REWARD_BUFF;
+typedef VCTF_REWARD_BUFF::iterator		VCTF_REWARD_BUFF_ITER;
+
+enum ENUM_CTF_JOIN_RESULT
+{
+	CTF_JOIN_OK				        = 0,
+	CTF_JOIN_NO_CHAR		        = 1,	//the character does not exist
+	CTF_JOIN_WRONG_CHANNEL	        = 2,	//the character is in another channel
+	CTF_JOIN_WRONG_LEVEL	        = 3,	//the character's level is lower than the requirement of CTF	
+	CTF_JOIN_WRONG_PVE              = 4,	//the character is in pve instance map
+    CTF_JOIN_WRONG_MATCHING_CONTENTS = 5,	//the character is in Matching System Contents;
+};
+
+
+
+//
+//mjeon.db.man
+//
+typedef std::vector<SAPOST>				VPOST;
+typedef VPOST::iterator					VPOST_ITER;
+
+typedef std::vector<SAPOSTSTATE>		VPOSTSTATE;
+typedef VPOSTSTATE::iterator			VPOSTSTATE_ITER;
+
+typedef std::vector<LONGLONG>			VPOSTID;
+typedef std::vector<LONGLONG>::iterator	ITER_VPOSTID;
+
+
+#endif // _GLOGIC_DATA_H_

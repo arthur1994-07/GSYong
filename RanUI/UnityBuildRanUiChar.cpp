@@ -1,0 +1,6 @@
+#include "stdafx.h"
+#include "./OldUI/Char/CharacterWindow.cpp"
+#include "./OldUI/Char/CharacterWindowEx.cpp"
+#include "./OldUI/Char/CharacterWindowMsg.cpp"
+#include "./OldUI/Char/CharacterWindowUpdate.cpp"
+#include "./OldUI/Char/PtoPWindow.cpp"

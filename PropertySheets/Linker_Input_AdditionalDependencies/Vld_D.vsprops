@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Vld_D"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="&quot;$(SolutionDir)=vld/lib/win32/vld.lib&quot;"
+	/>
+</VisualStudioPropertySheet>

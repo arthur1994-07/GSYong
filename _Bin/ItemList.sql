@@ -1,0 +1,3 @@
+DELETE ItemList
+GO
+GO

@@ -1,0 +1,5 @@
+#include "stdafx.h"
+#include "./OldUi/PointShop/PointShopCategory.cpp"
+#include "./OldUi/PointShop/PointShopNode.cpp"
+#include "./OldUi/PointShop/PointShopTooltip.cpp"
+#include "./OldUi/PointShop/PointShopWindow.cpp"

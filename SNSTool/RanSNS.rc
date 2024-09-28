@@ -1,0 +1,282 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#include ""res\\RanSNS.rc2""  // Microsoft Visual C++에서 편집되지 않은 리소스\r\n"
+    "#include ""afxres.rc""         // 표준 구성 요소\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\RAN_20130416.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_RANSNS_DIALOG DIALOGEX 0, 0, 201, 301
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "RanSNS"
+FONT 9, "굴림", 400, 0, 0x81
+BEGIN
+END
+
+IDD_PAGE01 DIALOGEX 0, 0, 201, 301
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_DISABLED | WS_CAPTION
+CAPTION "Facebook"
+FONT 9, "굴림", 400, 0, 0x81
+BEGIN
+    PUSHBUTTON      "Authorize",IDC_BUTTON_AUTH,40,10,121,16
+    LISTBOX         IDC_LIST_MSG_FB,11,243,178,35,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Wall Post",IDC_BUTTON_WALLPOST,60,89,80,16
+    GROUPBOX        "Wall Post",IDC_STATIC,14,30,173,82
+    EDITTEXT        IDC_EDIT_WALLMSG,24,44,155,39,ES_MULTILINE | 
+                    ES_AUTOHSCROLL | ES_WANTRETURN
+    GROUPBOX        "Publish  Photos",IDC_STATIC,14,117,173,116
+    PUSHBUTTON      "Publish Photos",IDC_BUTTON_PUBLISH_PHOTOS,60,210,80,16
+    EDITTEXT        IDC_EDIT_CAPTION,24,171,155,32,ES_MULTILINE | 
+                    ES_AUTOHSCROLL | ES_WANTRETURN
+    PUSHBUTTON      "Browse",IDC_BUTTON_BROWSE,147,132,31,16
+    EDITTEXT        IDC_EDIT_PATH,24,132,118,17,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Caption for the photo",IDC_STATIC,24,159,88,8
+END
+
+IDD_PAGE02 DIALOGEX 0, 0, 201, 301
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Twitter"
+FONT 9, "굴림", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Authorize",IDC_BUTTON_AUTH02,40,10,121,16
+    LISTBOX         IDC_LIST_MSG_TW,11,243,178,35,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Tweet Msg",IDC_BUTTON_TWEETMSG,60,89,80,16
+    GROUPBOX        "Tweet Message",IDC_STATIC,14,30,173,82
+    EDITTEXT        IDC_EDIT_TWEETMSG,24,44,155,39,ES_MULTILINE | 
+                    ES_AUTOHSCROLL | ES_WANTRETURN
+    GROUPBOX        "Follow / UnFollow",IDC_STATIC,14,117,173,87
+    EDITTEXT        IDC_EDIT_FOLLOW,24,138,75,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "Follow",IDC_BUTTON_FOLLOW,60,159,80,16
+    PUSHBUTTON      "UnFollow",IDC_BUTTON_UNFOLLOW,60,180,80,16
+    CONTROL         "Is the name UserID?",IDC_CHECK_FOLLOW,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,102,139,78,12
+END
+
+IDD_WEB_DLG DIALOGEX 0, 0, 492, 329
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_EXPLORER2,"{8856F961-340A-11D0-A96B-00C04FD705A2}",
+                    WS_TABSTOP,7,7,478,289
+    EDITTEXT        IDC_EDIT_PIN,209,305,90,13,ES_AUTOHSCROLL | WS_DISABLED
+    CTEXT           "Input PIN number",IDC_STATIC_PIN,144,307,62,9,
+                    WS_DISABLED
+    PUSHBUTTON      "Set PINcode",IDC_BUTTON_PIN,306,305,50,12,WS_DISABLED
+    GROUPBOX        "Only for Twitter",IDC_STATIC,135,297,232,25
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041203b5"
+        BEGIN
+            VALUE "CompanyName", "TODO: <회사 이름>"
+            VALUE "FileDescription", "TODO: <파일 설명>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "RanSNS.exe"
+            VALUE "LegalCopyright", "TODO: (c) <회사 이름>.  All rights reserved."
+            VALUE "OriginalFilename", "RanSNS.exe"
+            VALUE "ProductName", "TODO: <제품 이름>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "변환", 0x412, 949
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_RANSNS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 194
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 294
+    END
+
+    IDD_PAGE01, DIALOG
+    BEGIN
+        RIGHTMARGIN, 200
+    END
+
+    IDD_PAGE02, DIALOG
+    BEGIN
+        LEFTMARGIN, 9
+        RIGHTMARGIN, 192
+        TOPMARGIN, 10
+        BOTTOMMARGIN, 290
+    END
+
+    IDD_WEB_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 485
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 322
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+//IDR_HTML_WEBBROWSER2    HTML                    "WebBrowser2.htm"
+//IDR_HTML_WEBDLG         HTML                    "WebDlg.htm"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_WEB_DLG DLGINIT
+BEGIN
+    IDC_EXPLORER2, 0x376, 160, 0
+0x0000, 0x0000, 0x004c, 0x0000, 0x4a1b, 0x0000, 0x3093, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x004c, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 
+0x0000, 0xd0e0, 0x0057, 0x3573, 0x11cf, 0x69ae, 0x0008, 0x2e2b, 0x6212, 
+0x0008, 0x0000, 0x0000, 0x0000, 0x004c, 0x0000, 0x1401, 0x0002, 0x0000, 
+0x0000, 0x00c0, 0x0000, 0x0000, 0x4600, 0x0080, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_PROPSHEET           "RAN+SNS Tool"
+END
+
+#endif    // 한국어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#pragma code_page(949)
+#include "res\RanSNS.rc2"  // Microsoft Visual C++에서 편집되지 않은 리소스
+#include "afxres.rc"         // 표준 구성 요소
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

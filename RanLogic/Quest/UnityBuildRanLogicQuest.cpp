@@ -1,0 +1,5 @@
+#include "pch.h"
+#include "GLQuest.cpp"
+#include "GLQuestMan.cpp"
+#include "GLQuestManExcel.cpp"
+#include "GLQuestPlay.cpp"

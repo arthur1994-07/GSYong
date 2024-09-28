@@ -1,0 +1,28 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoIPLib", "GeoIPLib\GeoIPLib.vcproj", "{9A78F367-39E1-4BAC-9015-2DF683CE3CE1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RanStatistics", "RanStatisticsCore\RanStatistics.vcproj", "{0A4ADA70-C213-407D-851F-F6764DFEF586}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9A78F367-39E1-4BAC-9015-2DF683CE3CE1} = {9A78F367-39E1-4BAC-9015-2DF683CE3CE1}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A78F367-39E1-4BAC-9015-2DF683CE3CE1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9A78F367-39E1-4BAC-9015-2DF683CE3CE1}.Debug|Win32.Build.0 = Debug|Win32
+		{9A78F367-39E1-4BAC-9015-2DF683CE3CE1}.Release|Win32.ActiveCfg = Release|Win32
+		{9A78F367-39E1-4BAC-9015-2DF683CE3CE1}.Release|Win32.Build.0 = Release|Win32
+		{0A4ADA70-C213-407D-851F-F6764DFEF586}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A4ADA70-C213-407D-851F-F6764DFEF586}.Debug|Win32.Build.0 = Debug|Win32
+		{0A4ADA70-C213-407D-851F-F6764DFEF586}.Release|Win32.ActiveCfg = Release|Win32
+		{0A4ADA70-C213-407D-851F-F6764DFEF586}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

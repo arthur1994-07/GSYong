@@ -1,0 +1,5 @@
+#include "pch.h"
+#include "GLLottoGlobalDataClient.cpp"
+#include "GLLottoSystemManClient.cpp"
+#include "LottoSystemClient.cpp"
+#include "LottoSystemClientMsg.cpp"

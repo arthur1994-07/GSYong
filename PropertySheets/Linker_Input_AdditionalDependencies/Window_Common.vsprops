@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Window_Common"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="winmm.lib imm32.lib ws2_32.lib dbghelp.lib Version.lib wldap32.lib"
+	/>
+</VisualStudioPropertySheet>

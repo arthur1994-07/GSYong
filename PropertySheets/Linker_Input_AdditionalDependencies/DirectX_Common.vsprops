@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="DirectX_Common"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="&quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/dsound.lib&quot; &quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/dinput8.lib&quot; &quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/dxerr9.lib&quot; &quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/d3dx9.lib&quot; &quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/d3d9.lib&quot; &quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/d3dxof.lib&quot; &quot;$(SolutionDir)../RanThirdParty/DirectX/Lib/x86/dxguid.lib&quot;"
+	/>
+</VisualStudioPropertySheet>

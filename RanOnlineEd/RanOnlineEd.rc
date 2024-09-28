@@ -1,0 +1,624 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 중립 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(949)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About RanOnlineEd"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "RanOnlineEd Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2011",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
+END
+
+IDD_SPLASHDLG DIALOGEX 0, 0, 242, 44
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Please wait while loading..."
+FONT 9, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "",IDC_STATIC_SPLASH,6,8,230,30
+END
+
+IDD_DIALOG_STRING_ENCTYPT DIALOGEX 0, 0, 287, 64
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "String Encrypt"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_STRING_DECRYPT,5,5,150,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Encrypt",IDC_BUTTON_STRING_ENCRYPT,165,5,50,14
+    EDITTEXT        IDC_EDIT_STRING_ENCRYPT,7,22,150,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Decrypt",IDC_BUTTON_STRING_DECRYPT,165,25,50,14
+    PUSHBUTTON      "Copy clipboard",IDC_BUTTON_STRING_COPY_TO_CLIPBOARD,220,25,60,14
+    DEFPUSHBUTTON   "Close",IDOK,125,47,50,14
+END
+
+IDD_DLGSPECIALACTIVITY DIALOGEX 0, 0, 589, 427
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "SpecialActivity"
+FONT 9, "MS Shell Dlg", 400, 0, 0x81
+BEGIN
+    PUSHBUTTON      "N",IDC_BUTTON_NEW,17,15,21,16
+    PUSHBUTTON      "L",IDC_BUTTON_LOAD,39,15,21,16
+    PUSHBUTTON      "S",IDC_BUTTON_SAVE,60,15,21,16
+    PUSHBUTTON      "XML EXPORT",IDC_BUTTON_XML_EXPORT,95,15,51,16
+    PUSHBUTTON      "XML IMPORT",IDC_BUTTON_XML_IMPORT,150,15,54,16
+    GROUPBOX        "",IDC_STATIC_CONTROL,17,39,457,294
+    PUSHBUTTON      "CSV EXPORT",IDC_BUTTON_CSV_EXPORT,209,15,54,16
+END
+
+IDD_SPECIAL_ACTIVITY_TREE DIALOGEX 0, 0, 343, 386
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_DISABLED | WS_CAPTION | WS_SYSMENU
+CAPTION "Special Activity"
+FONT 9, "MS Shell Dlg", 400, 0, 0x81
+BEGIN
+    CONTROL         "",IDC_TREE_ITEM,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_NOTOOLTIPS | WS_TABSTOP,7,7,321,314,WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_CROWSALE_FILENAME,103,329,225,15,ES_AUTOHSCROLL
+    LTEXT           "SALE ITEM (*.crowsale)",IDC_STATIC_CROWSALE_FILENAME,14,331,82,10
+    LTEXT           "ex ) xxxx.crowsale; yyyy.crowsale",IDC_STATIC_CROWSALE_FILENAME2,103,346,125,10
+END
+
+IDD_DIALOG_CONNSTRINGS DIALOGEX 0, 0, 475, 253
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ADO ConnectionStrings in XML"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LISTBOX         IDC_LIST_DBTYPE,23,60,39,49,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_TITLE,106,23,89,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DBNAME,115,46,70,12,ES_AUTOHSCROLL
+    CONTROL         "",IDC_IPADDRESS_DB,"SysIPAddress32",WS_TABSTOP,115,62,95,12
+    EDITTEXT        IDC_EDIT_DBID,115,78,70,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DBPW,115,94,70,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Apply to XML",IDC_BUTTON_APPLY,83,125,82,27
+    DEFPUSHBUTTON   "Add other DB-Group to XML",IDC_BUTTON_ADDMORE,251,147,100,14
+    DEFPUSHBUTTON   "Reset XML",IDC_BUTTON_RESET,360,147,55,14
+    DEFPUSHBUTTON   "Export Result XML -> .XML file",ID_BUTTON_EXPORT,73,218,325,22
+    EDITTEXT        IDC_EDIT_XML,251,20,206,121,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL | NOT WS_TABSTOP
+    LTEXT           "DB Type",IDC_STATIC,25,48,34,10
+    LTEXT           "DB Name",IDC_STATIC,78,47,34,10
+    LTEXT           "DB IP",IDC_STATIC,78,63,34,10
+    LTEXT           "DB ID",IDC_STATIC,78,79,34,10
+    LTEXT           "DB PW",IDC_STATIC,78,95,34,10
+    EDITTEXT        IDC_EDIT_RESULT,20,187,435,16,ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    GROUPBOX        "A group of DB information",IDC_STATIC,10,8,224,159
+    LTEXT           "DB-Group Title",IDC_STATIC,55,23,51,12
+    GROUPBOX        "Result XML",IDC_STATIC,241,8,224,159
+    GROUPBOX        "Output Messages",IDC_STATIC,10,171,455,40
+END
+
+IDD_DLG_SPECIAL_ACTIVITY_SET DIALOGEX 0, 0, 291, 443
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Condition"
+FONT 9, "MS Shell Dlg", 400, 0, 0x81
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,87,397,50,16
+    PUSHBUTTON      "CANCEL",IDCANCEL,146,398,50,16
+    LTEXT           "ID",IDC_STATIC,16,14,18,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_MID,68,13,35,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_SPEC_ACT_SID,109,13,35,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Subject",IDC_STATIC,16,39,45,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_SUBJECT,68,36,195,13,ES_AUTOHSCROLL
+    LTEXT           "Description",IDC_STATIC,16,74,45,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_DESCRITION,68,72,195,13,ES_AUTOHSCROLL
+    GROUPBOX        "Condition",IDC_STATIC,16,109,248,77
+    LTEXT           "First Arrival",IDC_STATIC,26,143,59,10
+    LTEXT           "TYPE",IDC_STATIC,26,162,59,10
+    COMBOBOX        IDC_COMBO_SPEC_ACT_TYPE,102,160,149,76,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Notify_Level",IDC_STATIC,27,125,59,10
+    COMBOBOX        IDC_COMBO_SPEC_ACT_NOTIFY_LEVEL,102,122,150,65,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Reward",IDC_STATIC,16,318,247,72
+    LTEXT           "Reward Point",IDC_STATIC,25,333,59,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_REWARD_POINT,95,331,114,13,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Reward Title",IDC_STATIC,25,351,59,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_REWARD_TITLE,95,349,114,13,ES_AUTOHSCROLL
+    GROUPBOX        "Condition",IDC_STATIC_CONDITION,16,191,248,121
+    LTEXT           "Level",IDC_STATIC_LEVEL,25,205,35,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_LEVEL,65,203,87,13,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "MAP",IDC_STATIC_TARGET,25,223,33,10
+    PUSHBUTTON      "ADD",IDC_BUTTON_TARGET_LIST,226,223,27,13
+    PUSHBUTTON      "CLEAR",IDC_BUTTON_TARGET_DEL,226,241,27,13
+    LTEXT           "KILL",IDC_STATIC_COUNT,25,295,21,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_COUNT_NUM,65,292,31,13,ES_AUTOHSCROLL
+    CONTROL         "Use",IDC_CHECK_USE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,230,14,32,10,WS_EX_RIGHT
+    EDITTEXT        IDC_EDIT_SPEC_ACT_BYORDER,102,141,150,13,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Subject ID",IDC_STATIC,16,58,45,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_SUBJECT_ID,68,54,195,13,ES_AUTOHSCROLL
+    LTEXT           "Description ID",IDC_STATIC,16,92,45,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_DESCRITION_ID,68,90,195,13,ES_AUTOHSCROLL
+    LTEXT           "Reward Title ID",IDC_STATIC,25,370,59,10
+    EDITTEXT        IDC_EDIT_SPEC_ACT_REWARD_TITLE_ID,95,368,114,13,ES_AUTOHSCROLL
+    CONTROL         "",IDC_LIST_SPEC_ACT_TARGET,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,65,223,154,64
+END
+
+IDD_DIALOG_NPC DIALOGEX 0, 0, 190, 187
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "NPC/MOB ( Korean )"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,86,166,48,14
+    PUSHBUTTON      "Cancel",IDCANCEL,138,166,48,14
+    LISTBOX         IDC_LIST_NPC,6,6,180,132,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Find",IDC_BUTTON_FIND,139,143,48,15
+    EDITTEXT        IDC_EDIT_FINDMID,88,143,23,17,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_FINDSID,112,143,23,17,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_MAP DIALOGEX 0, 0, 190, 188
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MAP ( Korean )"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,85,166,48,14
+    PUSHBUTTON      "Cancel",IDCANCEL,138,166,48,14
+    LISTBOX         IDC_LIST_MAP,6,6,180,132,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Find",IDC_BUTTON_FIND,139,143,48,15
+    EDITTEXT        IDC_EDIT_FINDMID,88,143,23,17,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_FINDSID,112,143,23,17,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_ITEM DIALOGEX 0, 0, 190, 190
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ITEM ( Korean )"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,85,169,48,14
+    PUSHBUTTON      "Cancel",IDCANCEL,138,169,48,14
+    LISTBOX         IDC_LIST_ITEM,6,6,180,132,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Find",IDC_BUTTON_FIND,139,146,47,15
+    EDITTEXT        IDC_EDIT_FINDMID,87,146,23,17,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_FINDSID,111,146,23,17,ES_AUTOHSCROLL
+END
+
+IDD_DIALOG_ASSET_TO_EXCEL DIALOGEX 0, 0, 394, 231
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Asset To Excel"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,210,50,14
+    PUSHBUTTON      "CANCEL",IDCANCEL,337,210,50,14
+    PUSHBUTTON      "Start",IDC_BUTTON_ASSET_TO_EXCEL_START,7,7,109,38
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_SPLASHDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 37
+    END
+
+    IDD_DIALOG_STRING_ENCTYPT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 280
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 57
+    END
+
+    IDD_DLGSPECIALACTIVITY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 582
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 420
+    END
+
+    IDD_SPECIAL_ACTIVITY_TREE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 336
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 378
+    END
+
+    IDD_DIALOG_CONNSTRINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 468
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 246
+    END
+
+    IDD_DLG_SPECIAL_ACTIVITY_SET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 284
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 436
+    END
+
+    IDD_DIALOG_NPC, DIALOG
+    BEGIN
+        RIGHTMARGIN, 189
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 162
+    END
+
+    IDD_DIALOG_MAP, DIALOG
+    BEGIN
+        RIGHTMARGIN, 189
+        TOPMARGIN, 7
+    END
+
+    IDD_DIALOG_ITEM, DIALOG
+    BEGIN
+        RIGHTMARGIN, 189
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 167
+    END
+
+    IDD_DIALOG_ASSET_TO_EXCEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 387
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 224
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 중립 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#include ""res\\RanOnlineEd.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#include ""afxprint.rc""       // printing/print preview resources\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\RanOnlineEd.ico"
+IDR_RanOnlineEdTYPE     ICON                    "res\\RanOnlineEdDoc.ico"
+IDI_ICON_TOOL_TITLE     ICON                    "res\\RanOnlineEd.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM "Print Pre&view",              ID_FILE_PRINT_PREVIEW
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM "S&plit",                      ID_WINDOW_SPLIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About RanOnlineEd...",       ID_APP_ABOUT
+    END
+END
+
+IDR_ACTIVITY_POPUP_MENU MENU 
+BEGIN
+    POPUP "Activity"
+    BEGIN
+        MENUITEM "ADD Item",                    ID_ACTIVITY_ADDITEM
+        MENUITEM "DEL Item",                    ID_ACTIVITY_DELITEM
+        MENUITEM SEPARATOR
+        MENUITEM "Copy",                        ID_ACTIVITY_COPYITEM
+        MENUITEM "Paste ( New )",               ID_ACTIVITY_PASTE
+        MENUITEM "Modify",                      ID_ACTIVITY_MODIFY
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "RanOnlineEd.exe"
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
+            VALUE "OriginalFilename", "RanOnlineEd.exe"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+    IDS_PROPSHT_CAPTION     "Sheet"
+    IDR_MAINFRAME           "RanOnlineEd\n\nRanOnlineEd\n\n\nRanOnlineEd.Document\nRanOnlineEd.Document"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "RanOnlineEd"
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this document"
+    ID_FILE_MRU_FILE2       "Open this document"
+    ID_FILE_MRU_FILE3       "Open this document"
+    ID_FILE_MRU_FILE4       "Open this document"
+    ID_FILE_MRU_FILE5       "Open this document"
+    ID_FILE_MRU_FILE6       "Open this document"
+    ID_FILE_MRU_FILE7       "Open this document"
+    ID_FILE_MRU_FILE8       "Open this document"
+    ID_FILE_MRU_FILE9       "Open this document"
+    ID_FILE_MRU_FILE10      "Open this document"
+    ID_FILE_MRU_FILE11      "Open this document"
+    ID_FILE_MRU_FILE12      "Open this document"
+    ID_FILE_MRU_FILE13      "Open this document"
+    ID_FILE_MRU_FILE14      "Open this document"
+    ID_FILE_MRU_FILE15      "Open this document"
+    ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+END
+
+#endif    // 한국어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#pragma code_page(949)
+#include "res\RanOnlineEd.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#include "afxprint.rc"       // printing/print preview resources
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

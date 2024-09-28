@@ -1,0 +1,627 @@
+#include "stdafx.h"
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <algorithm>
+
+#include "../../../SigmaCore/String/StringUtils.h"
+#include "../../../SigmaCore/String/StringUtil.h"
+#include "../../../SigmaCore/File/StringFile.h"
+#include "../../../SigmaCore/Loading/NSLoadingDirect.h"
+
+#include "../../DxCommon9/DXUT_UTIL.h"
+#include "../../DxTools/PrivateResource.h"
+#include "../../DxTools/DxInputDevice.h"
+#include "../../DxTools/DxViewPort.h"
+#include "../../DxTools/DxMethods.h"
+#include "../../DxTools/editmeshs.h"
+#include "../../Common/stlfunctions.h"
+#include "DxSkinDefine.h"
+
+#include "DxSkeletonManager.h"
+
+// ----------------------------------------------------------------------------
+#include "../../../SigmaCore/DebugInclude.h"
+// ----------------------------------------------------------------------------
+
+#define __ROOT	("__ROOT")
+DxBoneCollector& DxSkeletonManager::GetInstance()
+{
+	static DxBoneCollector Instance;
+	return Instance;
+}
+
+extern DWORD UPDATEBONECOUNT;
+
+D3DXMATRIX	 g_matTemp;
+float	DxSkeleton::g_fWeight = 1.f;
+
+
+void DxBoneTrans::ResetBone ()
+{
+#ifdef USE_ANI_QUATERNION
+	m_dwFlag = 0L;
+	m_vScale = D3DXVECTOR3( 1.0f, 1.0f, 1.0f );
+	D3DXQuaternionIdentity( &m_vQuatMIX );
+	m_pQuatPosCUR = m_pQuatPosPREV = m_pQuatPosORIG;
+
+#else
+	matRot = matRotOrig;
+
+#endif
+
+	if (pBoneTransFirstChild)
+        pBoneTransFirstChild->ResetBone();
+
+	if (pBoneTransSibling)
+        pBoneTransSibling->ResetBone();
+}
+
+void DxSkeleton::UpdateBones(DxBoneTrans *pBoneCur, const D3DXMATRIX &matCur, const D3DXVECTOR3 &vParentScale /* = D3DXVECTOR3 */)
+{
+	++UPDATEBONECOUNT;
+
+
+#ifndef USE_ANI_QUATERNION
+
+	//	Note : pBoneCur의 메트릭스를 계산. matCombined = matRot * matParent * matTrans
+	D3DXMatrixMultiply( &pBoneCur->matCombined, &pBoneCur->matRot, &matCur );
+	
+	//	Note : 자식 프레임의 메트릭스 모두 계산.
+	//
+	DxBoneTrans *pBoneChild = pBoneCur->pBoneTransFirstChild;
+	while( pBoneChild )
+	{
+		UpdateBones( pBoneChild, pBoneCur->matCombined );
+
+		pBoneChild = pBoneChild->pBoneTransSibling;
+	}
+
+#else
+
+	// Note : Base
+	SQuatPos* pQuatPos = &pBoneCur->m_pQuatPosCUR;
+	DWORD dwFlag = pBoneCur->m_dwFlag;
+
+	// Note : Animation Blending
+	if( dwFlag & USE_ANI_BLENDING )
+	{
+		SQuatPos* pQuatPosPREV = &pBoneCur->m_pQuatPosPREV;
+
+		// Note : 보간 작업.
+		D3DXVec3Lerp( &pQuatPos->m_vPos, &pQuatPosPREV->m_vPos, &pQuatPos->m_vPos, g_fWeight );
+		D3DXVec3Lerp( &pQuatPos->m_vScale, &pQuatPosPREV->m_vScale, &pQuatPos->m_vScale, g_fWeight );
+		D3DXQuaternionSlerp( &pQuatPos->m_vQuat, &pQuatPosPREV->m_vQuat, &pQuatPos->m_vQuat, g_fWeight );
+	}
+
+	// Note : Ani 를 더했다면..~!!
+	if( dwFlag & USE_ANI_ADD )
+	{
+		D3DXQuaternionNormalize( &pQuatPos->m_vQuat, &pQuatPos->m_vQuat );
+		D3DXQuaternionNormalize( &pBoneCur->m_vQuatMIX , &pBoneCur->m_vQuatMIX  );
+		//D3DXQuaternionMultiply( &pQuatPos->m_vQuat, &pQuatPos->m_vQuat, &pBoneCur->m_vQuatMIX );
+		D3DXQuaternionMultiply( &pQuatPos->m_vQuat, &pBoneCur->m_vQuatMIX, &pQuatPos->m_vQuat );
+	}
+
+	D3DXMatrixRotationQuaternion( &g_matTemp, &pQuatPos->m_vQuat );
+
+	pQuatPos->m_vPos.x *= vParentScale.x;
+
+    D3DXMATRIX matTemp(
+        g_matTemp._11 * pQuatPos->m_vScale.x,
+        g_matTemp._12 * pQuatPos->m_vScale.x,
+        g_matTemp._13 * pQuatPos->m_vScale.x,
+        g_matTemp._14,
+	    g_matTemp._21 * pQuatPos->m_vScale.y,
+        g_matTemp._22 * pQuatPos->m_vScale.y,
+        g_matTemp._23 * pQuatPos->m_vScale.y,
+        g_matTemp._24,
+	    g_matTemp._31 * pQuatPos->m_vScale.z,
+        g_matTemp._32 * pQuatPos->m_vScale.z,
+        g_matTemp._33 * pQuatPos->m_vScale.z,
+        g_matTemp._34,
+	    pQuatPos->m_vPos.x,
+        pQuatPos->m_vPos.y,
+        pQuatPos->m_vPos.z,
+        g_matTemp._44);
+
+	pQuatPos->m_vScale.x *= (pBoneCur->m_vEditScale.x * pBoneCur->m_vScale.x);
+	pQuatPos->m_vScale.y *= (pBoneCur->m_vEditScale.y * pBoneCur->m_vScale.y);
+	pQuatPos->m_vScale.z *= (pBoneCur->m_vEditScale.z * pBoneCur->m_vScale.z);
+
+	g_matTemp._11 *= pQuatPos->m_vScale.x;
+	g_matTemp._12 *= pQuatPos->m_vScale.x;
+	g_matTemp._13 *= pQuatPos->m_vScale.x;
+	g_matTemp._21 *= pQuatPos->m_vScale.y;
+	g_matTemp._22 *= pQuatPos->m_vScale.y;
+	g_matTemp._23 *= pQuatPos->m_vScale.y;
+	g_matTemp._31 *= pQuatPos->m_vScale.z;
+	g_matTemp._32 *= pQuatPos->m_vScale.z;
+	g_matTemp._33 *= pQuatPos->m_vScale.z;
+	g_matTemp._41 = pQuatPos->m_vPos.x;
+	g_matTemp._42 = pQuatPos->m_vPos.y;
+	g_matTemp._43 = pQuatPos->m_vPos.z;
+
+
+	D3DXMATRIX matCombined;
+	//	Note : pBoneCur의 메트릭스를 계산. matCombined = matRot * matParent * matTrans
+	D3DXMatrixMultiply( &pBoneCur->matCombined, &g_matTemp, &matCur );
+	D3DXMatrixMultiply( &matCombined, &matTemp, &matCur );
+
+
+	// 본 데이터를 같은 성별끼리 공유하여 쓰기 때문에 다시 초기화해준다.
+	D3DXVECTOR3 vTemp(pBoneCur->m_vEditScale);
+	pBoneCur->m_vEditScale = D3DXVECTOR3( 1.0f, 1.0f, 1.0f );
+
+	//	Note : 자식 프레임의 메트릭스 모두 계산.
+	//
+	DxBoneTrans *pBoneChild = pBoneCur->pBoneTransFirstChild;
+	while( pBoneChild )
+	{
+		UpdateBones( pBoneChild, matCombined, vTemp );			
+
+		pBoneChild = pBoneChild->pBoneTransSibling;
+	}
+
+#endif
+}
+
+void DxSkeleton::CheckSphere( LPDIRECT3DDEVICEQ pd3dDevice, const char* szName )
+{
+	DxBoneTrans* pBoneTran = FindBone( szName );
+	if( !pBoneTran )	return;
+
+	D3DXVECTOR3 vPos(
+        pBoneTran->matCombined._41,
+        pBoneTran->matCombined._42,
+        pBoneTran->matCombined._43);
+
+	pd3dDevice->SetRenderState( D3DRS_ZENABLE,		FALSE );
+	pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE,	FALSE );
+
+	EDITMESHS::RENDERSPHERE( pd3dDevice, vPos, 0.006f*DxViewPort::GetInstance().GetDistance(), NULL, 0xffff0000 );
+
+	pd3dDevice->SetRenderState( D3DRS_ZENABLE,		TRUE );
+	pd3dDevice->SetRenderState( D3DRS_ZWRITEENABLE,	TRUE );
+}
+
+void DxSkeleton::EditLineSphere( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	EditLineSphere( pd3dDevice, pBoneRoot );
+}
+
+void DxSkeleton::EditLineSphere( LPDIRECT3DDEVICEQ pd3dDevice, DxBoneTrans *pBoneCur )
+{
+	D3DXVECTOR3 vPos(
+        pBoneCur->matCombined._41,
+        pBoneCur->matCombined._42,
+        pBoneCur->matCombined._43);
+
+	EDITMESHS::RENDERSPHERE( pd3dDevice, vPos, 0.003f*DxViewPort::GetInstance().GetDistance() );
+
+	//	Note : 자식 프레임의 메트릭스 모두 계산.
+	DxBoneTrans *pBoneChild = pBoneCur->pBoneTransFirstChild;
+	while ( pBoneChild != NULL )
+	{
+		D3DXVECTOR3 vPosChild(0.f,0.f,0.f);
+		vPosChild.x = pBoneChild->matCombined._41;
+		vPosChild.y = pBoneChild->matCombined._42;
+		vPosChild.z = pBoneChild->matCombined._43;
+
+		EDITMESHS::RENDERLINE( pd3dDevice, vPos, vPosChild );
+
+		EditLineSphere( pd3dDevice, pBoneChild );
+		pBoneChild = pBoneChild->pBoneTransSibling;
+	}
+}
+
+BOOL DxSkeleton::IsCollision( D3DXVECTOR3& vFrom, D3DXVECTOR3& vLook, std::string& strName, const float fLength )
+{
+	float fBestDis = FLT_MAX;
+	CheckCollision( vFrom, vLook, strName, fLength, fBestDis, pBoneRoot );
+
+	if (strName.size() > 0)
+        return TRUE;
+	else
+        return FALSE;
+}
+
+void DxSkeleton::CheckCollision( D3DXVECTOR3& vFrom, D3DXVECTOR3& vLook, std::string& strName, const float fLength, float fBestDis, DxBoneTrans *pBoneCur )
+{
+	D3DXVECTOR3 vPos(
+        pBoneCur->matCombined._41,
+        pBoneCur->matCombined._42,
+        pBoneCur->matCombined._43);
+
+	// Note : 원에 픽킹 했는지 체크
+	if( COLLISION::IsCollisionLineToSphere( vFrom, vLook, vPos, fLength ) )
+	{
+		const D3DXVECTOR3 vDis(vFrom - vPos);
+		const float fDis = D3DXVec3Length( &vDis );
+
+		if( fDis < fBestDis )
+		{
+			strName = pBoneCur->szName;
+			fBestDis = fDis;
+		}
+	}
+
+	// Note : 자식 프레임의 메트릭스 모두 계산.
+	DxBoneTrans *pBoneChild = pBoneCur->pBoneTransFirstChild;
+	while ( pBoneChild != NULL )
+	{
+		CheckCollision( vFrom, vLook, strName, fLength, fBestDis, pBoneChild );	
+		pBoneChild = pBoneChild->pBoneTransSibling;
+	}
+}
+
+HRESULT DxSkeleton::LoadFile(const std::string& FileName, LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	if (FileName.empty())
+        return E_INVALIDARG;
+
+	HRESULT hr = S_OK;
+	LPDIRECTXFILE pxofapi = NULL;
+	LPDIRECTXFILEENUMOBJECT pxofenum = NULL;
+	LPDIRECTXFILEDATA pxofobjCur = NULL;
+	int cchFileName;
+
+    CString strEncryptFile;
+    CPrivateResource cResource( CPrivateResource::ETypeSkin );
+
+	SAFE_DELETE(pBoneRoot);
+
+	cchFileName = FileName.length();
+	if (cchFileName < 2)
+	{
+		hr = E_FAIL;
+		goto e_Exit;
+	}
+
+	SAFE_DELETE_ARRAY(szXFileName);
+	int nStrLen = cchFileName+1;
+	szXFileName = new char[nStrLen];
+	StringCchCopy(szXFileName, nStrLen, FileName.c_str());
+
+	//	xFile 개체를 만듬.
+	hr = DirectXFileCreate(&pxofapi);
+	if (FAILED(hr))
+		goto e_Exit;
+
+    //	xFile 템플리트 등록.
+	hr = pxofapi->RegisterTemplates((LPVOID)D3DRM_XTEMPLATES,
+		D3DRM_XTEMPLATE_BYTES);
+	if (FAILED(hr))
+		goto e_Exit;
+
+	//	Note : Path xFile 경로.
+	//
+	char szPathName[MAX_PATH] = "";
+	StringCchCopy( szPathName, MAX_PATH, DxSkeletonManager::GetInstance().GetPath() );
+	StringCchCat( szPathName, MAX_PATH, szXFileName );
+
+    STRUTIL::ChangeExt( szPathName, strEncryptFile, ".mxf" );
+
+    if ( cResource.LoadFileDec( strEncryptFile ) )
+	{
+		D3DXF_FILELOADMEMORY sData;
+		sData.lpMemory = (LPCVOID)cResource.GetData();
+		sData.dSize = cResource.GetSize();
+
+		hr = pxofapi->CreateEnumObject((LPVOID)&sData,
+			DXFILELOAD_FROMMEMORY,
+			&pxofenum);
+
+		if (FAILED(hr))
+			goto e_Exit;
+	}
+	else
+	{
+		//	실제 xFile을 열음.
+		hr = pxofapi->CreateEnumObject((LPVOID)szPathName,
+			DXFILELOAD_FROMFILE,
+			&pxofenum);
+		if (FAILED(hr))
+			goto e_Exit;
+	}
+
+    //	Note : 최상위 오브젝트를 읽어옴.
+	//
+	pBoneRoot = new DxBoneTrans;
+	nStrLen = strlen(__ROOT)+1;
+	pBoneRoot->szName = new char[nStrLen];
+	StringCchCopy( pBoneRoot->szName, nStrLen, __ROOT );
+	while (SUCCEEDED(pxofenum->GetNextDataObject(&pxofobjCur)))
+	{
+		const GUID *type;
+
+		hr = pxofobjCur->GetType(&type);
+		if (FAILED(hr))	goto e_Exit;
+
+		//	Note : 본만 가져온다.
+		//
+		if ( *type == TID_D3DRMFrame )
+		{
+			hr = LoadBoneTrans ( pBoneRoot, pxofobjCur, EMBODY_DEFAULT );
+			if (FAILED(hr))	goto e_Exit;
+		}
+
+		GXRELEASE(pxofobjCur);
+	}
+
+e_Exit:
+    GXRELEASE(pxofobjCur);
+    GXRELEASE(pxofenum);
+    GXRELEASE(pxofapi);
+
+	return hr;
+}
+
+HRESULT DxSkeleton::LoadBoneTrans ( PDXBONETRANS &pBone, LPDIRECTXFILEDATA pxofobjCur, EMBODY emBody )
+{
+	HRESULT hr = S_OK;
+	LPDIRECTXFILEDATA pxofobjChild = NULL;
+	LPDIRECTXFILEOBJECT pxofChild = NULL;
+	const GUID *type;
+	DWORD cbSize;
+	D3DXMATRIX *pmatNew;
+	PDXBONETRANS pBoneTransCur;
+	DWORD cchName;
+    
+	//	Note : 오브젝트의 타입.
+	//
+	hr = pxofobjCur->GetType(&type);
+	if (FAILED(hr))	goto e_Exit;
+    
+    //	Note : 트렌스폼.
+	//
+	if (*type == TID_D3DRMFrameTransformMatrix)
+	{
+		hr = pxofobjCur->GetData ( NULL, &cbSize, (PVOID*)&pmatNew );
+		if (FAILED(hr))	goto e_Exit;
+        
+		//// Normal 값을 단위벡터로 유지시키기 위한 작업
+		//D3DXMATRIX	sM = *pmatNew;
+		//float fLength = sM._11*(sM._22*sM._33-sM._23*sM._32) - sM._12*(sM._21*sM._33-sM._23*sM._31) + sM._13*(sM._21*sM._32-sM._22*sM._31);
+		//fLength = 1.f/fLength;
+		//*pmatNew *= fLength;
+
+		//	update the parents matrix with the new one
+		pBone->matRot = pBone->matRotOrig = *pmatNew;
+		D3DXMatrixToSQT( pBone->m_pQuatPosCUR.m_vScale, pBone->m_pQuatPosCUR.m_vQuat, pBone->m_pQuatPosCUR.m_vPos, pBone->matRot );
+		pBone->m_pQuatPosPREV = pBone->m_pQuatPosORIG = pBone->m_pQuatPosCUR;
+	}
+	//	Note : 하위 프레임.
+	//
+	else if (*type == TID_D3DRMFrame)
+	{
+		char* szFrameName = NULL;
+
+		//	Note : 프레임의 이름이 있는지 검사.
+		//
+		hr = pxofobjCur->GetName(NULL, &cchName);
+		if ( SUCCEEDED(hr) && cchName!=0 )
+		{
+			szFrameName = (char*) _alloca(sizeof(char)*(cchName+1));
+			hr = pxofobjCur->GetName ( szFrameName, &cchName );
+			if (FAILED(hr))	goto e_Exit;
+		}
+
+		// Note : 이름이 없다면 작업 안 만듬.
+		if( !szFrameName )	goto e_Exit;
+        
+		//	Note : 새 프레임 만듬.
+		//
+		pBoneTransCur = new DxBoneTrans();
+		if (pBoneTransCur == NULL)
+		{
+			hr = E_OUTOFMEMORY;
+			goto e_Exit;
+		}
+
+		pBoneTransCur->SetName ( szFrameName );
+
+		// 상체인지 하체인지 관리한다. ( 부모가 상체면 자식도 상체이다. )
+		switch( emBody )
+		{
+		case EMBODY_DEFAULT:
+			if( strcmp(szFrameName,"Bip01_Spine1")==0 )
+			{
+				pBoneTransCur->m_emBody = EMBODY_UPBODY;
+			}
+			else
+			{
+				pBoneTransCur->m_emBody = EMBODY_DEFAULT;
+			}
+			break;
+
+		case EMBODY_UPBODY:
+			pBoneTransCur->m_emBody = EMBODY_UPBODY;
+			break;
+		};
+
+		BoneMap.insert ( std::make_pair(std::string(pBoneTransCur->szName),pBoneTransCur) );
+		pBone->AddBoneTrans(pBoneTransCur);
+
+		//	Note : 순차적으로 탐색하면서 에니메이션을 읽어온다.
+		//		QueryInterface()를 사용하여 오브젝트의 타입을 확인함.
+		//
+		while ( SUCCEEDED(pxofobjCur->GetNextObject(&pxofChild)) )
+		{
+			hr = pxofChild->QueryInterface(IID_IDirectXFileData,
+					(LPVOID *)&pxofobjChild);
+
+			if (SUCCEEDED(hr))
+			{
+				hr = LoadBoneTrans ( pBoneTransCur, pxofobjChild, pBoneTransCur->m_emBody );
+				if (FAILED(hr))		goto e_Exit;
+
+				GXRELEASE(pxofobjChild);
+            }
+
+			GXRELEASE(pxofChild);
+		}
+
+	}
+
+e_Exit:
+	GXRELEASE(pxofobjChild);
+	GXRELEASE(pxofChild);
+
+	return S_OK;
+}
+
+DxBoneCollector::DxBoneCollector(void)
+{
+	memset( m_szPath, 0, sizeof(char)*MAX_PATH );
+}
+
+DxBoneCollector::~DxBoneCollector(void)
+{
+	CleanUp ();
+}
+
+void DxBoneCollector::OneTimeSceneInit ( char* szPath )
+{
+	StringCchCopy( m_szPath, MAX_PATH, szPath );
+}
+
+void DxBoneCollector::CleanUp ()
+{
+	std::for_each ( m_MapBone.begin(), m_MapBone.end(), std_afunc::DeleteMapObject() );
+	m_MapBone.clear ();
+}
+
+DxSkeleton* DxBoneCollector::Find(const std::string& FileName)
+{
+	BONEMAP_ITER iter = m_MapBone.find(FileName);
+	if (iter!=m_MapBone.end())
+        return iter->second;
+    else
+	    return NULL;
+}
+
+DxSkeleton* DxBoneCollector::Load(const std::string& FileName, LPDIRECT3DDEVICEQ pd3dDevice )
+{
+    std::string strFile(FileName);
+    sc::string::lowerString(strFile);
+
+	// 이미 로드된 뼈다귀인지 검사후 처리
+	DxSkeleton* pSkeleton = Find(strFile);
+	if (pSkeleton)
+	{
+		pSkeleton->AddRef();
+		return pSkeleton;
+	}
+
+	//CDebugSet::ToListView ( "DxSkeleton '%s' Load", strFile.GetString() );
+
+	// 새로운 뼈다귀 생성
+	pSkeleton = new DxSkeleton;
+	HRESULT hr = pSkeleton->LoadFile(strFile, pd3dDevice);
+	if (FAILED(hr))
+    {
+        SAFE_DELETE( pSkeleton );
+        return NULL;
+    }
+
+    pSkeleton->AddRef();
+	
+	// 리스트에 삽입
+	m_MapBone.insert(BONEMAP_VALUE(pSkeleton->szXFileName, pSkeleton));
+
+	return pSkeleton;
+}
+
+BOOL DxBoneCollector::PreLoad(const std::string& BoneList, LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	CString strPath;
+	strPath = GetPath();
+	strPath += BoneList.c_str();	
+
+    sc::CStringFile StrFile;
+	if ( !StrFile.Open ( strPath.GetString() ) )
+        return FALSE;
+
+    std::vector<std::string> SplitVec;	
+
+	CString strLine;
+	while ( StrFile.GetNextLine(strLine) )
+	{
+        std::string OrigianlStr(strLine.GetString());
+		if (OrigianlStr.empty())
+            continue;
+
+        SplitVec.clear();
+        boost::split(SplitVec, OrigianlStr, boost::algorithm::is_any_of("\t "), boost::algorithm::token_compress_on);
+
+		if (SplitVec.size() != 1)
+			continue;
+
+        sc::string::lowerString(SplitVec[0]);
+
+        //---------------------------------------------------//
+        NSLoadingDirect::FrameMoveRender( FALSE );
+        //---------------------------------------------------//
+
+		DxSkeleton* pSkeleton = Load(SplitVec[0], pd3dDevice);
+		if (!pSkeleton)
+		{
+			CString strMessage;
+			strMessage.Format(
+                "DxBoneCollector::PreLoad() [%s] Load에 실패하였습니다.",
+                SplitVec[0].c_str());
+			MessageBox(NULL, strMessage, "ERROR", MB_OK);
+			continue;
+		}
+
+		m_PreLoadBoneMap.insert(BONEMAP_VALUE(SplitVec[0], pSkeleton));
+	}
+	return TRUE;
+}
+
+HRESULT DxBoneCollector::DoInterimClean ( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	BONELIST listInterimClean;
+	
+	//	Note : 제거할 리스트 작성.
+	//
+	{
+		BONEMAP_ITER iter = m_MapBone.begin();
+		BONEMAP_ITER iter_end = m_MapBone.end();
+		for ( ; iter!=iter_end; ++iter)
+		{
+			//	Note : 사전 로딩 리스트에 있는 파일 제외.
+			//
+			BONEMAP_ITER found = m_PreLoadBoneMap.find((*iter).first);
+			if (found != m_PreLoadBoneMap.end())
+                continue;
+
+			//	제거 리스트에 등록.
+			listInterimClean.push_back( (*iter).second );
+		}
+	}
+
+	//	Note : 데이터 정리.
+	//
+	{
+		BONELIST_ITER iter = listInterimClean.begin();
+		BONELIST_ITER iter_end = listInterimClean.end();
+		for ( ; iter!=iter_end; ++iter )
+		{
+			DxSkeleton* pBone = (*iter);
+			std::string strname = pBone->szXFileName;
+
+			// 데이터 삭제.
+			SAFE_DELETE(pBone);
+
+			//	로드 파일 리스트에서 제거.
+			BONEMAP_ITER iter_del = m_MapBone.find(strname);
+			if (iter_del!=m_MapBone.end())
+                m_MapBone.erase ( iter_del );
+		}
+	}
+
+	return S_OK;
+}
+

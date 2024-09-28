@@ -1,0 +1,7 @@
+#include "stdafx.h"
+#include "./OldUI/Product/ProductGoods.cpp"
+#include "./OldUI/Product/ProductList.cpp"
+#include "./OldUI/Product/ProductType.cpp"
+#include "./OldUI/Product/ProductButton.cpp"
+#include "./OldUI/Product/ProductProgress.cpp"
+#include "./OldUI/Product/ProductWindow.cpp"

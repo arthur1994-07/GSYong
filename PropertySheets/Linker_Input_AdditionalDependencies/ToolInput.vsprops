@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="ToolInput"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="&quot;$(SolutionDir)=nProtect/NPGameLib.lib&quot; &quot;$(SolutionDir)=nProtect/ggsrvlib25_32_MD.lib&quot; &quot;$(SolutionDir)=Library/AHClientInterface.lib&quot; &quot;$(SolutionDir)../RanThirdParty/XtremeToolkit/Lib/ToolkitPro1502vc90DS.lib&quot; &quot;$(SolutionDir)../RanThirdParty/WindowsSDK_v6.1/Lib/strmbase_Multibyte.lib&quot;"
+	/>
+</VisualStudioPropertySheet>

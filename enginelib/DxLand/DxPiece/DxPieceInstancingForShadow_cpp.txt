@@ -1,0 +1,194 @@
+//#include "pch.h"
+//
+//#include "../../../InternalCommonLib/Define/TextureAddData.h"
+//
+//#include "../../DxTools/Material/NSShadowRenderForMaterial.h"
+//#include "./DxPieceStaticAni.h"
+//#include "./DxPieceDef.h"
+//
+//#include "DxPieceInstancingForShadow.h"
+//
+//// ----------------------------------------------------------------------------
+//#include "../../../SigmaCore/DebugInclude.h"
+//// ----------------------------------------------------------------------------
+//
+//// Shadow 에서만 사용되는 Instancing
+//DxPieceInstancingForShadow::DxPieceInstancingForShadow( DxStaticAniFrame* pStaticAniFrame )
+//	: m_rStaticAniFrame(pStaticAniFrame)
+//	, m_dwRefCount(1)						// 맵에 셋팅된 갯수
+//	, g_pInstanceDataVB(NULL)
+//{
+//
+//}
+//
+//DxPieceInstancingForShadow::~DxPieceInstancingForShadow()
+//{
+//	SAFE_RELEASE( g_pInstanceDataVB );
+//}
+//
+//void DxPieceInstancingForShadow::OnResetDevice( LPDIRECT3DDEVICEQ pd3dDevice )
+//{
+//	CreateVB( pd3dDevice );
+//}
+//
+//void DxPieceInstancingForShadow::OnLostDevice()
+//{
+//	SAFE_RELEASE ( g_pInstanceDataVB );
+//}
+//
+//void DxPieceInstancingForShadow::Insert( const PieceParameter* pParameter )
+//{
+//	m_vecpPieceParameter.push_back( pParameter );
+//}
+//
+//void DxPieceInstancingForShadow::CreateVB( LPDIRECT3DDEVICEQ pd3dDevice )
+//{
+//	// Create a  VB for the Instancing data
+//	SAFE_RELEASE ( g_pInstanceDataVB );
+//	pd3dDevice->CreateVertexBuffer( m_dwRefCount * sizeof( INSTANCEDATA_POS ), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0, D3DPOOL_DEFAULT, &g_pInstanceDataVB, 0 );
+//	if ( !g_pInstanceDataVB )
+//	{
+//		pd3dDevice->CreateVertexBuffer( m_dwRefCount * sizeof( INSTANCEDATA_POS ), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0, D3DPOOL_SYSTEMMEM, &g_pInstanceDataVB, 0 );
+//	}
+//
+//	//pd3dDevice->CreateVertexBuffer( m_dwRefCount * sizeof( INSTANCEDATA_POS ), 0, 0, D3DPOOL_MANAGED, &g_pInstanceDataVB, 0 );
+//
+//	//if ( m_vecpPieceParameter.empty() )
+//	//	return;
+//
+//	//DWORD dwPieceNum = m_vecpPieceParameter.size();
+//
+//	//// 위치좌표를 넣는다.
+//	//{
+//	//	INSTANCEDATA_POS* pLocked = NULL;
+//	//	g_pInstanceDataVB->Lock( 0, 0, (VOID**)&pLocked, 0 );
+//	//	for ( DWORD i=0; i<dwPieceNum; ++i )
+//	//	{
+//	//		memcpy( &pLocked[i].m_vMatrix1.x, &m_vecpPieceParameter[i]->m_rmatWorld->_11, sizeof(D3DXVECTOR3) );
+//	//		memcpy( &pLocked[i].m_vMatrix2.x, &m_vecpPieceParameter[i]->m_rmatWorld->_21, sizeof(D3DXVECTOR3) );
+//	//		memcpy( &pLocked[i].m_vMatrix3.x, &m_vecpPieceParameter[i]->m_rmatWorld->_31, sizeof(D3DXVECTOR3) );
+//	//		memcpy( &pLocked[i].m_vMatrix4.x, &m_vecpPieceParameter[i]->m_rmatWorld->_41, sizeof(D3DXVECTOR4) );
+//	//	}
+//	//	g_pInstanceDataVB->Unlock();
+//	//}
+//}
+//
+//void DxPieceInstancingForShadow::Reset()
+//{
+//	m_vecpPieceParameter.clear();
+//}
+//
+//void DxPieceInstancingForShadow::InsertDataToVB()
+//{
+//	DWORD dwPieceNum = m_vecpPieceParameter.size();
+//
+//	if ( dwPieceNum <= 1 )
+//		return;
+//
+//	// 위치좌표를 넣는다.
+//	{
+//		INSTANCEDATA_POS* pLocked = NULL;
+//		g_pInstanceDataVB->Lock( 0, 0, (VOID**)&pLocked, D3DLOCK_DISCARD );
+//		for ( DWORD i=0; i<dwPieceNum; ++i )
+//		{
+//			memcpy( &pLocked[i].m_vMatrix1.x, &m_vecpPieceParameter[i]->m_rmatWorld->_11, sizeof(D3DXVECTOR3) );
+//			memcpy( &pLocked[i].m_vMatrix2.x, &m_vecpPieceParameter[i]->m_rmatWorld->_21, sizeof(D3DXVECTOR3) );
+//			memcpy( &pLocked[i].m_vMatrix3.x, &m_vecpPieceParameter[i]->m_rmatWorld->_31, sizeof(D3DXVECTOR3) );
+//			memcpy( &pLocked[i].m_vMatrix4.x, &m_vecpPieceParameter[i]->m_rmatWorld->_41, sizeof(D3DXVECTOR4) );
+//		}
+//		g_pInstanceDataVB->Unlock();
+//	}
+//}
+//
+//void DxPieceInstancingForShadow::RenderCascadeShadowOpaque( LPDIRECT3DDEVICEQ pd3dDevice )
+//{
+//	if ( m_vecpPieceParameter.size() != 1 )
+//		return;
+//
+//	if ( !m_rStaticAniFrame->IsTexType(EMTTF_OPAQUE) )
+//		return;
+//
+//	NSShadowRenderForMaterial::SetWorld( *m_vecpPieceParameter[0]->m_rmatWorld );
+//	NSShadowRenderForMaterial::CommitChanges();
+//
+//	m_rStaticAniFrame->RenderCascadeShadowOpaque( m_vecpPieceParameter[0]->m_pd3dDevice );
+//}
+//
+//void DxPieceInstancingForShadow::RenderCascadeShadowHardAlpha( LPDIRECT3DDEVICEQ pd3dDevice )
+//{
+//	if ( m_vecpPieceParameter.size() != 1 )
+//		return;
+//
+//	if ( !m_rStaticAniFrame->IsTexType(EMTTF_ALPHA_HARD) )
+//		return;
+//
+//	NSShadowRenderForMaterial::SetWorld( *m_vecpPieceParameter[0]->m_rmatWorld );
+//	//NSShadowRenderForMaterial::CommitChanges();
+//
+//	m_rStaticAniFrame->RenderCascadeShadowHardAlpha( m_vecpPieceParameter[0]->m_pd3dDevice );
+//}
+//
+//void DxPieceInstancingForShadow::RenderCascadeShadowOpaque_Instancing( LPDIRECT3DDEVICEQ pd3dDevice )
+//{
+//	if ( m_vecpPieceParameter.size() <= 1 )
+//		return;
+//
+//	if ( !m_rStaticAniFrame->IsTexType(EMTTF_OPAQUE) )
+//		return;
+//
+//	DWORD dwPieceNum = m_vecpPieceParameter.size();
+//	//DWORD dwPieceNum = m_dwRefCount;
+//
+//	// Stream zero is our model, and its frequency is how we communicate the number of instances required,
+//	// which in this case is the total number of boxes
+//	//V( pd3dDevice->SetStreamSource( 0, g_pVBBox, 0, sizeof( BOX_VERTEX ) ) );
+//	pd3dDevice->SetStreamSourceFreq( 0, D3DSTREAMSOURCE_INDEXEDDATA | dwPieceNum );
+//
+//	// Stream one is the Instancing buffer, so this advances to the next value
+//	// after each box instance has been drawn, so the divider is 1.
+//	pd3dDevice->SetStreamSource( 1, g_pInstanceDataVB, 0, sizeof( INSTANCEDATA_POS ) );
+//	pd3dDevice->SetStreamSourceFreq( 1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul );
+//
+//	//if ( m_vecpPieceParameter.size() == 1 )
+//	//{
+//	//	NSShadowRenderForMaterial::SetWorld( *m_vecpPieceParameter[i]->m_rmatWorld );
+//	//	NSShadowRenderForMaterial::CommitChanges();
+//
+//	//	m_rStaticAniFrame->RenderCascadeShadowOpaque( *m_vecpPieceParameter[i] );
+//	//}
+//	//else
+//	{
+//		m_rStaticAniFrame->RenderCascadeShadowOpaque_Instancing( pd3dDevice );
+//	}
+//}
+//
+//void DxPieceInstancingForShadow::RenderCascadeShadowHardAlpha_Instancing( LPDIRECT3DDEVICEQ pd3dDevice )
+//{
+//	if ( m_vecpPieceParameter.size() <= 1 )
+//		return;
+//
+//	if ( !m_rStaticAniFrame->IsTexType(EMTTF_ALPHA_HARD) )
+//		return;
+//
+//	DWORD dwPieceNum = m_vecpPieceParameter.size();
+//	//DWORD dwPieceNum = m_dwRefCount;
+//
+//	// Stream zero is our model, and its frequency is how we communicate the number of instances required,
+//	// which in this case is the total number of boxes
+//	//V( pd3dDevice->SetStreamSource( 0, g_pVBBox, 0, sizeof( BOX_VERTEX ) ) );
+//	pd3dDevice->SetStreamSourceFreq( 0, D3DSTREAMSOURCE_INDEXEDDATA | dwPieceNum );
+//
+//	// Stream one is the Instancing buffer, so this advances to the next value
+//	// after each box instance has been drawn, so the divider is 1.
+//	pd3dDevice->SetStreamSource( 1, g_pInstanceDataVB, 0, sizeof( INSTANCEDATA_POS ) );
+//	pd3dDevice->SetStreamSourceFreq( 1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul );
+//
+//	{
+//		m_rStaticAniFrame->RenderCascadeShadowHardAlpha_Instancing( pd3dDevice );
+//	}
+//}
+//
+//void DxPieceInstancingForShadow::AddRef()
+//{
+//	++m_dwRefCount;
+//}

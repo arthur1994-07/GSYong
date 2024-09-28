@@ -1,0 +1,5 @@
+#include "pch.h"
+//#include "DxGameStage.cpp"
+//#include "DxGlobalStage.cpp"
+#include "DxGlobalStageMsg.cpp"
+//#include "DxLobyStage.cpp" 

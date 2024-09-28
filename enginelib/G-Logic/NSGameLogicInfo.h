@@ -1,0 +1,8 @@
+//////////////////////////////////////////////////////////////////////////
+//						
+#pragma once
+
+namespace NSGameLogicInfo
+{
+	extern TSTRING	g_strWinnerCountryWB;	// 난사군도에서 승리한 국가 국기.
+};

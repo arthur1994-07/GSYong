@@ -1,0 +1,48 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Client</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{02ef11c2-5d73-4300-b2b7-798876d05df8}</ProjectGuid>
+    <AssemblyName>SquirrelProject1</AssemblyName>
+    <Name>SquirrelProject1</Name>
+    <RootNamespace>SquirrelProject1</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Client' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <AutorunInterpreter>True</AutorunInterpreter>
+    <CommandLineOptions>
+    </CommandLineOptions>
+    <Interpreter>D:\Test_source\squirrel\SQUIRREL2_total 2.24\bin\minimalSqPlus.exe</Interpreter>
+    <Localhost>True</Localhost>
+    <Port>1234</Port>
+    <SuspendOnStartup>False</SuspendOnStartup>
+    <TargetAddress>127.0.0.1</TargetAddress>
+    <WorkingDirectory>D:\Test_source\squirrel\SQUIRREL2_total 2.24\bin</WorkingDirectory>
+    <PathFixup>
+    </PathFixup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Server' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <AutorunInterpreter>True</AutorunInterpreter>
+    <CommandLineOptions>
+    </CommandLineOptions>
+    <Interpreter>
+    </Interpreter>
+    <Localhost>True</Localhost>
+    <Port>1234</Port>
+    <SuspendOnStartup>False</SuspendOnStartup>
+    <TargetAddress>127.0.0.1</TargetAddress>
+    <WorkingDirectory>
+    </WorkingDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="test.nut">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+</Project>

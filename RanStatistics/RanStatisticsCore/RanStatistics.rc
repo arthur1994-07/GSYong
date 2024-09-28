@@ -1,0 +1,310 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#include ""res\\RanStatistics.rc2""  // Microsoft Visual C++에서 편집되지 않은 리소스\r\n"
+    "#include ""afxres.rc""         // 표준 구성 요소\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\RAN_20130416.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "RanStatistics 정보"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "RanStatistics Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2010",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "확인",IDOK,178,7,50,16,WS_GROUP
+END
+
+IDD_RANSTATISTICS_DIALOG DIALOGEX 0, 0, 399, 355
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "RanStatistics v2.2 ADO"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Exit",IDOK,276,330,76,16
+    CONTROL         "",IDC_DATETIMEPICKER_FROM,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,30,331,53,13
+    CONTROL         "",IDC_DATETIMEPICKER_TO,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,93,331,53,13
+    RTEXT           "- ",IDC_STATIC,83,332,8,13
+    GROUPBOX        "Period for Analysis",IDC_STATIC,14,320,147,29
+    CONTROL         "Export to Files",IDC_CHECK_EXPORT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,183,331,63,14
+END
+
+IDD_PAGE01 DIALOGEX 0, 0, 399, 355
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Page01"
+FONT 9, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LISTBOX         IDC_LIST_NEWUSER,20,45,89,200,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "Process",IDC_BUTTON_PROCESS_01,253,226,93,17
+    LISTBOX         IDC_LIST_MSG_01,20,271,353,63,LBS_HASSTRINGS | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Date                   Users",IDC_STATIC_NEWUSER2,21,31,91,11
+    GROUPBOX        "Newly registered",IDC_STATIC,12,15,204,239
+    GROUPBOX        "Console Messages",IDC_STATIC,12,258,371,84
+    LISTBOX         IDC_LIST_NEWCHAR,115,45,92,200,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Date              Characters",IDC_STATIC_NEWUSER3,115,31,92,11
+    LISTBOX         IDC_MONTHLYUSERS,231,45,68,150,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LISTBOX         IDC_MONTHLYSHOPINCOME,306,45,68,150,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_GROUP | WS_TABSTOP,WS_EX_STATICEDGE
+    GROUPBOX        "Monthly",IDC_STATIC,223,15,159,190
+    LTEXT           "Distinct Users",IDC_STATIC_NEWUSER4,231,31,50,11
+    LTEXT           "Shop Income (US$)",IDC_STATIC_NEWUSER5,305,31,67,11
+END
+
+IDD_PAGE02 DIALOGEX 0, 0, 399, 355
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Page02"
+FONT 9, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LISTBOX         IDC_LIST_ANAYSIS_GAMETIME,20,45,195,66,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "Process",IDC_BUTTON_PROCESS_02,267,228,96,17
+    LISTBOX         IDC_LIST_MSG_02,20,271,358,63,LBS_HASSTRINGS | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    GROUPBOX        "Game Time and Concurrent Users",IDC_STATIC,12,15,212,239
+    GROUPBOX        "Console Messages",IDC_STATIC,12,258,374,84
+    LISTBOX         IDC_LIST_CONCURRENT,20,133,195,101,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Date  TotalUser  PlayedUser TotalTime Avg.Time Avg.PTime",IDC_STATIC_NEWUSER2,20,31,201,11
+    LTEXT           "Week    Avg.CU    TotalCU",IDC_STATIC_NEWUSER3,21,119,153,11
+    LISTBOX         IDC_LIST_CHALEVEL,242,45,61,155,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Lv.    Numbers",IDC_STATIC_NEWUSER4,243,31,78,11
+    LISTBOX         IDC_LIST_IP2NATION,309,45,63,155,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Country   Numbers",IDC_STATIC_NEWUSER5,309,31,66,11
+    GROUPBOX        "Character Level and IP-to-Nation Analysis",IDC_STATIC,234,15,146,194
+END
+
+IDD_PAGE03 DIALOGEX 0, 0, 399, 355
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Page03"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Process",IDC_BUTTON_PROCESS_03,157,242,88,14,WS_DISABLED
+    LISTBOX         IDC_LIST_CC_DETAIL,133,58,153,170,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Country / Numbers / Percentage",IDC_STATIC_NEWUSER5,19,45,120,10
+    LISTBOX         IDC_LIST_CC_NUM,20,58,101,170,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Country  /  UserID  /  IP",IDC_STATIC_NEWUSER6,134,45,95,9
+    LTEXT           "NOTE: This Page is designed only for statistics of LiveDB in KOR.   DO NOT USE THIS PAGE FOR Other DBs!",IDC_STATIC_NEWUSER7,19,27,365,14
+    LISTBOX         IDC_LIST_MSG_03,20,271,358,63,LBS_HASSTRINGS | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    GROUPBOX        "Console Messages",IDC_STATIC,12,258,374,84
+    CONTROL         "Except KOR",IDC_CHECK_EXCEPT_KOR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,257,242,51,13
+    LTEXT           "UserIDs (no overlapping)",IDC_STATIC_NEWUSER8,296,46,85,10
+    LISTBOX         IDC_LIST_UID_SET,297,58,81,170,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    GROUPBOX        "Korea LiveDB IP-to-Nation statistics",IDC_STATIC,12,12,375,225
+END
+
+IDD_PAGE04 DIALOGEX 0, 0, 399, 355
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Page04"
+FONT 9, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LISTBOX         IDC_LIST_DAILY_PLAYTIME,20,43,65,67,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "Process",IDC_BUTTON_PROCESS_04,210,69,93,17
+    LISTBOX         IDC_LIST_MSG_04,20,271,353,63,LBS_HASSTRINGS | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Playtime  Numbers",IDC_STATIC_DAILY_PLAYTIME,20,29,70,11
+    GROUPBOX        "Daily Playtime",-1,12,15,372,239
+    GROUPBOX        "Console Messages",-1,12,258,371,84
+    LISTBOX         IDC_LIST_DAILY_PLAYTIME_DETAIL,20,136,356,109,LBS_HASSTRINGS | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_DISABLENOSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Playtime  UserID",IDC_STATIC_DAILY_PLAYTIME2,20,123,53,11
+    LTEXT           "해당 글꼴의 특성상, 자평 차이로 인해 화면상에는 Data가 제대로 정렬 되어 있지 않으므로, 파일로 Export한 후 확인하시기 바랍니다.",IDC_STATIC_DAILY_PLAYTIME3,118,30,251,22
+    LTEXT           "ChaName     ChaLevel",IDC_STATIC_DAILY_PLAYTIME4,189,123,74,11
+    LTEXT           "Country(Web) Country(IP)",IDC_STATIC_DAILY_PLAYTIME5,279,123,87,11
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041203b5"
+        BEGIN
+            VALUE "CompanyName", "TODO: <회사 이름>"
+            VALUE "FileDescription", "TODO: <파일 설명>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "RanStatistics.exe"
+            VALUE "LegalCopyright", "TODO: (c) <회사 이름>.  All rights reserved."
+            VALUE "OriginalFilename", "RanStatistics.exe"
+            VALUE "ProductName", "TODO: <제품 이름>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "변환", 0x412, 949
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_RANSTATISTICS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 392
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 348
+    END
+
+    IDD_PAGE01, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 392
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 348
+    END
+
+    IDD_PAGE02, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 392
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 348
+    END
+
+    IDD_PAGE03, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 390
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 348
+    END
+
+    IDD_PAGE04, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 392
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 348
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "RanStatistics 정보(&A)..."
+    IDS_PROPERTYSHEET       "RanStatistics PropSheet"
+END
+
+#endif    // 한국어 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#pragma code_page(949)
+#include "res\RanStatistics.rc2"  // Microsoft Visual C++에서 편집되지 않은 리소스
+#include "afxres.rc"         // 표준 구성 요소
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

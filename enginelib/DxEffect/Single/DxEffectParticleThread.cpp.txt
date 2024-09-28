@@ -1,0 +1,1615 @@
+#include "pch.h"
+
+#include "../../../SigmaCore/Math/Random.h"
+
+#include "./DxEffectParticleSysDef.h"
+#include "./DxEffectParticleSys.h"
+#include "./DxEffSingleMan.h"
+
+#include "DxEffectParticleThread.h"
+
+
+//	Note	:	디버그용,
+extern BOOL			g_bEFFtoTEX;
+
+const float	MIN_SPEED			= 0.0f;
+const float	MIN_LIFETIME		= 0.1f;
+const float	MIN_SIZE			= 0.5f;
+const float	MIN_GRAVITY			= -5.0f;
+const float	MIN_ALPHA			= 0.0f;
+
+const float	MAX_SPEED			= 250.0f;
+const float	MAX_LIFETIME		= 10.0f;
+const float	MAX_SIZE			= 100.0f;
+const float	MAX_GRAVITY			= 5.0f;
+const float	MAX_ALPHA			= 1.0f;
+const float	_SCALEFACT_PAR		= 400.0f;
+
+// useful macro to guarantee that values are within a given range
+#define Clamp(x, min, max)  ( x = (x<min ? min : x<max ? x : max) )
+
+
+PARTICLE::PARTICLE()
+	: m_fAge(0.0f)
+	, m_fSize(1.0f)
+	, m_bPlay(FALSE)
+	, m_pNext(NULL)
+{
+	m_cColor.x = 1.0f;
+	m_cColor.y = 0.0f;
+	m_cColor.z = 0.0f;
+	m_cColor.w = 0.5f;
+
+	D3DXMatrixIdentity( &m_matRotate );
+	D3DXMatrixIdentity( &m_matWorld );
+}
+
+PARTICLE::~PARTICLE()
+{
+	if( m_spSingleGroup.get() )
+	{
+		m_spSingleGroup->InvalidateDeviceObjects ();
+		m_spSingleGroup->DeleteDeviceObjects ();
+		m_spSingleGroup->FinalCleanup();
+		m_spSingleGroup.reset();
+	}
+
+	SAFE_DELETE(m_pNext);
+}
+
+// 파티클 하나가 새로운 egp 를 들고 있는 개념.
+void PARTICLE::CreateSingleGroup_MainThread( LPDIRECT3DDEVICEQ pd3dDevice, DxEffSinglePropGroupResource& spPropGroup, const EmitterBaseSetting& sEmitterSetting )
+{
+	// 무조건 시작할때 부터 뿌린다.
+	if( !(sEmitterSetting.GetFlag()&(USENEWEFF_END|USENEWEFF_END_STOP)) )	
+		m_bPlay = TRUE;
+
+	if( m_spSingleGroup.get() )
+	{
+		m_spSingleGroup->CleanUp();
+		m_spSingleGroup.reset();
+	}
+
+	m_spSingleGroup = spPropGroup.get()->NEWEFFGROUP();
+	if ( m_spSingleGroup.get() == NULL )
+		return;
+
+	//	Note : Eff Group Create Dev.
+	m_spSingleGroup->Create( pd3dDevice );
+
+	m_matWorld._41 = m_vLocation.x;
+	m_matWorld._42 = m_vLocation.y;
+	m_matWorld._43 = m_vLocation.z;
+	m_spSingleGroup->m_matWorld = m_matWorld;
+}
+
+BOOL PARTICLE::FrameMove ( float fElapsedTime, 
+						  const D3DXVECTOR3 *pAttractLoc, 
+						  const D3DXVECTOR3 *pGravity, 
+						  BOOL bFromTo, 
+						  const D3DXVECTOR3& vTARGET_POS,
+						  const D3DXVECTOR3& vSTART_POS,
+						  DWORD dwFlag )
+{
+	// 여기는 Thread 이기 때문에 m_spSingleGroup->FrameMove 는 말이 안된다.
+	//if( m_spSingleGroup.get() )
+	//{
+	//	if( m_bPlay )
+	//	{
+	//		m_spSingleGroup->FrameMove( 0.f, fElapsedTime );
+	//	}
+
+	//	// 여기는 Thread 이기 때문에 이 작업이 되면, Main Thread 에서 어떤 일이 벌어질지 모른다.
+	//	//if ( m_spSingleGroup->m_dwAliveCount == 0 )
+	//	//{
+	//	//	m_spSingleGroup->InvalidateDeviceObjects ();
+	//	//	m_spSingleGroup->DeleteDeviceObjects ();
+	//	//	m_spSingleGroup->FinalCleanup();
+	//	//	m_spSingleGroup.reset();
+	//	//}
+	//}
+
+	if ( m_fAge + fElapsedTime >= m_fLifetime ) 
+	{
+		if( (m_spSingleGroup.get() == NULL) ||								// 파티클 egp 가 아닐 경우 혹은
+			(m_spSingleGroup && (m_spSingleGroup->m_dwAliveCount == 0)) )	// 파티클 egp 들도 모두 삭제가 된 경우.
+		{
+			m_fAge = -1.0f;
+			return FALSE;
+		}
+
+		// Note : USENEWEFF_END 이 활성화 되어 있는 경우를 대비해서 넣어준다.
+		m_bPlay = TRUE;
+
+		if( dwFlag&USENEWEFF_END_STOP )	// 부모가 움직이는것을 원하지 않는다면 return 한다.
+		{
+			return TRUE;
+		}
+	}
+
+	m_fAge += fElapsedTime;
+
+	m_vPrevLocation = m_vLocation;
+
+	if ( m_fAge == fElapsedTime )	m_vLocation += (m_vVelocity*fElapsedTime);
+	else							m_vLocation += (m_vVelocity*fElapsedTime) + (m_vForceFull*(1.f-(m_fForceVar*m_fAge)));
+	m_vVelocity += ( *pGravity * m_fGravity * fElapsedTime );
+
+	if ( pAttractLoc && m_fAge > 0.03f )
+	{
+		D3DXVECTOR3 AttractDir = *pAttractLoc - m_vLocation;
+		D3DXVec3Normalize ( &AttractDir, &AttractDir );
+		m_vVelocity += AttractDir * 25.0f * fElapsedTime;
+	}
+
+	//	Note : 지면과 충돌시	- 
+	//
+	if ( m_bCollision )
+	{
+		boost::shared_ptr<DxLandMan> spLandMan = DxEffSingleMan::GetInstance().GetLandMan();
+		if ( spLandMan )	// 이상														// 처음보는 위치이면 Picking 계산함
+		{
+			BOOL		bCollision;
+			D3DXVECTOR3	vCollision;
+			D3DXVECTOR3	vPoint1( m_vLocation.x,	m_vLocation.y+5.f,		m_vLocation.z );		// 뿌려지는 중심 위치 구하기
+			D3DXVECTOR3	vPoint2( m_vLocation.x,	m_vLocation.y-100.f,	m_vLocation.z );		// 뿌려지는 중심 위치 구하기
+			LPDXFRAME	pDxFrame = NULL;
+
+			if ( m_vVelocity.y < 0.f )
+			{
+				spLandMan->IsCollision( vPoint1, vPoint2, vCollision, bCollision, pDxFrame, EMCC_CULL_CCW );
+
+				if ( (m_vLocation.y<=vCollision.y) &&  (m_vPrevLocation.y>=vCollision.y))
+				{
+					m_vVelocity.y = -m_vVelocity.y*0.7f;
+					m_vLocation.y += m_vVelocity.y * fElapsedTime;
+				}
+			}
+		}
+	}
+
+	if ( bFromTo )		// 어디에서 어디까지 가라는 목표가 있을 경우 사용한다.
+	{
+		D3DXVECTOR3	vDelta = vTARGET_POS - vSTART_POS;
+		m_vLocation	= vSTART_POS + (vDelta*(m_fAge/m_fLifetime));
+	}
+
+	//	Note : 알파 조정 
+	//
+	if ( m_fAge < m_fAlphaTime1 )									m_fAlpha += m_fAlphaDelta1 * fElapsedTime;
+	else if ( m_fAge >= m_fAlphaTime1 && m_fAge < m_fAlphaTime2)	m_fAlpha += m_fAlphaDelta2 * fElapsedTime;
+	else															m_fAlpha += m_fAlphaDelta3 * fElapsedTime;
+
+	if ( m_fAlpha < 0.f )		m_fAlpha = 0.f;
+	if ( m_fAlpha > 1.f )		m_fAlpha = 1.f;
+
+	//	Note : 컬러 조정 
+	//
+	m_cColor.x += m_cColorDelta.x * fElapsedTime;
+	m_cColor.y += m_cColorDelta.y * fElapsedTime;
+	m_cColor.z += m_cColorDelta.z * fElapsedTime;
+	m_cColor.w = m_fAlpha;
+
+	//	Note : 사이즈, 중력 변화
+	//	
+	m_fSize += m_fSizeDelta * fElapsedTime;
+	if ( m_fSize <= 0.f )	m_fSize = 0.01f;		// 0.f 일 경우 버그 생성 가능성 때문에.
+
+	m_fGravity += m_fGravityDelta * fElapsedTime;
+
+	//	Note : 텍스쳐 회전 적용
+	//
+	m_fTexRotateAngelSum += m_fTexRotateAngel * fElapsedTime;
+	m_vTexScale += m_vTexScaleDelta * fElapsedTime;
+
+	return TRUE;
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//							ParticleEmitter
+//////////////////////////////////////////////////////////////////////////
+ParticleEmitter::ParticleEmitter( const D3DXVECTOR3&	vGVelocity,
+								 const D3DXVECTOR3&		vGGravity,
+								 float					fLength,
+								 const D3DXVECTOR3&		vPlayTime,
+								 const D3DXVECTOR3&		vSleepTime )
+	: m_vGLocation(0.f,0.f,0.f)
+	, m_vGPrevLocation(0.f,0.f,0.f)
+	, m_bRandomPlay(FALSE)
+	, m_fRandomPlayTime(0.f)
+	, m_nCountR(0)
+	, m_fRotateLAngelSum(0.f)
+	, m_fElapsedTimeSum(0.f)
+	, m_fSequenceTime(0.f)
+
+	, m_vGVelocity(vGVelocity)
+	, m_vGGravity(vGGravity)
+	, m_fLength(fLength)
+	, m_vPlayTime(vPlayTime)
+	, m_vSleepTime(vSleepTime)
+{
+	D3DXMatrixIdentity( &m_matRandomR );
+}
+
+ParticleEmitter::~ParticleEmitter()
+{
+
+}
+
+void ParticleEmitter::NewParticleCreate( PARTICLE* pParticle, 
+										const DxEffSingleGroup* pThisGroup, 
+										const EmitterBaseSetting& sEmitterSetting, 
+										D3DXMATRIX &matComb,
+										const D3DXMATRIX& matLocal,
+										D3DXVECTOR3 vPos_NowPrev, 
+										float fElapsedTime )
+{
+	D3DXMATRIX matTrans, matRotate, matParent;
+
+	D3DXVECTOR3 tempVelocity = ( m_vGLocation - m_vGPrevLocation ) / fElapsedTime;
+
+	//	Note : 초기 생성 위치 지정. 
+	pParticle->m_vLocation = m_vGPrevLocation + tempVelocity * sc::Random::RANDOM_NUM() * fElapsedTime;
+
+	//	Note : 생성 범위 지정 
+	D3DXVECTOR3 tempLocation (0.f, 1.f, 0.f );
+
+	if ( sEmitterSetting.GetFlag() & USERANGE )
+	{
+		tempLocation.x = (sEmitterSetting.GetRange().x * (rand()%1000)/1000.f) - (sEmitterSetting.GetRange().x*0.5f);
+		tempLocation.y = (sEmitterSetting.GetRange().y * (rand()%1000)/1000.f) - (sEmitterSetting.GetRange().y*0.5f);
+		tempLocation.z = (sEmitterSetting.GetRange().z * (rand()%1000)/1000.f) - (sEmitterSetting.GetRange().z*0.5f);
+
+		//	Note : 원이나 직사각형으로 만들 수 있도록 옵션을. TRUE - 원, FALSE - 직사각형
+		//
+		if ( sEmitterSetting.GetFlag() & USESPHERE )
+		{
+			if ( (tempLocation.x*tempLocation.x) + (tempLocation.z*tempLocation.z) > (sEmitterSetting.GetRange().x*sEmitterSetting.GetRange().x/4.f) )
+			{
+				tempLocation = tempLocation/2.f;
+			}
+
+			//	Note : 생성 범위안에 있는 파티클 중 .. 일정범위에 있는 것들이  나오도록 설정할 수 있다.
+			//
+			if ( sEmitterSetting.GetRangeRate() > 0.f )
+			{
+				float	fTempLong;
+
+				fTempLong = sEmitterSetting.GetRange().x/2.f;
+				if ( fTempLong < tempLocation.y/2.f ) fTempLong = tempLocation.y;
+				if ( fTempLong < tempLocation.z/2.f ) fTempLong = tempLocation.z;	//최고 긴 것을 찾는다.
+
+				// 1. 일정 범위에 있는지 검사		// 바꾸자
+				float fTemp1 = sqrtf( (tempLocation.x*tempLocation.x) + (tempLocation.y*tempLocation.y) );
+				if ( sqrtf( (fTemp1*fTemp1) + (tempLocation.z*tempLocation.z) ) < fTempLong*sEmitterSetting.GetRangeRate() )
+				{
+
+					// 2. 시작점 찾기
+					float		fRate, fTemp;
+					D3DXVECTOR3 tempStart;
+					tempStart = (sEmitterSetting.GetRange())*sEmitterSetting.GetRangeRate()/2.f;
+
+					fRate = fabsf(tempStart.x/tempLocation.x);
+
+					fTemp = fabsf(tempStart.y/tempLocation.y);
+					if ( fRate > fTemp ) fRate = fTemp;
+
+					fTemp = fabsf(tempStart.z/tempLocation.z);
+					if ( fRate > fTemp ) fRate = fTemp;	// 최소 비율 찾기
+
+					tempStart = tempLocation * fRate;	// 비율로 곱하기
+
+					// 3. 비율로써 새로운 점 찾기
+					tempLocation = tempStart + tempLocation*(1-sEmitterSetting.GetRangeRate());
+				}
+			}
+		}
+		else
+		{
+			//	Note : 생성 범위안에 있는 파티클 중 .. 일정범위에 있는 것들이  나오도록 설정할 수 있다.
+			//
+			if ( sEmitterSetting.GetRangeRate() > 0.f )
+			{
+				// 1. 일정 범위에 있는지 검사	// 이것은 직사각형, 육면체만 해당
+				if ( sEmitterSetting.GetRange().x*sEmitterSetting.GetRangeRate()/2.f >= tempLocation.x && -sEmitterSetting.GetRange().x*sEmitterSetting.GetRangeRate()/2.f <= tempLocation.x &&
+					sEmitterSetting.GetRange().y*sEmitterSetting.GetRangeRate()/2.f >= tempLocation.y && -sEmitterSetting.GetRange().y*sEmitterSetting.GetRangeRate()/2.f <= tempLocation.y &&
+					sEmitterSetting.GetRange().z*sEmitterSetting.GetRangeRate()/2.f >= tempLocation.z && -sEmitterSetting.GetRange().z*sEmitterSetting.GetRangeRate()/2.f <= tempLocation.z )
+				{
+
+					// 2. 시작점 찾기
+					float		fRate, fTemp;
+					D3DXVECTOR3 tempStart;
+					tempStart = (sEmitterSetting.GetRange())*sEmitterSetting.GetRangeRate()/2.f;
+
+					fRate = fabsf(tempStart.x/tempLocation.x);
+
+					fTemp = fabsf(tempStart.y/tempLocation.y);
+					if ( fRate > fTemp ) fRate = fTemp;
+
+					fTemp = fabsf(tempStart.z/tempLocation.z);
+					if ( fRate > fTemp ) fRate = fTemp;	// 최소 비율 찾기
+
+					tempStart = tempLocation * fRate;	// 비율로 곱하기
+
+					// 3. 비율로써 새로운 점 찾기
+					tempLocation = tempStart + tempLocation*(1-sEmitterSetting.GetRangeRate());
+				}
+			}
+		}
+		pParticle->m_vLocation += tempLocation;
+	}
+
+	//	Note : 회전 적용
+	if ( sEmitterSetting.GetFlag() & USEROTATEL )
+	{
+		D3DXVECTOR3		vCenter ( 0.f, 0.f, 0.f );
+		D3DXVECTOR3		vPoint ( 1.f, 0.f, 0.f );		
+		D3DXVECTOR3		vTempPoint1 ( -0.01f, 10000.f, 0.f );
+		D3DXVECTOR3		vTempPoint2 ( -0.01f, -10000.f, 0.f );
+		D3DXPLANE		vPlane;										
+
+		if ( tempVelocity.y <= 0.01f && tempVelocity.y >= -0.01f )		vPoint = D3DXVECTOR3 ( 0.f, 1.f, 0.f );
+		else
+		{
+			D3DXPlaneFromPointNormal ( &vPlane, &vCenter, &tempVelocity );
+			vPoint = DxSplit ( &vPlane, &vTempPoint1, &vTempPoint2 );
+			D3DXVec3Normalize ( &vPoint, &vPoint );
+		}
+
+		//	Note : 회전 반지름 - FrameMove
+		//
+		if ( pThisGroup->m_fGAge >= pThisGroup->m_fGBeginTime && pThisGroup->m_fGAge < sEmitterSetting.GetRotateLTime1() )
+			m_fLength +=  sEmitterSetting.GetRotateLDelta1()*m_fElapsedTimeSum;
+		else if ( pThisGroup->m_fGAge >= sEmitterSetting.GetRotateLTime1() && pThisGroup->m_fGAge < sEmitterSetting.GetRotateLTime2() )	
+			m_fLength +=  sEmitterSetting.GetRotateLDelta2()*m_fElapsedTimeSum;
+		else														
+			m_fLength +=  sEmitterSetting.GetRotateLDelta3()*m_fElapsedTimeSum;
+
+
+		D3DXMATRIX matRotateL;
+		vPoint *= m_fLength;
+		m_fRotateLAngelSum += sEmitterSetting.GetRotateLAngel() * m_fElapsedTimeSum * 360.f;
+		if ( tempVelocity.y > 0.f )	D3DXMatrixRotationAxis ( &matRotateL ,&tempVelocity , m_fRotateLAngelSum*D3DX_PI/180.f );	// 회전 매트릭스 구함
+		else						D3DXMatrixRotationAxis ( &matRotateL ,&tempVelocity , m_fRotateLAngelSum*D3DX_PI/180.f + D3DX_PI );	// 회전 매트릭스 구함
+
+		D3DXVec3TransformCoord ( &vCenter, &vPoint ,&matRotateL );
+
+		pParticle->m_vLocation += vCenter;
+		m_fElapsedTimeSum = 0.f;
+	}
+
+	//	Note : 메쉬 파티클이 방향성을 가지지 않으면 랜덤하게 회전시켜 놓는다.
+	if ( (sEmitterSetting.GetFlag()&USEMESH) && !(sEmitterSetting.GetFlag()&USEDIRECTION) )
+	{
+		//D3DXMatrixIdentity ( &matTrans );
+		//D3DXMatrixRotationX ( &matRotate, (float)rand() );
+		//D3DXMatrixMultiply ( &matTrans, &matTrans, &matRotate );
+		//D3DXMatrixRotationY ( &matRotate, (float)rand() );
+		//D3DXMatrixMultiply ( &matTrans, &matTrans, &matRotate );
+		//D3DXMatrixRotationZ ( &matRotate, (float)rand() );
+
+		D3DXMatrixIdentity ( &matTrans );
+		D3DXMatrixRotationY ( &matRotate, (float)rand() );
+
+		D3DXMatrixMultiply ( &pParticle->m_matRotate, &matTrans, &matRotate );
+	}
+
+	//	Note : 이동 함 생각 해 볼까 !
+	//
+	if ( sEmitterSetting.GetFlag()&USEPARENTMOVE )			// 완전 적용	(상대좌표)	//	빗방울(캐릭)
+	{
+		matParent = matLocal;
+		//D3DXVec3TransformCoord ( &pParticle->m_vLocation, &pParticle->m_vLocation, m_pmatLocal );
+	}
+	else	// 회전만 적용	(절대좌표)	// 불(월드)
+	{
+		//	matParent = matComb;
+		//	matParent._41 = pThisGroup->m_matWorld._41;
+		//	matParent._42 = pThisGroup->m_matWorld._42;
+		//	matParent._43 = pThisGroup->m_matWorld._43;
+		D3DXMatrixMultiply ( &matParent, &matLocal, &matComb );//&matParent );
+
+		//D3DXVec3TransformCoord ( &pParticle->m_vLocation, &pParticle->m_vLocation, &matParent );
+	}
+
+	//	Note : 회전 함 생각 해 볼까 !
+	//
+	if ( sEmitterSetting.GetFlag() & USEPARENTROTATE_FOR_PARTICLE )
+	{
+		matRotate = matComb;
+		matRotate._41 = 0.f;
+		matRotate._42 = 0.f;
+		matRotate._43 = 0.f;
+		matRotate._44 = 1.f;
+		//D3DXMatrixMultiply ( &matParent, &matParent, &matRotate );
+		D3DXMatrixMultiply_RM3( matParent, matRotate );
+	}
+
+	//	Note : 이동과 회전 적용 최종본
+	//
+	D3DXVec3TransformCoord ( &pParticle->m_vLocation, &pParticle->m_vLocation, &matParent );
+
+	pParticle->m_vPrevLocation = m_vGLocation;
+}
+
+void ParticleEmitter::FrameMove( DWORD dwRunFlag, float fElapsedTime, const DxEffectParticleSys* pParticleSysSource, PARTICLE* pParticleHead )
+{
+	const EmitterBaseSetting& sEmitterSetting = pParticleSysSource->GetEmitterSetting();
+	const ParticlesBaseSetting& sParticleSetting = pParticleSysSource->GetParticleSetting();
+
+	m_fSequenceTime += fElapsedTime;
+
+	////	Note : 회전 적용
+	////
+	//if ( (m_dwFlag&USERANGEHIGH) )			
+	//	m_fRotateAngelSum += m_fRotateAngel * fElapsedTime;
+
+	if ( !( dwRunFlag & EFF_PLY_DONE ) )
+	{
+		//	Note : 위치 이동.
+		//
+		m_vGPrevLocation = m_vGLocation;
+		m_vGLocation += m_vGVelocity * fElapsedTime;
+
+
+		//	Note : 회전에서 필요, 시간의 누적
+		m_fElapsedTimeSum += fElapsedTime;
+
+		//	Note : 속도 변화. [ GRAVITY 문제가 있는거 같음. ]  - [수정필요]
+		D3DXVECTOR3 vDeltaGVel = m_vGGravity*fElapsedTime;
+
+		m_vGVelocity += vDeltaGVel;
+
+		//	Note : 중력 변화.
+		m_vGGravity += sEmitterSetting.GetGGravityDelta() * fElapsedTime;
+	}
+
+	// Note : 랜덤 Play 셋팅
+	if ( sEmitterSetting.GetFlag() & USERANDOMPLAY )
+	{
+		if( m_bRandomPlay )
+		{
+			if( m_fRandomPlayTime > m_vPlayTime.z )
+			{
+				m_fRandomPlayTime = 0.f;
+				m_bRandomPlay = FALSE;
+
+				m_vSleepTime.z = m_vSleepTime.x + m_vSleepTime.y * sc::Random::RANDOM_POS();
+			}
+		}
+		else
+		{
+			if( m_fRandomPlayTime > m_vSleepTime.z )	
+			{
+				m_fRandomPlayTime = 0.f;
+				m_bRandomPlay = TRUE;
+
+				m_vPlayTime.z = m_vPlayTime.x + m_vPlayTime.y * sc::Random::RANDOM_POS();
+
+				// Note : 효과를 재 Play 할 경우 방향을 바꿔주는 셋팅
+				if ( sEmitterSetting.GetFlag() & USERANDOMDIRECT )
+				{
+					D3DXMATRIX matRotate;
+					if( m_nCountR==0 )
+					{
+						D3DXMatrixRotationX( &matRotate, (float)rand() );
+						D3DXMatrixMultiply( &m_matRandomR, &m_matRandomR, &matRotate );
+					}
+					else if( m_nCountR==1 )
+					{
+						D3DXMatrixRotationY( &matRotate, (float)rand() );
+						D3DXMatrixMultiply( &m_matRandomR, &m_matRandomR, &matRotate );
+					}
+					else if( m_nCountR==2 )
+					{
+						D3DXMatrixRotationZ( &matRotate, (float)rand() );
+						D3DXMatrixMultiply( &m_matRandomR, &m_matRandomR, &matRotate );
+					}
+
+					++m_nCountR;
+
+					if( m_nCountR==3 )	m_nCountR = 0;
+				}
+			}
+		}
+
+		m_fRandomPlayTime += fElapsedTime;
+	}
+
+	//	Note : 시퀀스 적용
+	//
+	if ( sEmitterSetting.GetFlag() & USESEQUENCE )
+	{
+		PARTICLE* pParticleNode(NULL);
+		if ( sEmitterSetting.GetFlag() & USESEQUENCELOOP )
+		{
+			if ( m_fSequenceTime > sParticleSetting.GetAniTime() )
+			{
+				m_fSequenceTime = 0.f;
+
+				pParticleNode = pParticleHead;
+				while ( pParticleNode )
+				{
+					if ( pParticleNode->m_bSequenceRoop )	pParticleNode->m_nNowSprite++;
+					else									pParticleNode->m_nNowSprite--;
+
+					pParticleNode = pParticleNode->m_pNext;
+				}
+			}
+
+			pParticleNode = pParticleHead;
+			while ( pParticleNode )
+			{
+				if ( pParticleNode->m_nNowSprite >= sParticleSetting.GetAllSprite() )
+				{
+					pParticleNode->m_bSequenceRoop	= !pParticleNode->m_bSequenceRoop;
+					pParticleNode->m_nNowSprite		-= 2;
+				}
+				else if ( pParticleNode->m_nNowSprite < 0 )
+				{
+					pParticleNode->m_bSequenceRoop	= !pParticleNode->m_bSequenceRoop;
+					pParticleNode->m_nNowSprite		+= 2;
+				}
+
+				pParticleNode = pParticleNode->m_pNext;
+			}
+		}
+		else
+		{
+			if ( m_fSequenceTime > sParticleSetting.GetAniTime() )
+			{
+				m_fSequenceTime = 0.f;
+
+				pParticleNode = pParticleHead;
+				while ( pParticleNode )
+				{
+					pParticleNode->m_nNowSprite++;
+
+					if ( pParticleNode->m_nNowSprite >= sParticleSetting.GetAllSprite() )	
+						pParticleNode->m_nNowSprite = 0;
+
+					pParticleNode = pParticleNode->m_pNext;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//							ParticlesForThread
+//////////////////////////////////////////////////////////////////////////
+ParticlesForThread::ParticlesForThread( boost::shared_ptr<ParticleEmitter>& spParicleEmitter,
+									   boost::shared_ptr<DxEffSingleGroup>& spThisGroup,
+									   const DxEffectParticleSys* pEffectParticleSys )
+	: SingleForThread( spThisGroup )
+	, m_spParicleEmitter(spParicleEmitter)
+	//, m_wpThisGroup(spThisGroup)
+	, m_rParticleSysSource(pEffectParticleSys)
+	, m_pParticleHead(NULL)
+	, m_uParticlesAlive(0)
+	, m_uParticlesCreated(0)
+	, m_fEmissionResidue(0.f)
+	, m_fAlpha(1.f)
+{
+	D3DXMatrixIdentity( &m_matPrevComb );
+	D3DXMatrixIdentity( &m_matRotate );
+	D3DXMatrixIdentity( &m_matCombine );
+
+	m_dwDrawPoints[0] = 0;
+	m_dwDrawPoints[1] = 0;
+	D3DXMatrixIdentity( &m_matWorld[0] );
+	D3DXMatrixIdentity( &m_matWorld[1] );
+
+	//m_rParticleSysSource = MIN_BOOST::polymorphic_downcast<const DxEffectParticleSys*>( pSingleSource );
+}
+
+ParticlesForThread::~ParticlesForThread()
+{
+	SAFE_DELETE ( m_pParticleHead );
+}
+
+void ParticlesForThread::PutSleepParticles ( PARTICLE* pParticles )
+{
+	if ( !pParticles )	
+		return;
+
+	PARTICLE* pCur = pParticles;
+	while ( pCur )
+	{
+		if( pCur->m_spSingleGroup.get() )
+		{
+			pCur->m_spSingleGroup->InvalidateDeviceObjects ();
+			pCur->m_spSingleGroup->DeleteDeviceObjects ();
+			pCur->m_spSingleGroup->FinalCleanup();
+			pCur->m_spSingleGroup.reset();
+		}
+
+		pCur = pCur->m_pNext;
+	}
+
+	//	Note : 집어 넣을 파티클 리스트의 끝 노드를 찾는다.
+	//
+	{
+		PARTICLE* pCur = pParticles;
+		while ( pCur )
+		{
+			PARTICLE* pRelease = pCur;
+			pCur = pCur->m_pNext;
+
+			pRelease->m_pNext = NULL;
+			SAFE_DELETE(pRelease);
+		}
+	}
+}
+
+void ParticlesForThread::PutSleepParticle ( PARTICLE* pParticle )
+{
+	if ( !pParticle )	
+		return;
+
+	if( pParticle->m_spSingleGroup.get() )
+	{
+		pParticle->m_spSingleGroup->InvalidateDeviceObjects ();
+		pParticle->m_spSingleGroup->DeleteDeviceObjects ();
+		pParticle->m_spSingleGroup->FinalCleanup();
+		pParticle->m_spSingleGroup.reset();
+	}
+
+	//	Note : 집어 넣을 파티클 리스트의 끝 노드를 찾는다.
+	{
+		pParticle->m_pNext = NULL;
+		SAFE_DELETE(pParticle);
+	}
+}
+
+void ParticlesForThread::CheckAABBBox( D3DXVECTOR3& vMax, D3DXVECTOR3& vMin ) const
+{
+	if ( !m_pParticleHead )
+		return;
+
+	float fSize;
+	D3DXVECTOR3 vBase;
+	D3DXVECTOR3 vPos;
+	PARTICLE* pParticleNode = m_pParticleHead;
+	while ( pParticleNode )
+	{
+		//if ( pParticleNode->m_fAge + fElapsedTime >= pParticleNode->m_fLifetime ) 
+		if ( pParticleNode->m_fAge >= pParticleNode->m_fLifetime ) 
+		{
+			pParticleNode = pParticleNode->m_pNext;
+			continue;
+		}
+
+		fSize = pParticleNode->m_fSize*0.5f;
+		D3DXVec3TransformCoord( &vBase, &pParticleNode->m_vLocation, &m_matWorld[m_nUSED] );
+
+		vPos = vBase + D3DXVECTOR3( fSize, fSize, fSize);
+		if( vMax.x < vPos.x )	vMax.x = vPos.x;
+		if( vMax.y < vPos.y )	vMax.y = vPos.y;
+		if( vMax.z < vPos.z )	vMax.z = vPos.z;
+
+		vPos = vBase - D3DXVECTOR3( fSize, fSize, fSize);
+		if( vMin.x > vPos.x )	vMin.x = vPos.x;
+		if( vMin.y > vPos.y )	vMin.y = vPos.y;
+		if( vMin.z > vPos.z )	vMin.z = vPos.z;
+
+		pParticleNode = pParticleNode->m_pNext;
+	}
+}
+
+void ParticlesForThread::FrameMove( float fElapsedTime )
+{
+	if ( m_nUSED == -1 )
+		return;
+
+	const boost::shared_ptr<DxEffSingleGroup> spThisGroup = m_wpThisGroup.lock();
+	if ( !spThisGroup )
+		return;
+
+	//boost::shared_ptr<DxEffSingleGroup> spThisGroup = m_wpThisGroup.lock();
+	//if ( !spThisGroup )
+	//	return;
+
+	const EmitterBaseSetting& sEmitterSetting = m_rParticleSysSource->GetEmitterSetting();
+	const ParticlesBaseSetting& sParticleSetting = m_rParticleSysSource->GetParticleSetting();
+
+	//	Note : 중력.. 중력. 부모의 회전이 나에게 영향을 받도록 만든다.
+	D3DXVECTOR3	vLocal (0.f,9.8f,0.f);
+	D3DXVec3TransformCoord ( &vLocal, &vLocal, &m_matRotate );
+
+	//	Note : 파티클 업데이트.
+	m_uParticlesAlive = 0;
+
+	D3DXVECTOR3 vAttractLocBase( 0.f, 0.f, 0.f );
+	const D3DXVECTOR3 *pAttractLoc(NULL);
+	if ( sEmitterSetting.GetFlag()&USEATTRACTION )
+	{
+		if ( sEmitterSetting.GetFlag()&USEPARENTMOVE )		pAttractLoc = &vAttractLocBase;
+		else												pAttractLoc = &(spThisGroup->m_vGNowPos);
+	}
+
+	BOOL		bFromTo(FALSE);
+	D3DXVECTOR3 vSTART_POS(0.f,0.f,0.f);
+	D3DXVECTOR3 vTARGET_POS(0.f,0.f,0.f);
+	if ( sEmitterSetting.GetFlag()&USEFROMTO )
+	{
+		bFromTo		= TRUE;
+		vSTART_POS	= spThisGroup->GetNowPos();
+		vTARGET_POS	= spThisGroup->GetTargetPos();
+	}
+
+	m_spParicleEmitter->FrameMove( m_rParticleSysSource->m_dwRunFlag, fElapsedTime, m_rParticleSysSource, m_pParticleHead );
+
+	m_uParticlesAlive = 0;
+
+	PARTICLE* pParticleNode = m_pParticleHead;
+	PARTICLE* pParticlePrev = NULL;
+	while ( pParticleNode )
+	{		
+		if ( pParticleNode->FrameMove ( fElapsedTime, pAttractLoc, &vLocal, bFromTo, vTARGET_POS, vSTART_POS, sEmitterSetting.GetFlag() ) )
+		{
+			m_uParticlesAlive++;
+
+			pParticlePrev = pParticleNode;
+			pParticleNode = pParticleNode->m_pNext;
+		}
+		else
+		{
+			// 삭제 되야할 것 등록.
+			m_vecDeleteParticles.push_back( pParticleNode );
+
+			//	Note : 리스트에서 분리.
+			//
+			PARTICLE* pParticleThis = pParticleNode;
+			if ( pParticleThis == m_pParticleHead )
+			{
+				m_pParticleHead = pParticleNode->m_pNext;
+				pParticlePrev = NULL;
+
+				pParticleNode = m_pParticleHead;
+			}
+			else
+			{
+				pParticlePrev->m_pNext = pParticleNode->m_pNext;
+
+				pParticleNode = pParticlePrev->m_pNext;
+			}
+		}
+	}
+
+	// 새로 만들어질 파티클 갯수를 계산한다.
+	{
+		// fps 가 늦다고 1 Frame 에 너무 많은 파티클은 뿌리지 않도록 하자. 기준 (30fps)
+		if ( fElapsedTime > 0.0333f )
+			fElapsedTime = 0.3333f;
+
+		float fParticlesNeeded = m_rParticleSysSource->GetParticlesPerSec() * fElapsedTime + m_fEmissionResidue;
+		m_uParticlesCreated = (DWORD) fParticlesNeeded;
+
+		if ( m_uParticlesCreated >= m_rParticleSysSource->GetParticlesPerSec() )
+		{
+			m_uParticlesCreated = m_rParticleSysSource->GetParticlesPerSec();
+		}
+
+		m_fEmissionResidue = fParticlesNeeded - m_uParticlesCreated;
+
+		if ( m_rParticleSysSource->m_dwRunFlag & EFF_PLY_DONE )
+		{
+			m_uParticlesCreated = 0;
+		}
+
+	}
+}
+
+void ParticlesForThread::NewParticleCreate( D3DXMATRIX &matComb, D3DXVECTOR3 vPos_NowPrev, float fElapsedTime )
+{
+	const boost::shared_ptr<DxEffSingleGroup> spThisGroup = m_wpThisGroup.lock();
+	if ( !spThisGroup )
+		return;
+
+	const EmitterBaseSetting& sEmitterSetting = m_rParticleSysSource->GetEmitterSetting();
+
+	// Note : Play가 아닐때는 생성을 안한다.
+	if ( sEmitterSetting.GetFlag() & USERANDOMPLAY )
+	{
+		if( !m_spParicleEmitter->GetRandomPlay() )
+		{
+			m_uParticlesCreated = 0;
+			return;
+		}
+	}
+
+	if ( !spThisGroup->m_bOut_Particle )	
+	{
+		m_uParticlesCreated = 0;
+	}
+
+	if( !g_bEFFtoTEX )
+	{
+		if ( m_uParticlesCreated >= 1 )		
+			m_uParticlesCreated = 1;	// 1 보다 크면 제한 .. 끊김현상 제거
+	}
+
+	D3DXMATRIX matTrans, matRotate, matParent;
+
+	int		nBlur = 5;
+	if ( sEmitterSetting.GetFlag() & USEBEZIER_P )
+	{
+		m_uParticlesCreated *= nBlur;	// 잔상 때.
+	}
+
+	//	Note : DONE 상태에서 샐행이 된다.
+	//
+	PARTICLE* pParticle = NULL;
+	while  ( m_uParticlesCreated > 0 && !(m_rParticleSysSource->m_dwRunFlag&EFF_PLY_DONE) )
+	{
+		//	Note : 새로운 파티클 할당.
+		pParticle = new PARTICLE;
+
+		////	Note : 파티클 활성 리스트에 등록.
+		//pParticle->m_pNext = m_pParticleHead;
+		//m_pParticleHead = pParticle;
+
+		m_rParticleSysSource->GetParticleSetting().NewParticleCreate( pParticle, m_rParticleSysSource, matComb, vPos_NowPrev );
+
+		//	Note : 파티클 각각이 충돌을 한다.
+		if ( sEmitterSetting.GetFlag() & USECOLLISION )	pParticle->m_bCollision = TRUE;
+		else											pParticle->m_bCollision = FALSE;
+
+		m_spParicleEmitter->NewParticleCreate( pParticle, spThisGroup.get(), sEmitterSetting, matComb, m_rParticleSysSource->GetLocalMatrix(), vPos_NowPrev, fElapsedTime );
+
+		float fRate = 1.f;
+
+		//	Note : 보간을 위해서 마지막을 장식..
+		//
+		if ( sEmitterSetting.GetFlag() & USEBEZIER_P )	
+			fRate = 1.f - (float)(m_uParticlesCreated % nBlur)/(float)(nBlur);
+
+		pParticle->m_vLocation -= spThisGroup->m_vGDelta * fElapsedTime * fRate;
+
+		m_rParticleSysSource->GetParticleSetting().NewParticleCreate2
+		( 
+			pParticle, 
+			spThisGroup.get(), 
+			m_rParticleSysSource, 
+			matComb, 
+			vPos_NowPrev, 
+			fElapsedTime, 
+			sEmitterSetting.GetFlag(),
+			m_matRotate 
+		);
+
+		m_uParticlesCreated--;
+
+		m_vecCreateParticles.push_back( pParticle );
+	}
+
+	m_spParicleEmitter->m_vGPrevLocation = m_spParicleEmitter->m_vGLocation;
+}
+
+// pParticle->CreateSingleGroup( pd3dDevice, m_PropGroupRes ); 작업이 필요하다.
+
+void ParticlesForThread::SetMatrix ( D3DXMATRIX &matWorld, D3DXMATRIX &matComb )
+{
+	const boost::shared_ptr<DxEffSingleGroup> spThisGroup = m_wpThisGroup.lock();
+	if ( !spThisGroup )
+		return;
+
+	const EmitterBaseSetting& sEmitterSetting = m_rParticleSysSource->GetEmitterSetting();
+
+	float		fTime;
+	D3DXVECTOR3	vDelta(0.f,0.f,0.f);
+	D3DXMATRIX matTrans, matEmitter;	//, matRotate, matParent;
+
+	//	Note : 부모 회전 적용된 것과 안된 매트릭스 만들기
+	//			그룹의 시작위치가 DTS_WORLD의 이동에 영향을 주어야 한다.	뿌려야 할 위치 매트릭스!!!
+	//
+	if ( sEmitterSetting.GetFlag() & USEPARENTROTATEWORLD )	// 월드 에디터 적용..
+	{
+		matEmitter = matComb;
+		matEmitter._41 = spThisGroup->m_matWorld._41;
+		matEmitter._42 = spThisGroup->m_matWorld._42;
+		matEmitter._43 = spThisGroup->m_matWorld._43;
+	}
+	else
+	{
+		D3DXMatrixIdentity ( &matEmitter );
+		matEmitter._41 = spThisGroup->m_matWorld._41;
+		matEmitter._42 = spThisGroup->m_matWorld._42;
+		matEmitter._43 = spThisGroup->m_matWorld._43;
+	}
+
+	//	Note : 자기 자신의 매트릭스를 넣어준다.
+	//
+	//matWorld = m_matLocal;
+	D3DXMatrixIdentity( &matWorld );
+	matWorld._41 = 0.f;
+	matWorld._42 = 0.f;
+	matWorld._43 = 0.f;
+
+	//	Note : 월드 툴에서 넣어주는 회전(!!!회전!!!)을 셋팅 하기 위하여 이 계산을 한다.
+	//
+	m_matRotate = matEmitter;
+	m_matRotate._41 = 0.f;
+	m_matRotate._42 = 0.f;
+	m_matRotate._43 = 0.f;
+
+
+	// 완전 적용	(상대좌표)	//	빗방울(캐릭), 불(월드)	, 이동을 해도 원본 그상태, 문제점 회전시 빌보드 문제
+	if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )			
+	{
+		matWorld._41 = matComb._41;
+		matWorld._42 = matComb._42;
+		matWorld._43 = matComb._43;
+		matWorld._44 = matComb._44;
+	}
+	// 적용 안 시킴	(절대좌표)	//							, 이동을 하면 흔들린다.
+	else
+	{
+		matWorld._44 = matComb._44;
+	}
+
+	//	Note : 	자신의 위치에서 원점으로 가기위한 보간
+	//
+	if ( sEmitterSetting.GetFlag() & USEGOTOCENTER )
+	{
+		matTrans = m_rParticleSysSource->GetLocalMatrix();
+
+		fTime = m_rParticleSysSource->m_fGBeginTime+m_rParticleSysSource->m_fGLifeTime-m_rParticleSysSource->m_fGAge;
+
+		vDelta.x = m_rParticleSysSource->GetLocalMatrix()._41/m_rParticleSysSource->m_fGLifeTime;
+		vDelta.y = m_rParticleSysSource->GetLocalMatrix()._42/m_rParticleSysSource->m_fGLifeTime;
+		vDelta.z = m_rParticleSysSource->GetLocalMatrix()._43/m_rParticleSysSource->m_fGLifeTime;
+
+		matTrans._41 = vDelta.x*fTime;
+		matTrans._42 = vDelta.y*fTime;
+		matTrans._43 = vDelta.z*fTime;
+
+		D3DXMatrixMultiply ( &matWorld, &matWorld, &matTrans );
+	}
+}
+
+void ParticlesForThread::SetVertices( float fElapsedTime, const D3DXMATRIX& matCameraView )
+{
+	const boost::shared_ptr<DxEffSingleGroup> spThisGroup = m_wpThisGroup.lock();
+	if ( !spThisGroup )
+		return;
+
+	const EmitterBaseSetting& sEmitterSetting = m_rParticleSysSource->GetEmitterSetting();
+
+	D3DXMATRIX matComb(m_matCombine);
+	float fAlpha(m_fAlpha);
+
+	VERTEXCOLORTEX* pVertices = m_sVertices[m_nBackUp];
+
+	// Note : 랜덤 옵션에 랜덤 방향일 경우 계산을 해주어야 한다.
+	if( m_spParicleEmitter->m_bRandomPlay )
+	{
+		D3DXMatrixMultiply( &matComb, &m_spParicleEmitter->m_matRandomR, &matComb );
+	}
+
+	D3DXMATRIX	matView, matProj, matWVP;
+	D3DXMATRIX	matEmitter, matWorld, matRotate, matRotateL, matScale, matTrans, matMesh, matParent, matChild, matIdentity;
+	PARTICLE*	pParticleNode;
+	D3DXVECTOR3	lookAt;
+	D3DXVECTOR3	vDir;
+	D3DXVECTOR3	vPos_NowPrev;
+
+	lookAt = D3DXVECTOR3(0.f,0.f,0.f);
+
+	//	Note : 매트릭스 셋팅
+	SetMatrix ( matWorld, matComb );
+
+	if ( !(m_rParticleSysSource->m_dwRunFlag&EFF_PLY_PLAY) )		
+		return;
+
+	if ( m_rParticleSysSource->m_dwRunFlag&EFF_PLY_END )			
+		return;
+
+	if ( m_rParticleSysSource->m_dwRunFlag&EFF_PLY_RENDPASS )		
+		return;
+
+	//	Note : 본체의 힘에 의해 작은 파티클의 약간의 이동 움직임
+	//
+	if ( (m_matPrevComb._41==0.f) && (m_matPrevComb._42==0.f) && (m_matPrevComb._43==0.f) )
+	{
+		vPos_NowPrev = D3DXVECTOR3 ( 0.f, 0.f, 0.f );
+	}
+	else
+	{
+		vPos_NowPrev = D3DXVECTOR3 ( matComb._41-m_matPrevComb._41, matComb._42-m_matPrevComb._42, matComb._43-m_matPrevComb._43 );
+	}
+
+	//	Note : 새로운 파티클을 계속 생산해 낸다.
+	//
+	NewParticleCreate( matComb, vPos_NowPrev, fElapsedTime );
+
+	if ( m_uParticlesAlive==0 )
+		return;
+
+	m_matWorld[m_nBackUp] = matWorld;
+
+	
+
+	//	Note : 메쉬 뿌릴 것인가, 아니면 파티클로 뿌릴 것인가 ?
+	//
+	if( sEmitterSetting.GetFlag() & USEMESH )
+	{
+	}
+	else
+	{
+
+		int nDrawPoints = 0;
+
+		//	Note : 텍스쳐 늘이기를 사용한다.
+		//
+		if ( sEmitterSetting.GetFlag() & USETEXSCALE )
+		{
+			D3DXMATRIX matLocal;
+			D3DXVECTOR3	vBillPos, vDirc;
+
+			//	Note : 상대 좌표일 때 또는 절대 좌표 일 때 ..!!
+			//
+			if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+			{
+				vBillPos.x = m_rParticleSysSource->GetLocalMatrix()._41;
+				vBillPos.y = m_rParticleSysSource->GetLocalMatrix()._42;
+				vBillPos.z = m_rParticleSysSource->GetLocalMatrix()._43;
+				D3DXVec3TransformCoord ( &vBillPos, &vBillPos, &matWorld );
+			}
+			else
+			{
+				vBillPos.x = spThisGroup->m_matWorld._41;
+				vBillPos.y = spThisGroup->m_matWorld._42;
+				vBillPos.z = spThisGroup->m_matWorld._43;
+			}
+
+			if ( sEmitterSetting.GetFlag()&USEBILLBOARDUP )
+				matLocal = DxBillboardLookAtHeight ( &vBillPos, matCameraView );		// 
+			else if ( sEmitterSetting.GetFlag()&USEGROUND )
+				D3DXMatrixBillboardGround( matLocal );
+			else
+				matLocal = DxBillboardLookAt ( &vBillPos, matCameraView );			//
+			matLocal._41 = 0.f;
+			matLocal._42 = 0.f;
+			matLocal._43 = 0.f;
+
+			VERTEXCOLORTEX	sVertex[4];
+			DWORD dwVertexSize( sizeof(VERTEXCOLORTEX)*4 );
+			DWORD dwColor(0);
+			int nCount00(0);
+			int nCount10(0);
+			int nCount01(0);
+			int nCount11(0);
+
+			float fSize(0.f);
+			float fScaleX(0.f);
+			float fScaleY(0.f);
+
+			D3DXVECTOR3 vAddPos(0.f,0.f,0.f);
+
+			pParticleNode = m_pParticleHead;
+			while ( pParticleNode )
+			{
+				if( MAX_PARTICLES==nDrawPoints )
+					break;
+
+				if ( sEmitterSetting.GetFlag()&USEBILLBOARDALL )
+				{
+					if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+					{
+						vBillPos = pParticleNode->m_vLocation;
+						D3DXVec3TransformCoord ( &vBillPos, &vBillPos, &matWorld );
+					}
+					else
+					{
+						vBillPos = pParticleNode->m_vLocation;
+					}
+					if ( sEmitterSetting.GetFlag()&USEBILLBOARDUP )
+						matLocal = DxBillboardLookAtHeight ( &vBillPos, matCameraView );		// 
+					else if ( sEmitterSetting.GetFlag()&USEGROUND )
+						D3DXMatrixBillboardGround( matLocal );
+					else
+						matLocal = DxBillboardLookAt ( &vBillPos, matCameraView );			//
+					matLocal._41 = 0.f;
+					matLocal._42 = 0.f;
+					matLocal._43 = 0.f;
+				}
+				if ( sEmitterSetting.GetFlag()&USEDIRECTION )	// 방향이 있는 물체면 (범위)를 적용한 매트릭스가 사라진다.
+				{
+					if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+					{
+						D3DXVec3TransformCoord ( &vDirc, &pParticleNode->m_vLocation, &matWorld );
+						vDir.x = spThisGroup->m_matWorld._41;
+						vDir.y = spThisGroup->m_matWorld._42;
+						vDir.z = spThisGroup->m_matWorld._43;
+						matLocal = DxBillboardLookAtDir ( &vDirc, &vDir );
+					}
+					else
+					{
+						matLocal = DxBillboardLookAtDir ( &pParticleNode->m_vLocation, &pParticleNode->m_vPrevLocation );
+					}
+				}
+
+				fSize = pParticleNode->m_fSize*0.25f;
+				fScaleX = fSize*pParticleNode->m_vTexScale.x;
+				fScaleY = fSize*pParticleNode->m_vTexScale.y;
+
+				vAddPos = pParticleNode->m_vLocation;
+				dwColor = D3DCOLOR_COLORVALUE ( pParticleNode->m_cColor.x, pParticleNode->m_cColor.y, pParticleNode->m_cColor.z, pParticleNode->m_cColor.w*fAlpha );
+				nCount00 = (nDrawPoints*4)+0;
+
+
+				if ( sEmitterSetting.GetCenterPoint() == 0)	// 위
+				{
+					D3DXVECTOR3 vLocal = D3DXVECTOR3( -fScaleX, 0.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( fScaleX, 0.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( -fScaleX, -fScaleY*2.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( fScaleX, -fScaleY*2.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vLocal, &matLocal );
+				}
+				else if ( sEmitterSetting.GetCenterPoint() == 1)	// 중심
+				{
+					D3DXVECTOR3 vLocal = D3DXVECTOR3( -fScaleX, fScaleY, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( fScaleX, fScaleY, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( -fScaleX, -fScaleY, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( fScaleX, -fScaleY, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vLocal, &matLocal );
+				}
+				else if ( sEmitterSetting.GetCenterPoint() == 2)	// 아래
+				{
+					D3DXVECTOR3 vLocal = D3DXVECTOR3( -fScaleX, fScaleY*2.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( fScaleX, fScaleY*2.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( -fScaleX, 0.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vLocal, &matLocal );
+					vLocal = D3DXVECTOR3( fScaleX, 0.f, 0.f );
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vLocal, &matLocal );
+				}
+
+				if ( sEmitterSetting.GetFlag() & USESEQUENCE )
+				{
+					int nCol = m_rParticleSysSource->GetParticleSetting().GetCol();
+					int nRow = m_rParticleSysSource->GetParticleSetting().GetRow();
+
+					sVertex[0].vPos += vAddPos;
+					sVertex[0].dwColor = dwColor;
+					sVertex[0].vTex.x = pParticleNode->m_nNowSprite / (float)nCol;
+					sVertex[0].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow;
+
+					sVertex[1].vPos += vAddPos;
+					sVertex[1].dwColor = dwColor;
+					sVertex[1].vTex.x = (pParticleNode->m_nNowSprite+1) / (float)nCol;
+					sVertex[1].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow;
+
+					sVertex[2].vPos += vAddPos;
+					sVertex[2].dwColor = dwColor;
+					sVertex[2].vTex.x = pParticleNode->m_nNowSprite / (float)nCol;
+					sVertex[2].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow + 1.f/(float)nRow;
+
+					sVertex[3].vPos += vAddPos;
+					sVertex[3].dwColor = dwColor;
+					sVertex[3].vTex.x = (pParticleNode->m_nNowSprite+1) / (float)nCol;
+					sVertex[3].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow + 1.f/(float)nRow;
+
+					memcpy( &pVertices[ nCount00 ], sVertex, dwVertexSize );
+				}
+				else
+				{
+					sVertex[0].vPos += vAddPos;
+					sVertex[0].dwColor = dwColor;
+					sVertex[0].vTex.x = 0.f;
+					sVertex[0].vTex.y = 0.f;
+
+					sVertex[1].vPos += vAddPos;
+					sVertex[1].dwColor = dwColor;
+					sVertex[1].vTex.x = 1.f;
+					sVertex[1].vTex.y = 0.f;
+
+					sVertex[2].vPos += vAddPos;
+					sVertex[2].dwColor = dwColor;
+					sVertex[2].vTex.x = 0.f;
+					sVertex[2].vTex.y = 1.f;
+
+					sVertex[3].vPos += vAddPos;
+					sVertex[3].dwColor = dwColor;
+					sVertex[3].vTex.x = 1.f;
+					sVertex[3].vTex.y = 1.f;
+
+					memcpy( &pVertices[ nCount00 ], sVertex, dwVertexSize );
+				}
+
+				++nDrawPoints;
+
+				pParticleNode = pParticleNode->m_pNext;
+			}
+		}
+		//	Note : 텍스쳐 회전 사용 한다 ? Yes
+		//
+		else if ( sEmitterSetting.GetFlag() & USETEXROTATE )
+		{
+			D3DXVECTOR3	vBillPos;
+
+			//	Note : 상대 좌표일 때 또는 절대 좌표 일 때 ..!!
+			//
+			if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+			{
+				vBillPos.x = m_rParticleSysSource->GetLocalMatrix()._41;
+				vBillPos.y = m_rParticleSysSource->GetLocalMatrix()._42;
+				vBillPos.z = m_rParticleSysSource->GetLocalMatrix()._43;
+				D3DXVec3TransformCoord ( &vBillPos, &vBillPos, &matWorld );
+			}
+			else
+			{
+				vBillPos.x = spThisGroup->m_matWorld._41;
+				vBillPos.y = spThisGroup->m_matWorld._42;
+				vBillPos.z = spThisGroup->m_matWorld._43;
+			}
+
+			D3DXMATRIX	matLocal;
+
+			if ( sEmitterSetting.GetFlag()&USEBILLBOARDUP )
+				matLocal = DxBillboardLookAtHeight ( &vBillPos, matCameraView );		// 경우가 2가지다. 
+			else if ( sEmitterSetting.GetFlag()&USEGROUND )
+				D3DXMatrixBillboardGround( matLocal );
+			else
+				matLocal = DxBillboardLookAt ( &vBillPos, matCameraView );			//
+			matLocal._41 = 0.f;
+			matLocal._42 = 0.f;
+			matLocal._43 = 0.f;
+
+			VERTEXCOLORTEX	sVertex[4];
+			DWORD dwVertexSize( sizeof(VERTEXCOLORTEX)*4 );
+			DWORD dwColor(0);
+			int nCount00(0);
+			int nCount10(0);
+			int nCount01(0);
+			int nCount11(0);
+			float		fSize(0.f);
+			float		fTexRotateAngelSum(0.f);
+			D3DXVECTOR3 vLocal(0.f,0.f,0.f);
+			D3DXVECTOR3 vAddPos(0.f,0.f,0.f);
+			D3DXMATRIX	matScale, matFinal;
+
+			D3DXVECTOR3 vPos00( -1.f, 1.f, 0.f );
+			D3DXVECTOR3 vPos10( 1.f, 1.f, 0.f );
+			D3DXVECTOR3 vPos01( -1.f, -1.f, 0.f );
+			D3DXVECTOR3 vPos11( 1.f, -1.f, 0.f );
+
+			pParticleNode = m_pParticleHead;
+			while ( pParticleNode )
+			{
+				if( MAX_PARTICLES==nDrawPoints )
+					break;
+
+				if ( sEmitterSetting.GetFlag()&USEBILLBOARDALL )
+				{
+					if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+					{
+						vBillPos = pParticleNode->m_vLocation;
+						D3DXVec3TransformCoord ( &vBillPos, &vBillPos, &matWorld );
+					}
+					else
+					{
+						vBillPos = pParticleNode->m_vLocation;
+					}
+					if ( sEmitterSetting.GetFlag()&USEBILLBOARDUP )
+						matLocal = DxBillboardLookAtHeight ( &vBillPos, matCameraView );		// 경우가 2가지다. 
+					else if ( sEmitterSetting.GetFlag()&USEGROUND )
+						D3DXMatrixBillboardGround( matLocal );
+					else
+						matLocal = DxBillboardLookAt ( &vBillPos, matCameraView );			//
+					matLocal._41 = 0.f;
+					matLocal._42 = 0.f;
+					matLocal._43 = 0.f;
+				}
+
+				vAddPos = pParticleNode->m_vLocation;
+				dwColor = D3DCOLOR_COLORVALUE ( pParticleNode->m_cColor.x, pParticleNode->m_cColor.y, pParticleNode->m_cColor.z, pParticleNode->m_cColor.w*fAlpha );
+				nCount00 = (nDrawPoints*4)+0;
+
+				fSize = pParticleNode->m_fSize*0.5f;
+				fTexRotateAngelSum = pParticleNode->m_fTexRotateAngelSum;
+
+				D3DXMatrixRotationZ( &matRotate, fTexRotateAngelSum );
+				D3DXMatrixScaling( &matScale, fSize, fSize, fSize );
+				D3DXMatrixTranslation( &matTrans, vAddPos.x, vAddPos.y, vAddPos.z );
+				D3DXMatrixMultiply( &matFinal, &matScale, &matRotate );
+				D3DXMatrixMultiply( &matFinal, &matFinal, &matLocal );
+				D3DXMatrixMultiply( &matFinal, &matFinal, &matTrans );
+
+				if ( sEmitterSetting.GetFlag() & USESEQUENCE )
+				{
+					int nCol = m_rParticleSysSource->GetParticleSetting().GetCol();
+					int nRow = m_rParticleSysSource->GetParticleSetting().GetRow();
+
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vPos00, &matFinal );
+					sVertex[0].dwColor = dwColor;
+					sVertex[0].vTex.x = pParticleNode->m_nNowSprite / (float)nCol;
+					sVertex[0].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow;
+
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vPos10, &matFinal );
+					sVertex[1].dwColor = dwColor;
+					sVertex[1].vTex.x = (pParticleNode->m_nNowSprite+1) / (float)nCol;
+					sVertex[1].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow;
+
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vPos01, &matFinal );
+					sVertex[2].dwColor = dwColor;
+					sVertex[2].vTex.x = pParticleNode->m_nNowSprite / (float)nCol;
+					sVertex[2].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow + 1.f/(float)nRow;
+
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vPos11, &matFinal );
+					sVertex[3].dwColor = dwColor;
+					sVertex[3].vTex.x = (pParticleNode->m_nNowSprite+1) / (float)nCol;
+					sVertex[3].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow + 1.f/(float)nRow;
+
+					memcpy( &pVertices[ nCount00 ], sVertex, dwVertexSize );
+				}
+				else
+				{
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vPos00, &matFinal );
+					sVertex[0].dwColor = dwColor;
+					sVertex[0].vTex.x = 0.f;
+					sVertex[0].vTex.y = 0.f;
+
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vPos10, &matFinal );
+					sVertex[1].dwColor = dwColor;
+					sVertex[1].vTex.x = 1.f;
+					sVertex[1].vTex.y = 0.f;
+
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vPos01, &matFinal );
+					sVertex[2].dwColor = dwColor;
+					sVertex[2].vTex.x = 0.f;
+					sVertex[2].vTex.y = 1.f;
+
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vPos11, &matFinal );
+					sVertex[3].dwColor = dwColor;
+					sVertex[3].vTex.x = 1.f;
+					sVertex[3].vTex.y = 1.f;
+
+					memcpy( &pVertices[ nCount00 ], sVertex, dwVertexSize );
+				}
+
+				++nDrawPoints;
+
+				pParticleNode = pParticleNode->m_pNext;
+			}
+		}
+		else
+		{
+			D3DXVECTOR3	vBillPos;
+
+			//	Note : 상대 좌표일 때 또는 절대 좌표 일 때 ..!!
+			//
+			if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+			{
+				vBillPos.x = m_rParticleSysSource->GetLocalMatrix()._41;
+				vBillPos.y = m_rParticleSysSource->GetLocalMatrix()._42;
+				vBillPos.z = m_rParticleSysSource->GetLocalMatrix()._43;
+				D3DXVec3TransformCoord ( &vBillPos, &vBillPos, &matWorld );
+			}
+			else
+			{
+				vBillPos.x = spThisGroup->m_matWorld._41;
+				vBillPos.y = spThisGroup->m_matWorld._42;
+				vBillPos.z = spThisGroup->m_matWorld._43;
+			}
+
+			D3DXMATRIX	matLocal;
+
+			if ( sEmitterSetting.GetFlag()&USEBILLBOARDUP )
+				matLocal = DxBillboardLookAtHeight ( &vBillPos, matCameraView );		//
+			else if ( sEmitterSetting.GetFlag()&USEGROUND )
+				D3DXMatrixBillboardGround( matLocal );
+			else
+				matLocal = DxBillboardLookAt ( &vBillPos, matCameraView );			//
+			matLocal._41 = 0.f;
+			matLocal._42 = 0.f;
+			matLocal._43 = 0.f;
+
+			VERTEXCOLORTEX	sVertex[4];
+			DWORD dwVertexSize( sizeof(VERTEXCOLORTEX)*4 );
+			DWORD dwColor(0);
+			int nCount00(0);
+			int nCount10(0);
+			int nCount01(0);
+			int nCount11(0);
+			float fSize(0.f);
+			D3DXVECTOR3 vLocal(0.f,0.f,0.f);
+			D3DXVECTOR3 vAddPos(0.f,0.f,0.f);
+
+			D3DXMATRIX	matScale, matFinal;
+
+			D3DXVECTOR3 vPos00( -1.f, 1.f, 0.f );
+			D3DXVECTOR3 vPos10( 1.f, 1.f, 0.f );
+			D3DXVECTOR3 vPos01( -1.f, -1.f, 0.f );
+			D3DXVECTOR3 vPos11( 1.f, -1.f, 0.f );
+
+			pParticleNode = m_pParticleHead;
+			while ( pParticleNode )
+			{
+				if( MAX_PARTICLES==nDrawPoints )
+					break;
+
+				if ( sEmitterSetting.GetFlag()&USEBILLBOARDALL )
+				{
+					if ( (sEmitterSetting.GetFlag()&USEPARENTMOVE) )	
+					{
+						vBillPos = pParticleNode->m_vLocation;
+						D3DXVec3TransformCoord ( &vBillPos, &vBillPos, &matWorld );
+					}
+					else
+					{
+						vBillPos = pParticleNode->m_vLocation;
+					}
+					if ( sEmitterSetting.GetFlag()&USEBILLBOARDUP )
+						matLocal = DxBillboardLookAtHeight ( &vBillPos, matCameraView );		//  
+					else if ( sEmitterSetting.GetFlag()&USEGROUND )
+						D3DXMatrixBillboardGround( matLocal );
+					else
+						matLocal = DxBillboardLookAt ( &vBillPos, matCameraView );			//
+					matLocal._41 = 0.f;
+					matLocal._42 = 0.f;
+					matLocal._43 = 0.f;
+				}
+
+				fSize = pParticleNode->m_fSize*0.25f;
+
+				vAddPos = pParticleNode->m_vLocation;
+				dwColor = D3DCOLOR_COLORVALUE ( pParticleNode->m_cColor.x, pParticleNode->m_cColor.y, pParticleNode->m_cColor.z, pParticleNode->m_cColor.w*fAlpha );
+				nCount00 = nDrawPoints * 4;
+
+				D3DXMatrixScaling( &matScale, fSize, fSize, fSize );
+				D3DXMatrixTranslation( &matTrans, vAddPos.x, vAddPos.y, vAddPos.z );
+				D3DXMatrixMultiply( &matFinal, &matScale, &matLocal );
+				D3DXMatrixMultiply( &matFinal, &matFinal, &matTrans );
+
+				if ( sEmitterSetting.GetFlag() & USESEQUENCE )
+				{
+					int nCol = m_rParticleSysSource->GetParticleSetting().GetCol();
+					int nRow = m_rParticleSysSource->GetParticleSetting().GetRow();
+
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vPos00, &matFinal );
+					sVertex[0].dwColor = dwColor;
+					sVertex[0].vTex.x = pParticleNode->m_nNowSprite / (float)nCol;
+					sVertex[0].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow;
+
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vPos10, &matFinal );
+					sVertex[1].dwColor = dwColor;
+					sVertex[1].vTex.x = (pParticleNode->m_nNowSprite+1) / (float)nCol;
+					sVertex[1].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow;
+
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vPos01, &matFinal );
+					sVertex[2].dwColor = dwColor;
+					sVertex[2].vTex.x = pParticleNode->m_nNowSprite / (float)nCol;
+					sVertex[2].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow + 1.f/(float)nRow;
+
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vPos11, &matFinal );
+					sVertex[3].dwColor = dwColor;
+					sVertex[3].vTex.x = (pParticleNode->m_nNowSprite+1) / (float)nCol;
+					sVertex[3].vTex.y = (pParticleNode->m_nNowSprite / nCol) / (float)nRow + 1.f/(float)nRow;
+
+					memcpy( &pVertices[ nCount00 ], sVertex, dwVertexSize );
+				}
+				else
+				{
+					D3DXVec3TransformCoord ( &sVertex[0].vPos, &vPos00, &matFinal );
+					sVertex[0].dwColor = dwColor;
+					sVertex[0].vTex.x = 0.f;
+					sVertex[0].vTex.y = 0.f;
+
+					D3DXVec3TransformCoord ( &sVertex[1].vPos, &vPos10, &matFinal );
+					sVertex[1].dwColor = dwColor;
+					sVertex[1].vTex.x = 1.f;
+					sVertex[1].vTex.y = 0.f;
+
+					D3DXVec3TransformCoord ( &sVertex[2].vPos, &vPos01, &matFinal );
+					sVertex[2].dwColor = dwColor;
+					sVertex[2].vTex.x = 0.f;
+					sVertex[2].vTex.y = 1.f;
+
+					D3DXVec3TransformCoord ( &sVertex[3].vPos, &vPos11, &matFinal );
+					sVertex[3].dwColor = dwColor;
+					sVertex[3].vTex.x = 1.f;
+					sVertex[3].vTex.y = 1.f;
+
+					memcpy( &pVertices[ nCount00 ], sVertex, dwVertexSize );
+				}
+
+				++nDrawPoints;
+
+				pParticleNode = pParticleNode->m_pNext;
+			}
+		}
+
+		// draw 되는 갯수를 기억한다.
+		m_dwDrawPoints[m_nBackUp] = nDrawPoints;
+	}
+
+	//	Note : 예전의 위치를 기억 한다.
+	m_matPrevComb = matComb;
+}
+
+void ParticlesForThread::Swap( LPDIRECT3DDEVICEQ pd3dDevice )
+{
+	// 기본적인 것 스왑.
+	if ( !SingleForThread::IsSwap() )
+		return;
+
+	const EmitterBaseSetting& sEmitterSetting = m_rParticleSysSource->GetEmitterSetting();
+
+	// 생성 된 것 연결 작업
+	for ( DWORD i=0; i<m_vecCreateParticles.size(); ++i )
+	{
+		m_vecCreateParticles[i]->m_pNext = m_pParticleHead;
+		m_pParticleHead = m_vecCreateParticles[i];
+	}
+
+	// Note : EffGroup이 있다면 생성한다.
+	if ( sEmitterSetting.GetFlag() & USENEWEFF )
+	{
+		DxEffectParticleSys* pParticleSysSource_NoneConst = const_cast<DxEffectParticleSys*>(m_rParticleSysSource);
+		if( pParticleSysSource_NoneConst->m_PropGroupRes.Update() )
+		{
+			for ( DWORD i=0; i<m_vecCreateParticles.size(); ++i )
+			{
+				m_vecCreateParticles[i]->CreateSingleGroup_MainThread( pd3dDevice, pParticleSysSource_NoneConst->m_PropGroupRes, sEmitterSetting );
+			}
+		}
+	}
+
+	// 삭제 된 것 연결 작업.
+	PARTICLE* pParticleNode = NULL;
+	PARTICLE* pParticlePrev = NULL;
+	for ( DWORD i=0; i<m_vecDeleteParticles.size(); ++i )
+	{
+		pParticleNode = m_vecDeleteParticles[i];
+
+		//	Note : 소멸하는 파티클 Pool에 등록.
+		PutSleepParticle ( pParticleNode );
+	}
+
+	m_vecCreateParticles.clear();
+	m_vecDeleteParticles.clear();
+}
+
+DWORD ParticlesForThread::GetNumDrawPoints() const
+{
+	return m_dwDrawPoints[m_nUSED];
+}
+
+const VERTEXCOLORTEX* ParticlesForThread::GetUsedVertices() const
+{
+	return &m_sVertices[m_nUSED][0];
+}
+
+const D3DXMATRIX& ParticlesForThread::GetMatWorld() const
+{
+	return m_matWorld[m_nUSED];
+}
+
+BOOL ParticlesForThread::IsParticlesAlive() const
+{
+	return m_pParticleHead ? TRUE : FALSE;
+}
+
+const PARTICLE*	ParticlesForThread::GetParticleHead() const
+{
+	return m_pParticleHead;
+}

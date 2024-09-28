@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ks_c_5601-1987"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="AllProjectCommon"
+	OutputDirectory="$(SolutionDir)_Obj/$(ConfigurationName)/$(ProjectName)"
+	IntermediateDirectory="$(SolutionDir)_Obj/$(ConfigurationName)/$(ProjectName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="0"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)../RanThirdParty/boost_1_56&quot;;&quot;$(SolutionDir)=DX_Include&quot;;&quot;$(SolutionDir)=Squirrel/include&quot;"
+		PreprocessorDefinitions="WIN32;_WINDOWS;_SECURE_SCL_THROWS=0;BOOST_TYPEOF_SILENT;_BIND_TO_CURRENT_VCLIBS_VERSION=1;_NP30"
+		RuntimeLibrary="2"
+		AssemblerListingLocation="$(IntDir)\"
+		WarningLevel="4"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		LinkIncremental="1"
+		GenerateDebugInformation="true"
+		ProgramDatabaseFile="$(SolutionDir)/_bin/$(TargetName).pdb"
+		SubSystem="2"
+		LargeAddressAware="2"
+	/>
+</VisualStudioPropertySheet>

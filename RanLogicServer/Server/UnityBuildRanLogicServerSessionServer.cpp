@@ -1,0 +1,7 @@
+#include "pch.h"
+#include "SessionServer.cpp"
+//#include "SessionServerConfigXml.cpp"
+#include "SessionServerIO.cpp"
+#include "SessionServerMsg.cpp"
+#include "SessionServerPointShop.cpp"
+#include "SessionServerThread.cpp"

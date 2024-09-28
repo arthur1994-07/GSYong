@@ -1,0 +1,7 @@
+#include "stdafx.h"
+#include "./OldUi/Skill/SkillImage.cpp"
+#include "./OldUi/Skill/SkillImage33.cpp"
+#include "./OldUi/Skill/SkillPage.cpp"
+#include "./OldUi/Skill/SkillSlot.cpp"
+#include "./OldUi/Skill/SkillWindow.cpp"
+#include "./OldUi/Skill/SkillWindowToTray.cpp"

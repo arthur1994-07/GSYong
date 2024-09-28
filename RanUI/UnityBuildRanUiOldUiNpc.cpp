@@ -1,0 +1,8 @@
+#include "stdafx.h"
+//#include "./OldUi/Npc/DialogueWindow.cpp"
+//#include "./OldUi/Npc/DialogueWindowRenewal.cpp"
+//#include "./OldUi/Npc/NPCDialoguePage.cpp"
+//#include "./OldUi/Npc/NPCMarketPage.cpp"
+//#include "./OldUi/Npc/NPCPromotionPage.cpp"
+//#include "./OldUi/Npc/NPCRebuyPage.cpp"
+//#include "./OldUi/Npc/RebuyListNode.cpp"

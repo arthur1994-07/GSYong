@@ -1,0 +1,106 @@
+#ifndef _GL_CROW_DEFINE_H_
+#define _GL_CROW_DEFINE_H_
+
+#pragma once
+
+enum NPC_TYPE
+{
+    NPC_TYPE_NONE           = -1,
+    NPC_TYPE_NORMAL         = 0, // 일반;
+    NPC_TYPE_POSTBOX        = 1, // 우편함 타입;
+    NPC_TYPE_AUTHENTICATOR  = 2, // 인증기 타입;
+	NPC_TYPE_ODDEVEN        = 3, // 홀짝 게임기;
+	NPC_TYPE_TEXASHOLDEM    = 4, // 텍사스홀덤 게임;
+    NPC_TYPE_CLICK_TRIGGER  = 5, // 인던 스크립트용 클릭이벤트 트리거;
+
+    NPC_TYPE_SIZE           = 6,
+};
+
+enum EMCROWNOPENALTY
+{
+    EMCROWNOPENALTY_NORMAL	= 0x00001,
+    EMCROWNOPENALTY_DEBUFF	= 0x00002,
+    EMCROWNOPENALTY_LIMIT	= 0x00004,
+    EMCROWNOPENALTY_STATE	= 0x00008,
+};
+
+enum EMCROW_NPCACT
+{
+    EMCROWACT_TARSHORT	= 0x00004,
+    EMCROWACT_CDCERTIFY	= 0x00008,
+
+    EMCROWACT_INVISIBLE	= 0x00010,
+    EMCROWACT_RECVISIBLE= 0x00020,
+    EMCROWACT_BARRIER	= 0x00040,
+    EMCROWACT_POSHOLD	= 0x00080,
+    EMCROWACT_DIRHOLD	= 0x00100,
+
+    EMCROWACT_KNOCK		= 0x00200,
+    EMCROWACT_BOSS		= 0x00400,
+    EMCROWACT_BUSUNIT	= 0x01000,
+
+    EMCROWACT_IGNORE_SHOCK	= 0x10000,
+
+    EMCROWACT_AUTODROP	= 0x20000,
+	EMCROWACT_RANDOMREGEN = 0x40000,
+};
+
+enum EMCROWACT_UP
+{
+    EMCROWACT_UP_IDLE			= 0,
+    EMCROWACT_UP_FIRSTSTRIKE	= 1,
+    EMCROWACT_UP_LOWLEVEL		= 2,
+    EMCROWACT_UP_LOWHP			= 3,
+    EMCROWACT_UP_BRIGHT			= 4,
+    EMCROWACT_UP_DARK			= 5,
+    EMCROWACT_UP_BLOW			= 6,
+    EMCROWACT_UP_ARMER			= 7,
+    EMCROWACT_UP_RUNNER			= 8,
+    EMCROWACT_UP_ESCAPE			= 9,
+
+    EMCROWACT_UP_NSIZE			= 10
+};
+
+enum EMCROWACT_DN
+{
+    EMCROWACT_DN_CONTINUE		= 0,
+    EMCROWACT_DN_LOWHP			= 1,
+    EMCROWACT_DN_ESCAPE			= 2,
+
+    EMCROWACT_DN_NSIZE			= 3,
+};
+
+struct SCROWPATTERN
+{
+    enum { RANDOMPATTERNNUM = 10 };
+    float				m_fPatternDNRate;
+    EMCROWACT_UP		m_emActPattern;
+    DWORD				m_dwPatternAttackSet;        
+
+    SCROWPATTERN (void) :
+    m_fPatternDNRate( 0.0f ),
+        m_emActPattern( EMCROWACT_UP_IDLE ),
+        m_dwPatternAttackSet( 0 )
+    {
+
+    }
+};
+
+namespace COMMENT
+{
+	enum CROWSALE_TYPE
+	{
+		CROWSALE_ETC = 0,
+		CROWSALE_ARMOR,
+		CROWSALE_WEAPON,
+		CROWSALE_SRC,
+
+		CROWSALE_SIZE,
+	};
+
+	extern std::string SALETYPE[CROWSALE_SIZE];
+
+	int GetSaleType( const std::string& strType );
+}
+
+#endif // _GL_CROW_DEFINE_H_

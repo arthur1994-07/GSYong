@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{7C65038C-1B2F-41E1-A629-BED71D161F6F}") = "SquirrelProject1", "SquirrelProject1.sqproj", "{02EF11C2-5D73-4300-B2B7-798876D05DF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Client|Any CPU = Client|Any CPU
+		Server|Any CPU = Server|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02EF11C2-5D73-4300-B2B7-798876D05DF8}.Client|Any CPU.ActiveCfg = Client|Any CPU
+		{02EF11C2-5D73-4300-B2B7-798876D05DF8}.Client|Any CPU.Build.0 = Client|Any CPU
+		{02EF11C2-5D73-4300-B2B7-798876D05DF8}.Server|Any CPU.ActiveCfg = Server|Any CPU
+		{02EF11C2-5D73-4300-B2B7-798876D05DF8}.Server|Any CPU.Build.0 = Server|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

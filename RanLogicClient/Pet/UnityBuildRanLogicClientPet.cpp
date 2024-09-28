@@ -1,0 +1,6 @@
+#include "pch.h"
+#include "GLAnyPet.cpp"
+#include "GLPetClient.cpp"
+#include "GLPetClientCallback.cpp"
+#include "GLPetClientMsg.cpp"
+#include "GLPetClientReq.cpp"

@@ -1,0 +1,8 @@
+#include "stdafx.h"
+#include "./OldUi/Vehicle/BikeBoostWindow.cpp"
+#include "./OldUi/Vehicle/BikeColorChangeWindow.cpp"
+#include "./OldUi/Vehicle/BikeColorSlot.cpp"
+#include "./OldUi/Vehicle/BikeGetOffWindow.cpp"
+#include "./OldUi/Vehicle/BikeMessage.cpp"
+#include "./OldUi/Vehicle/BikeWindow.cpp"
+#include "./OldUi/Vehicle/VehicleWindow.cpp"

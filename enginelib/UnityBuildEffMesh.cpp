@@ -1,0 +1,8 @@
+#include "pch.h"
+#include "./DxEffect/Mesh/DxFrameAni.cpp"
+#include "./DxEffect/Mesh/DxFrameAniMan.cpp"
+//#include "./DxEffect/Mesh/DxStaticMeshThread.cpp"
+//#include "./DxEffect/Mesh/DxStaticMeshLightMap.cpp"
+#include "./DxEffect/Mesh/DxStaticPisMan.cpp"
+#include "./DxEffect/Mesh/DxStaticPisManEX.cpp"
+#include "./DxEffect/Mesh/DxStaticPisManThread.cpp"

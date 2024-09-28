@@ -1,0 +1,6 @@
+#include "stdafx.h"
+#include "./OldUi/Trade/TradeControlPage.cpp"
+#include "./OldUi/Trade/TradeInventoryPage.cpp"
+#include "./OldUi/Trade/TradeInventoryWindow.cpp"
+#include "./OldUi/Trade/TradePage.cpp"
+#include "./OldUi/Trade/TradeWindow.cpp"

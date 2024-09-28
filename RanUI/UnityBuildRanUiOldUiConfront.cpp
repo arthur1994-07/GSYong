@@ -1,0 +1,5 @@
+#include "stdafx.h"
+#include "./OldUI/Confront/ConftConfirm.cpp"
+#include "./OldUI/Confront/ConftDisplayMan.cpp"
+#include "./OldUI/Confront/ConftModalWindow.cpp"
+#include "./OldUI/Confront/ConftModalWindowMsg.cpp"

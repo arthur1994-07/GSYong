@@ -1,0 +1,6 @@
+#include "pch.h"
+#include "./DxEffect/EffKeep/DxEffKeep.cpp"
+#include "./DxEffect/EffKeep/DxEffKeepCTColor.cpp"
+#include "./DxEffect/EffKeep/DxEffKeepCTEdge.cpp"
+#include "./DxEffect/EffKeep/DxEffKeepCTShade.cpp"
+#include "./DxEffect/EffKeep/DxEffKeepPlayer.cpp"

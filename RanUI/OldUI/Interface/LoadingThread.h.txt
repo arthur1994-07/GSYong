@@ -1,0 +1,47 @@
+#pragma once
+
+struct SNATIVEID;
+class GLGaeaClient;
+
+namespace	NLOADINGTHREAD
+{
+	extern	LPDIRECT3DDEVICEQ*	n_ppd3dDevice;
+	extern	HWND				n_hWnd;
+	extern	BOOL				n_bWait;
+	extern	BOOL				n_bRender;
+	extern	char				n_szAppPath[MAX_PATH];
+	extern	int					n_ExitState;
+	extern	bool				n_bOVER15;
+	extern	bool				n_bFirst;
+	extern	CString				n_strTextureName;
+	extern	SNATIVEID			n_sMapID;
+
+	enum
+	{
+		eNOSTART,
+		eNORMAL,
+		eERROR,
+
+		LODING_COUNT = 4,
+		TIP_SIZE = 10,
+	};
+
+	HRESULT	StartThreadLOAD(
+        LPDIRECT3DDEVICEQ* ppd3dDevice, 
+		HWND hWnd, 
+		char* szAppPath, 
+		const CString& strTextureName,
+		SNATIVEID sMapID,
+        GLGaeaClient* pGaeaClient,
+		bool bFirst = false,
+		bool bOVER15 = false);
+	void WaitThread();
+	void EndThread();
+
+	BOOL GetWait();
+	void DeWait();
+	void EnWait();
+
+	void SetStep(int step);
+	int GetStep();
+};

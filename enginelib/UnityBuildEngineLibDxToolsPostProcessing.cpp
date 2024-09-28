@@ -1,0 +1,5 @@
+#include "pch.h"
+#include "./DxTools/PostProcessing/NSGlow.cpp"
+#include "./DxTools/PostProcessing/NSGlowFx.cpp"
+#include "./DxTools/PostProcessing/NSLightShafts.cpp"
+#include "./DxTools/PostProcessing/NSLightShaftsFx.cpp"
