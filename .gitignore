@@ -97,6 +97,8 @@ proguard/
 *.log
 *.htm
 
+# 
+
 # Android Studio Navigation editor temp files
 .navigation/
 
@@ -190,6 +192,7 @@ csrc/
 # Log file - the following switch allows to specify the file that will be
 # used to write all messages from simulation:  -l <filename>
 *.log
+*/*.htm
 
 # Coverage results (generated with urg) and database location.  The
 # following switch can also be used:  urg -dir <coverage_directory>.vdb
@@ -658,6 +661,7 @@ StyleCopReport.xml
 *.scc
 *.htm
 
+
 # Chutzpah Test files
 _Chutzpah*
 
@@ -871,6 +875,9 @@ node_modules/
 # Visual Studio 6 auto-generated workspace file (contains which files were open etc.)
 *.vbw
 
+# Visual Studio 9 build log
+*.htm
+
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
 **/*.DesktopClient/GeneratedArtifacts
@@ -918,6 +925,7 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 *.htm
+
 
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
@@ -1003,7 +1011,7 @@ _deps
 *.exe
 *.out
 *.app
-*.htm
+
 
 # C/C++ binary extension file
 *.bin
