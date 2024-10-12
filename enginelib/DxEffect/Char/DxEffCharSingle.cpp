@@ -25,7 +25,7 @@ extern BOOL g_bEFFECT_SPHERE_VISIBLE;
 
 DWORD		DxEffCharSingle::TYPEID				= EMEFFCHAR_SINGLE;
 const DWORD	DxEffCharSingle::VERSION			= 0x0108;
-char		DxEffCharSingle::NAME[MAX_PATH]		= "4.¥‹µ∂ ¿Ã∆Â∆Æ";
+char		DxEffCharSingle::NAME[MAX_PATH]		= "4.standalone_effect";
 
 DxEffCharSingle::DxEffCharSingle(void)
 	: DxEffChar()

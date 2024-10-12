@@ -466,7 +466,7 @@ BOOL CAttachLinkPage::LoadAblFile( const char *pszFileName )
     BOOL bOk = pAttBoneLink->LoadABLFile(std::string(pszFileName), pd3dDevice, EMSCD_ZERO );
 	if ( !bOk )
 	{
-		MessageBox ( "파일 읽기에 실패하였습니다." );
+		MessageBox ( "Failed to read file." );
 		return FALSE;
 	}
 

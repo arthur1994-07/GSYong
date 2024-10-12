@@ -320,7 +320,7 @@ void CAnimSetPage::UpdateAttachAnim( const SAttachBoneAnimInfo *pAttachBoneAnimI
 
 		if( pAttachBoneAnimInfo[i].bUseStrikeAni )
 		{
-			m_List_AttAni.SetItemText( i, 1, "타격 이펙트 사용" );
+			m_List_AttAni.SetItemText( i, 1, "Use hitting effect" );
 		}else{
 			SAttachBoneAnimBasicInfo sBasicInfo = pAttachBoneAnimInfo[i].sBasicAni;
 			// 아래의 COMMENT는 데이터에서 읽어오지 않는다;
@@ -334,8 +334,8 @@ void CAnimSetPage::UpdateAttachAnim( const SAttachBoneAnimInfo *pAttachBoneAnimI
 
 void CAnimSetPage::OnBnClickedCheckLoop()
 {
-	assert(m_pSheetTab&&"SheetTab의 포인터가 지정되지 않음.");
-	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control의 포인터가 지정되지 않음.");
+	assert(m_pSheetTab&&"SheetTab pointer to is not specified.");
+	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Controlpointer to is not specified.");
 
 	DxSkinAnimation *pAnimcont = m_pSheetTab->GetSkinAniContrl()->findanicont_none_const( m_sAnimName.GetString() );
 
@@ -364,8 +364,8 @@ void CAnimSetPage::OnBnClickedCheckMove()
 
 void CAnimSetPage::OnButtonOk() 
 {
-	assert(m_pSheetTab&&"SheetTab의 포인터가 지정되지 않음.");
-	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control의 포인터가 지정되지 않음.");
+	assert(m_pSheetTab&&"SheetTab The pointer to is not specified.");
+	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control pointer to is not specified.");
 
 	DWORD dwUnitTime;
 	CMainFrame *pFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
@@ -618,8 +618,8 @@ void CAnimSetPage::OnBnClickedButtonAnieff()
 void CAnimSetPage::OnBnClickedCheckUpbody()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	assert(m_pSheetTab&&_T("SheetTab의 포인터가 지정되지 않음.") );
-	assert(m_pSheetTab->GetSkinAniContrl()&&_T("Skin Animation Control의 포인터가 지정되지 않음.") );
+	assert(m_pSheetTab&&_T("SheetTab pointer to is not specified.") );
+	assert(m_pSheetTab->GetSkinAniContrl()&&_T("Skin Animation Control pointer to is not specified.") );
 
 	DxSkinAnimation *pAnimcont = m_pSheetTab->GetSkinAniContrl()->findanicont_none_const( m_sAnimName.GetString() );
 
@@ -675,9 +675,9 @@ BOOL CAnimSetPage::OnInitDialog()
 	int nVScrollBarWidth = ::GetSystemMetrics(SM_CXVSCROLL); 
 	int nColWidth[3] = { int(nListWidth*0.4f), int(nListWidth*0.38f), int(nListWidth*0.2f) };
 
-	m_List_AttAni.InsertColumn ( 0, _T("종류"),	LVCFMT_CENTER, nColWidth[0] );
-	m_List_AttAni.InsertColumn ( 1, _T("연결동작"),	LVCFMT_CENTER, nColWidth[1] );
-	m_List_AttAni.InsertColumn ( 2, _T("시작"),	LVCFMT_CENTER, nColWidth[2] );
+	m_List_AttAni.InsertColumn ( 0, _T("type"),	LVCFMT_CENTER, nColWidth[0] );
+	m_List_AttAni.InsertColumn ( 1, _T("Connection operation"),	LVCFMT_CENTER, nColWidth[1] );
+	m_List_AttAni.InsertColumn ( 2, _T("start"),	LVCFMT_CENTER, nColWidth[2] );
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
@@ -685,8 +685,8 @@ BOOL CAnimSetPage::OnInitDialog()
 void CAnimSetPage::OnBnClickedButtonImportCfg()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	assert(m_pSheetTab&&"SheetTab의 포인터가 지정되지 않음.");
-	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control의 포인터가 지정되지 않음.");
+	assert(m_pSheetTab&&"SheetTab pointer to is not specified.");
+	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control pointer to is not specified.");
 
 	CMainFrame *pFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
 	CCharEditView *pView = (CCharEditView*) pFrame->GetActiveView ();
@@ -723,8 +723,8 @@ void CAnimSetPage::OnBnClickedButtonImportCfg()
 void CAnimSetPage::OnBnClickedButtonXfileChange()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	assert(m_pSheetTab&&"SheetTab의 포인터가 지정되지 않음.");
-	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control의 포인터가 지정되지 않음.");
+	assert(m_pSheetTab&&"SheetTab pointer to is not specified.");
+	assert(m_pSheetTab->GetSkinAniContrl()&&"Skin Animation Control pointer to is not specified.");
 
 	CMainFrame *pFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
 	CCharEditView *pView = (CCharEditView*) pFrame->GetActiveView ();
