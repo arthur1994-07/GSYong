@@ -77,6 +77,7 @@ BEGIN_MESSAGE_MAP(CAnimSetPage, CPropertyPage)
 	ON_BN_CLICKED(IDC_BUTTON_XFILE_CHANGE, &CAnimSetPage::OnBnClickedButtonXfileChange)
 	ON_BN_CLICKED(IDC_BUTTON_ANI_JIGGLE_BLEND, OnBnClickedButtonAniJiggleBlend)
 	ON_BN_CLICKED(IDC_CHECK_MOVE, &CAnimSetPage::OnBnClickedCheckMove)
+	ON_BN_CLICKED(IDC_BUTTON_INSERT, &CAnimSetPage::OnBnClickedButtonInsert)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -768,4 +769,9 @@ void CAnimSetPage::OnBnClickedButtonAniJiggleBlend()
 	CMainFrame *pFrame = (CMainFrame *) AfxGetApp()->m_pMainWnd;
 	pFrame->m_cDlgEdit.SetAcitveSheetPage( CHARTAB_ANIJIGGLEBLEND );
 	pFrame->m_cDlgEdit.GetSheetChar()->m_AniJiggleBlend.SetInstance( m_sAnimName, m_pSheetTab );
+}
+
+void CAnimSetPage::OnBnClickedButtonInsert()
+{
+	// TODO: Add your control notification handler code here
 }

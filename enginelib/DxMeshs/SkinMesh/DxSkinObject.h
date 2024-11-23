@@ -20,6 +20,7 @@ public:
 protected:
 	char			    m_szSkinMesh[MAX_PATH];
 	DxSkinMeshResource	m_skinMeshRes;
+	DxSkeletonResource  m_skeletonRes;
 
 public:
 	DxSkinMesh9*	GetSkinMesh ()		{ return m_skinMeshRes.get(); }

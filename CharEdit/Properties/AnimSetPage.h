@@ -77,6 +77,7 @@ public:
 	afx_msg void OnBnClickedButtonImportCfg();
 	afx_msg void OnBnClickedButtonXfileChange();
 	afx_msg void OnBnClickedButtonAniJiggleBlend();
+	afx_msg void OnBnClickedButtonInsert();
 };
 
 //{{AFX_INSERT_LOCATION}}

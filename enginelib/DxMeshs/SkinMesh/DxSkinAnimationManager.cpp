@@ -67,44 +67,44 @@ namespace COMMENT
 	*/
 	TSTRING ANI_MAINTYPE[AN_TYPE_SIZE] =
 	{
-		_T("경계 -Lookout"),
-		_T("휴식 -Rest"),
-		_T("걷기 -Walk"),
-		_T("뛰기 -Run"),
-		_T("공격 -Attack"),
-		_T("충격 -Shock"),
-		_T("쓰러지기 -Down"),
+		_T("Lookout"),
+		_T("Rest"),
+		_T("Walk"),
+		_T("Run"),
+		_T("Attack"),
+		_T("Shock"),
+		_T("Down"),
 
-		_T("생성 -Create"),
-		_T("대화 -Conversation"),
+		_T("Create"),
+		_T("Conversation"),
 
-		_T("스킬 -Skill-A"),
-		_T("몸짓 -Gesture"),
-		_T("충격[MIX] -Shock[MIX]"),
+		_T("Skill-A"),
+		_T("Gesture"),
+		_T("Shock[MIX]"),
 
-		_T("경계[SP부족] -Lookout[SP_lack]"),
+		_T("Lookout[SP_lack]"),
 
-		_T("대련[승리] -Fight[win]"),
-		_T("대련[패배] -Fight[lose]"),
-		_T("특수 -Speciality"),
+		_T("Fight[win]"),
+		_T("Fight[lose]"),
+		_T("Speciality"),
 
-		_T("스킬 -Skill-B"),
-		_T("스킬 -Skill-C"),
-		_T("스킬 -Skill-D"),
-		_T("스킬 -Skill-E"),
+		_T("Skill-B"),
+		_T("Skill-C"),
+		_T("Skill-D"),
+		_T("Skill-E"),
 
-		_T("채집"),
+		_T("gather"),
 
 		_T("BT - 5"),
 		_T("BT - 7"),
 		_T("BT - 9"),
 		_T("EV - 1"),
 
-		_T("비행"), // 주병진
-		_T("스킬 -Skill-F"), // 과학부
+		_T("flight"), // 주병진
+		_T("Skill-F"), // 과학부
 
-		_T("스킬 -Skill-G"),
-		_T("스킬 -Skill-H"),
+		_T("Skill-G"),
+		_T("Skill-H"),
 		_T("Car_Ferrari"),			// Vehicle Car;
 		_T("Car_B"),
 		_T("Car_C"),
@@ -162,45 +162,45 @@ namespace COMMENT
 	
 	TSTRING ANI_SUBTYPE[AN_SUB_00_SIZE] =
 	{
-		_T("00 맨손 -Empty Hands"),
-		_T("01 한손검 -One Hand Sword"),
-		_T("02 양손검 -Two Hand Sword"),
-		_T("03 쌍검 -Two Sword"),
-		_T("04 단검 -Dagger"),
-		_T("05 창 -Spear"),
-		_T("06 활 -Bow"),
-		_T("07 투척 -Throw"),
-		_T("08 마법 -Magic"),
-		_T("09 양손검 대형 -Two Hand Big Sword"),
+		_T("00 Empty Hands"),
+		_T("01 One Hand Sword"),
+		_T("02 Two Hand Sword"),
+		_T("03 Two Sword"),
+		_T("04 Dagger"),
+		_T("05 Spear"),
+		_T("06 Bow"),
+		_T("07 Throw"),
+		_T("08 Magic"),
+		_T("09 Two Hand Big Sword"),
 
-		_T("10 몽둥이 -Club"),
+		_T("10 Club"),
 
-		_T("11 한손도 -One Hand KATANA"),
-		_T("12 양손도 -Two Hand KATANA"),
-		_T("13 양손도 대형 -Two Hand Big KATANA"),
-		_T("14 쌍도 -Two KATANA"),
+		_T("11 One Hand KATANA"),
+		_T("12 Two Hand KATANA"),
+		_T("13 Two Hand Big KATANA"),
+		_T("14 Two KATANA"),
 
-		_T("15 권법 -kung fu"),
+		_T("15 kung fu"),
 
-		_T("16 빗자루 -Broom"),
+		_T("16 Broom"),
 
-		_T("17 호버"),
+		_T("17 hover"),
 
-		_T("18 권총"),
-		_T("19 소총"),
+		_T("18 pistol"),
+		_T("19 rifle"),
 
-		_T("20 해머 - Hammer"),
-		_T("21 듀얼 스피어 - Dual spear"),
-		_T("22 사이드 - Side"),
+		_T("20 Hammer"),
+		_T("21 Dual spear"),
+		_T("22 Side"),
 
-		_T("23 극강글러브 - Extreme Glove"),
-		_T("24 마술지팡이- TRICK_STICK"),
-		_T("25 마술상자- TRICK_BOX"),
-		_T("26 채찍 - TRICK_WHIP"),
+		_T("23 Extreme Glove"),
+		_T("24 TRICK_STICK"),
+		_T("25 TRICK_BOX"),
+		_T("26 TRICK_WHIP"),
 
-		_T("27 변술부 해머 Hammer"),
-		_T("28 변술부 방패 Shield"),
-		_T("29 변술부 우산 Umbrella"),
+		_T("27 Hammer"),
+		_T("28 Shield"),
+		_T("29 Umbrella"),
 
 		_T("SUB_30"),
 		_T("SUB_31"),
@@ -615,18 +615,18 @@ namespace COMMENT
 
 	TSTRING ANI_SUBTYPE_03[AN_SUB_00_SIZE] =
 	{
-		_T("운전자_탑승"),			// 0
-		_T("운전자_서기"),			// 1
-		_T("운전자_이동(걷기)"),	// 2
-		_T("운전자_이동(뛰기)"),	// 3
-		_T("운전자_부스터 사용"),	// 4
-		_T("운전자_죽음"),			// 5
-		_T("보조자_탑승"),			// 6
-		_T("보조자_서기"),			// 7
-		_T("보조자_이동(걷기)"),	// 8
-		_T("보조자_이동(뛰기)"),	// 9
-		_T("보조자_부스터 사용"),	// 10
-		_T("보조자_죽음"),			// 11
+		_T("Driver_Boarding"),			// 0
+		_T("Driver_Clerk"),			// 1
+		_T("Driver_Movement (Walking)"),	// 2
+		_T("Driver_Move (run)"),	// 3
+		_T("Driver_Use booster"),	// 4
+		_T("driver_death"),			// 5
+		_T("Assistant_Boarding"),			// 6
+		_T("Assistant_Clerk"),			// 7
+		_T("Assistant_Movement (Walking)"),	// 8
+		_T("Assistant_Move (run)"),	// 9
+		_T("Assistant_Use booster"),	// 10
+		_T("Assistant_Death"),			// 11
 
 		_T("SUB_12"),
 		_T("SUB_13"),
@@ -1028,13 +1028,13 @@ void DxSkinAnimationManager::ProcessCompleteData(
 
 		case SANIMCONINFO_MSG_FALSE:
 			{
-				TSTRING strName(_T("SANIMCONINFO::LoadFile() 문제가 생겼습니다. "));
+				TSTRING strName(_T("SANIMCONINFO::LoadFile() There's a problem. "));
 				strName += spResData->m_fileName;
-				strName += " 가 잘못됬습니다.";
+				strName += "wrong.";
 
 				CDebugSet::ToLogFile( strName );
 
-				GASSERT( 0 && _T("SANIMCONINFO::LoadFile() 문제가 생겼습니다. log를 참조해주세요.") );
+				GASSERT( 0 && _T("SANIMCONINFO::LoadFile() There's a problem. Please refer to log.") );
 			}
 			break;
 
@@ -1045,19 +1045,19 @@ void DxSkinAnimationManager::ProcessCompleteData(
 
 				CDebugSet::ToLogFile( strName );
 
-				GASSERT( 0 && _T("SANIMCONINFO::LoadFile() unknown file version. log를 참조해주세요.") );
+				GASSERT( 0 && _T("SANIMCONINFO::LoadFile() unknown file version. Please refer to log.") );
 			}
 			break;
 
 		default:
 			{
-				TSTRING strName(_T("SANIMCONINFO::LoadFile() 정상적인 return 값이 아닙니다. "));
+				TSTRING strName(_T("SANIMCONINFO::LoadFile() It is not a normal return value."));
 				strName += spResData->m_fileName;
-				strName += " 가 잘못됬습니다.";
+				strName += "wrong.";
 
 				CDebugSet::ToLogFile( strName );
 
-				GASSERT( 0 && _T("SANIMCONINFO::LoadFile() 정상적인 return 값이 아닙니다. log를 참조해주세요.") );
+				GASSERT( 0 && _T("SANIMCONINFO::LoadFile() This is not a normal return value. Please refer to log.") );
 			}
 			break;
 		};
