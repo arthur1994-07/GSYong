@@ -249,7 +249,7 @@ BOOL CCharPage::LoadChfFile( const char *pszFileName )
 	BOOL bOk = pSkinCharData->LoadFile ( pszFileName, pd3dDevice, false );
 	if ( !bOk )
 	{
-		MessageBox ( "파일 읽기에 실패하였습니다." );
+		MessageBox ( "Failed to read file." );
 		return FALSE;
 	}
 
@@ -357,7 +357,7 @@ void CCharPage::OnBnClickedButtonSave()
 
 		if ( !bOk )
 		{
-			MessageBox ( "파일 쓰기에 실패하였습니다." );
+			MessageBox ( "Failed to write file." );
 		}
 
 		CWnd *pWnd;
@@ -700,7 +700,7 @@ void CCharPage::OnBnClickedButtonLoadEe()
 		BOOL bOK = g_EffCharDataArray.LoadFile ( szFileName );
 		if ( !bOK )
 		{
-			MessageBox ( "DxEffCharDataArray 효과 파일 읽기에 실패하였습니다.", szFileName, MB_OK );
+			MessageBox ( "DxEffCharDataArray: Failed to read effect file.", szFileName, MB_OK );
 			return;
 		}
 
@@ -812,7 +812,7 @@ void CCharPage::OnBnClickedCheckNameChfCfg()
 
 DxSkinPiece* CCharPage::CreateSkinPiece(int nParts)
 {
-    MIN_ASSERT(nParts >= 0 && nParts <= PIECE_SIZE && _T("파츠 인덱스 오류!!!"));
+    MIN_ASSERT(nParts >= 0 && nParts <= PIECE_SIZE && _T("Failed to read effect file!"));
 
     if (m_aSkinPieces[nParts].get() == 0)
     {

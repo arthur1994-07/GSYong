@@ -159,7 +159,7 @@ BOOL CAnimPage::LoadAnimation( const char *pszFileName )
 
 	if ( !m_pSheetTab->GetSkinAniContrl()->LoadAnimationForEdit( pszFileName, pView->GetD3dDevice () ) )
 	{
-		MessageBox ( "에니메이션 읽기에 실패하였습니다." );
+		MessageBox ( "Failed to read animation." );
 		return FALSE;
 	}
 
@@ -291,7 +291,7 @@ void CAnimPage::OnButtonAnimNew()
 					pView->GetD3dDevice(),
 					true ) )
 				{
-					MessageBox ( _T("에니메이션 읽기에 실패하였습니다.") );
+					MessageBox ( _T("Failed to read animation.") );
 					return;
 				}
 
@@ -306,7 +306,7 @@ void CAnimPage::OnButtonAnimNew()
 					pView->GetD3dDevice(),
 					true ) )
 				{
-					MessageBox ( _T("에니메이션 읽기에 실패하였습니다.") );
+					MessageBox ( _T("Failed to read animation.") );
 					return;
 				}
 
@@ -321,7 +321,7 @@ void CAnimPage::OnButtonAnimNew()
 					pView->GetD3dDevice(),
 					true ) )
 				{
-					MessageBox ( _T("에니메이션 읽기에 실패하였습니다.") );
+					MessageBox ( _T("Failed to read animation.") );
 					return;
 				}
 
@@ -837,7 +837,7 @@ void CAnimPage::OnBnClickedButtonCreateAniSequence()
 	// 2개 이상일 경우 작동시키지 않는다.
 	if( pListBox->GetSelCount() >= 2 )
 	{
-		MessageBox( _T("2개이상 선택되어서 작동이 되지 않습니다.") );
+		MessageBox( _T("It does not work because more than 2 items are selected..") );
 		return;
 	}
 

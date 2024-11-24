@@ -241,8 +241,8 @@ void CSkinObjPage::OnBnClickedButtonMakeobj()
 	}
 
 	if ( !pView->GetD3dDevice() )	return;
-	if ( !pSkinObject->CreateSkinMesh( sSkinMesh.GetString(), sSkinBone.GetString(), pView->GetD3dDevice(), FALSE ) )
+	if (!pSkinObject->CreateSkinMesh(sSkinMesh.GetString(), sSkinBone.GetString(), pView->GetD3dDevice(), TRUE )) // change to true
 	{
-		MessageBox ( "Failed to create skin/bone." );
+		MessageBox ( "Failed to create skin object." );
 	}
 }

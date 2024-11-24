@@ -351,7 +351,7 @@ void CEditState::SkinPieceAsset(DxSkinPiece* pSkinPiece, CAssetDlg* pDlg, HTREEI
 
         if (strBone.empty() == false)
         {
-            _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("본"), strBone.c_str());
+            _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("copy"), strBone.c_str());
             pDlg->Insert(hRoot, temp);
         }
     }
@@ -361,7 +361,7 @@ void CEditState::SkinPieceAsset(DxSkinPiece* pSkinPiece, CAssetDlg* pDlg, HTREEI
 
     if (strSkin.empty() == false)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("스킨"), strSkin.c_str());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("skin"), strSkin.c_str());
         hSkin = pDlg->Insert(hRoot, temp);
     }
 
@@ -370,7 +370,7 @@ void CEditState::SkinPieceAsset(DxSkinPiece* pSkinPiece, CAssetDlg* pDlg, HTREEI
     {
         TSTRING strTexture = CTextureFileNotifier::GetFile(pSkinPiece->m_arrayMaterialPiece + m, 
             pSkinPiece->m_pmcMesh->m_pMaterialEx + m, false);
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("텍스처"), strTexture.c_str());  
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("texture"), strTexture.c_str());  
         pDlg->Insert(hSkin, temp);
     }
 }
@@ -385,7 +385,7 @@ void CEditState::SkinCharAsset(DxSkinChar* pSkinChar, CAssetDlg* pDlg, HTREEITEM
     // 캐릭터 설정 파일(chf)
     if (pSkinChar->GetFileName() && _tcsclen(pSkinChar->GetFileName()) > 0)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("캐릭터"), pSkinChar->GetFileName());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("character"), pSkinChar->GetFileName());
         hRoot = pDlg->Insert(hRoot, temp);
     }
 
@@ -394,7 +394,7 @@ void CEditState::SkinCharAsset(DxSkinChar* pSkinChar, CAssetDlg* pDlg, HTREEITEM
 
     if (strBone.empty() == false)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("본"), strBone.c_str());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("copy"), strBone.c_str());
         pDlg->Insert(hRoot, temp);
     }
 
@@ -433,7 +433,7 @@ void CEditState::AnimationAsset(DxSkinAniControl* pAniCtrl, CAssetDlg* pDlg, HTR
     {
         if (hRoot)
         {
-            hAni = pDlg->Insert(hRoot, _T("애니"));
+            hAni = pDlg->Insert(hRoot, _T("animated film"));
             hRoot = 0;
         }
 
@@ -455,7 +455,7 @@ void CEditState::AttBoneAsset(DxAttBone* pAttPiece, CAssetDlg* pDlg, HTREEITEM h
     // 어태치 본 설정 파일(abf)
     if (pAttPiece->GetFileName() && _tcsclen(pAttPiece->GetFileName()) > 0)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("어태치 본"), pAttPiece->GetFileName());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("Attach Bone"), pAttPiece->GetFileName());
         hRoot = pDlg->Insert(hRoot, temp);
     }
 
@@ -464,7 +464,7 @@ void CEditState::AttBoneAsset(DxAttBone* pAttPiece, CAssetDlg* pDlg, HTREEITEM h
 
     if (strBone.empty() == false)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("본"), strBone.c_str());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("copy"), strBone.c_str());
         pDlg->Insert(hRoot, temp);
     }
 
@@ -497,7 +497,7 @@ void CEditState::AttBoneLinkAsset(DxAttBoneLink* pAttLink, CAssetDlg* pDlg, HTRE
     // 어태치 본 링크 설정 파일(abl)
     if (pAttLink->GetFileName() && _tcsclen(pAttLink->GetFileName()) > 0)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("어태치 본 링크"), pAttLink->GetFileName());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("Attach Bone Link"), pAttLink->GetFileName());
         hRoot = pDlg->Insert(hRoot, temp);
     }
 
@@ -512,7 +512,7 @@ void CEditState::SkeletonAsset(const TCHAR* pSkeletonFile, CAssetDlg* pDlg, HTRE
     // 본 파일
     if (pSkeletonFile && _tcsclen(pSkeletonFile) > 0)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("본"), pSkeletonFile);
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("copy"), pSkeletonFile);
         pDlg->Insert(hRoot, temp);
     }
 }
@@ -527,7 +527,7 @@ void CEditState::VehicleAsset(DxVehicle* pVehicle, CAssetDlg* pDlg, HTREEITEM hR
     // 비어클 설정 파일(vbf)
     if (pVehicle->GetFileName() && _tcsclen(pVehicle->GetFileName()) > 0)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("비어클"), pVehicle->GetFileName());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("Beercle"), pVehicle->GetFileName());
         hRoot = pDlg->Insert(hRoot, temp);
     }
 
@@ -536,7 +536,7 @@ void CEditState::VehicleAsset(DxVehicle* pVehicle, CAssetDlg* pDlg, HTREEITEM hR
 
     if (strBone.empty() == false)
     {
-        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("본"), strBone.c_str());
+        _sntprintf_s(temp, MAX_PATH, _T("%s\t%s"), _T("copy"), strBone.c_str());
         pDlg->Insert(hRoot, temp);
     }
 

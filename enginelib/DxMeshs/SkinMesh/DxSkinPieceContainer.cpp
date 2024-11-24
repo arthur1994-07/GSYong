@@ -994,7 +994,7 @@ void SMATERIAL_PIECE::LoadFile ( sc::BaseStream &SFile, LPDIRECT3DDEVICEQ pd3dDe
 	case VERSION:	LoadFile_0104( SFile, pd3dDevice );	break;
 	default:
 		{
-			GASSERT("SMATERIAL_PIECE::LoadFile() 지원하지 않는 버전입니다.");
+			GASSERT("SMATERIAL_PIECE::LoadFile() This version is not supported.");
 			SFile.SetOffSet ( SFile.GetfTell() + dwBLOCKSIZE );
 		}
 		break;
@@ -1013,24 +1013,24 @@ DxSkinPieceContainer& DxSkinPieceContainer::GetInstance()
 const DWORD	DxSkinPiece::VERSION = 0x00000116;
 const char	DxSkinPiece::m_szPIECETYPE[PIECE_SIZE][64] =
 {
-	"머리",
-	"상체",
-	"하체",
-	"손",
-	"기본도구",
-	"추가도구",
-	"발",
-	"헤어",
-	"모자",
+	"head",
+	"upper body",
+	"lower body",
+	"hand",
+	"Basic tools",
+	"Additional tools",
+	"foot",
+	"hair",
+	"hat",
 	"S.R.C",
 	"Cape",
     "Gride_Up",
 	"Gride_Down",
     "Gride_Hand",
 	"Gride_Foot",
-	"기본도구2",
-	"추가도구2",
-	"모자의헤어",
+	"Basic tools2",
+	"Additional tools2",
+	"hat's hair",
 };
 
 const char	DxSkinPiece::m_szATTBONETYPE[ATTBONE_SIZE][64] =
@@ -1048,14 +1048,14 @@ const char	DxSkinPiece::m_szATTBONETYPE[ATTBONE_SIZE][64] =
 
 const char	DxSkinPiece::m_szV_PARTSTYPE[PART_V_SIZE][64] =
 {
-	"사용안함",
-	"본체",
-	"헤드",
-	"타이어",
-	"마후라",
-	"back시트02",
-	"악세사리01",
-	"악세사리02",
+	"Not used",
+	"entity",
+	"head",
+	"tire",
+	"Mahura",
+	"back sheet02",
+	"accessories01",
+	"accessories02",
 };
 
 
@@ -3778,7 +3778,7 @@ BOOL DxSkinPiece::NSThreadCORE_UpdateData( LPDIRECT3DDEVICEQ pd3dDevice, BOOL bT
 						sc::string::format( _T("Base Bone : %1%, Error skin : %2%, Error Bone : %3% \n"), m_skinMeshRes.get()->GetBoneFileName(), m_szXFileName, m_szSkeleton ) 
 					);
 
-					GASSERT( 0 && _T("Skin.x 에 다중의 Bone.x을 사용중에 있습니다. log를 참조해주세요.") );
+					GASSERT( 0 && _T("Multiple Bone.x are being used in Skin.x. Please refer to log.") );
 
 					return FALSE;
 				}
@@ -4808,7 +4808,7 @@ bool IsTextureLoading(DxSkinPiece* pTemp)
 BOOL DxSkinPiece::UpdateLODData(int nLevel, LPDIRECT3DDEVICEQ pd3dDevice)
 {
 	return TRUE;
-   // // 작업해야 할것들이 있다.~ 로딩이 완료 되었으면 작동안되어된다.
+   // // 작업해야 할것들이 있다.~ 로딩이 완료 되었으면 작동안되어된다. There are things to work on. ~ Once loading is complete, it won't work.
    // if (m_bCompletedLOAD)
    // {
    //     if (m_skinMeshRes.Update())
@@ -4838,8 +4838,8 @@ BOOL DxSkinPiece::UpdateLODData(int nLevel, LPDIRECT3DDEVICEQ pd3dDevice)
    //             {
    //                 m_bActiveErrorLog = TRUE;
 
-   //                 // ~.cps 생성시 ~.x 과 게임상 ~.x 파일 정보가 맞지 않는 문제가 생김.
-   //                 CDebugSet::ToLogFile( sc::string::format( _T("%1%, %2%내부에 %3%가 없습니다."), m_szFileName, m_szXFileName, m_szMeshName ) );
+   //                 // ~.cps 생성시 ~.x 과 게임상 ~.x 파일 정보가 맞지 않는 문제가 생김. When creating, a problem occurs where the ~.x and in-game ~.x file information do not match.
+   //                 CDebugSet::ToLogFile( sc::string::format( _T("%1%, %2% does not contain %3%."), m_szFileName, m_szXFileName, m_szMeshName ) );
    //             }
 
    //             return FALSE;
@@ -4847,7 +4847,7 @@ BOOL DxSkinPiece::UpdateLODData(int nLevel, LPDIRECT3DDEVICEQ pd3dDevice)
 
 			//SetMaterialSetting( pd3dDevice, FALSE, TRUE );
 
-   //         // Note : 이제부터는 정점 갯수를 가지고 있을 것이다.
+   //         // Note : 이제부터는 정점 갯수를 가지고 있을 것이다. From now on, we will have the number of vertices.
    //         //m_dwVertexNUM = m_pmcMesh->m_dwVertexNUM;
 
    //         // Note : Cartoon Mesh를 생성한다.
@@ -4859,8 +4859,8 @@ BOOL DxSkinPiece::UpdateLODData(int nLevel, LPDIRECT3DDEVICEQ pd3dDevice)
 
    // return FALSE;
 }
-
-// Material 이전 셋팅 DxEffCharNone 을 썼을 경우, 새로운 Material Rendering 쪽에서 기본렌더를 안해야 한다고 알아차려야 한다.
+ 
+// Material 이전 셋팅 (Previous settings) DxEffCharNone 을 썼을 경우 (If you wrote), 새로운 new Material Rendering 쪽에서 기본렌더를 안해야 한다고 알아차려야 한다.You should be aware that you should not do basic rendering on the side.
 void DxSkinPiece::SetBaseRenderOff()
 {
 	if ( !m_arrayMaterialPiece )
@@ -4968,7 +4968,7 @@ DxSkinPiece* DxSkinPieceContainer::LoadPiece(const std::string& strFile, DWORD d
 
 HRESULT DxSkinPieceContainer::ReleasePiece(const std::string& FileName)
 {
-	//	Note : 만약 전역 객채 파괴 순서상에서 후순위일때 에러 유발 가능성을 막음.
+	//	Note : 만약 전역 객채 파괴 순서상에서 후순위일때 에러 유발 가능성을 막음. Prevents the possibility of causing an error if the global object is of lower priority in the destruction order.
 	if (m_mapSkinPiece.empty())
         return E_FAIL;
 
@@ -5178,10 +5178,11 @@ void DxSkinPieceContainer::NSThreadCORE_UpdateData( LPDIRECT3DDEVICEQ pd3dDevice
 	{
 		if ( !(*iter).second->NSThreadCORE_UpdateData( pd3dDevice, TRUE ) )
 		{
-			// [shhan][2015.01.08] 삭제를 하게 되면 DxCharPart::SetPart_Detail 작업시 m_rSkinPiece 값이 쓰레기 값이 되어서 문제가 생긴다.
-			//						삭제를 하지 말고, m_bCompletedLOAD 가 FALSE 인 상태로 등록하도록 한다.
+			// [shhan][2015.01.08] 삭제를 하게 되면 DxCharPart::SetPart_Detail 작업시 m_rSkinPiece 값이 쓰레기 값이 되어서 문제가 생긴다. 
+			// If deleted, a problem occurs because the m_rSkinPiece value becomes a garbage value when working with DxCharPart::SetPart_Detail.
+			//						삭제를 하지 말고, m_bCompletedLOAD 가 FALSE 인 상태로 등록하도록 한다. Do not delete it, but register it with m_bCompletedLOAD set to FALSE.
 			//
-			//// 잘못된 데이터라면 삭제를 한다.
+			//// 잘못된 데이터라면 삭제를 한다. If the data is incorrect, delete it.
 			//SAFE_DELETE ( (*iter).second );
 			//iter = m_mapLoading.erase( iter );
 
@@ -5215,7 +5216,7 @@ static void FindDontHaveTexture( const TCHAR* FileName, const TCHAR* pExt )
 	DxSkinPieceContainer::GetInstance().LoadPiece( FileName, 0L );
 }
 
-// 로딩을 전부 해보도록 한다.
+// 로딩을 전부 해보도록 한다. Let's try loading everything.
 void DxSkinPieceContainer::OnFindDontHaveTexture()
 {
 	sc::CFileFindTree	m_sFileTree;
