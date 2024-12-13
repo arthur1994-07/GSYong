@@ -109,7 +109,7 @@ BOOL CPatchPrimeManNewDlg::OnInitDialog()
 
 	m_pPath = new SUBPATH( ENGINE::emServiceProvider );
 
-	// 저장 / 란온라인 폴더 저장 및 저장 폴더가 없다면 생성
+	// Save / Save online folder and create a save folder if it does not exist
 	autopatch::SetBasicPath( m_pPath );
 
 	// load param.ini

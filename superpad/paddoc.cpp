@@ -113,7 +113,7 @@ BOOL CPadDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	if (!COleServerDoc::OnOpenDocument(lpszPathName))
 		return FALSE;
 
-	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
+	// TODO:  여기에 특수화된 작성 코드를 추가합니다. Add specialized writing code here
 	char ext[_MAX_EXT] = {0};
 	_splitpath( lpszPathName, NULL, NULL, NULL, ext );
 
@@ -124,23 +124,24 @@ BOOL CPadDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		strExt != _T(".CLASSCONST") && strExt != _T(".CROWSALE") &&
 		strExt != _T(".GENITEM") && strExt != _T(".BIN") )
 	{
-		if( IDNO == AfxMessageBox( "디코딩 하시겠습니까?", MB_YESNO ) )
+		if( IDNO == AfxMessageBox( "Would you like to decode it?", MB_YESNO ) )
 			return TRUE;
 	}
 
 	sc::CStringFile StrFile;
-	if ( !StrFile.Open ( lpszPathName, TRUE ) ) // 스트링파일 클래스 오픈, 디코딩한다.
+	if ( !StrFile.Open ( lpszPathName, TRUE ) ) // 스트링파일 클래스 오픈, 디코딩한다. Open the string file class and decode it
 		return FALSE;
 
 	CString strTemp, strLine;
-	while ( StrFile.GetNextLine(strLine) ) // 파일로 부터 한라인씩 읽어온다.
+	while ( StrFile.GetNextLine(strLine) ) // 파일로 부터 한라인씩 읽어온다. Read one line at a time from a file
 	{
 		strLine += "\r\n";
 		strTemp += strLine;
 	}
 
-	strTemp.SetAt(strTemp.GetLength()-2, NULL); // 마지막 \r\n은 제거한다.
-	// 에디트뷰에 출력
+	strTemp.SetAt(strTemp.GetLength()-2, NULL); // 마지막 \r\n은 제거한다. The last \r\n is removed.
+	// 에디트뷰에 출력 Output to edit view
+
 	reinterpret_cast<CEditView*>(m_viewList.GetHead())->SetWindowText(strTemp.GetString());
 
 	return TRUE;
@@ -159,13 +160,13 @@ BOOL CPadDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		strExt != _T(".CLASSCONST") && strExt != _T(".CROWSALE") &&
 		strExt != _T(".GENITEM") && strExt != _T(".BIN") )
 	{
-		if( IDNO == AfxMessageBox( "인코딩 하시겠습니까?", MB_YESNO ) )
+		if( IDNO == AfxMessageBox( "Would you like to encode?", MB_YESNO ) )
 			return COleServerDoc::OnSaveDocument(lpszPathName);
 	}
 
 	
 	CString strTemp;
-	// 에디트뷰에 텍스트를 읽어온다.
+	// 에디트뷰에 텍스트를 읽어온다. Read text into the edit view.
 	reinterpret_cast<CEditView*>(m_viewList.GetHead())->GetWindowText(strTemp);
 
     sc::CRijndael oRijndael;

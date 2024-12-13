@@ -41,11 +41,12 @@ void CServerLoginThread::ThreadMain()
 	if (IsForceTerminate())
         return;
 
-	// GETFILE_USEHTTP 안에 코드 보면 GS 만 사용하도록 되어있다.
-	// 로그인서버 주소가 param.ini 에 파일안에 들어있어서 로그인서버 주소가 변경될 경우 어려움이 있었는데
-	// 로그인서버에 접속하기 전에 패치서버에서 param.ini 파일을 먼저 받는 과정을 추가하였다. 로그인서버 주소가
-	// 변경됭 경우 패치서버에 변경된 로그인 서버 주소가 들어있는 param.ini.cab 파일을 올리면 그 주소로 접속을 할것이다.
-	// 이 기능이 들어간 런처를 받지 못한 유저들은 수동패치를 제공해야 한다.
+	// If you look at the code in GETFILE_USEHTTP, it is set to use only GS.
+	// Since the login server address is in the param.ini file, there were difficulties when the login server address changed.
+	// I added a process to receive the param.ini file from the patch server before connecting to the login server. If the login server address
+	// changes, upload the param.ini.cab file containing the changed login server address to the patch server, and it will connect to that address.
+	// Users who did not receive the launcher with this function must provide a manual patch.
+
 	if ( GETFILE_USEHTTP( m_pHttpPatch, "\\", "param.ini.cab", "" ) )
 	{
 		CAutoPatchManApp* pApp = ( CAutoPatchManApp* ) AfxGetApp();

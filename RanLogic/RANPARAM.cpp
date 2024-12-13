@@ -172,10 +172,10 @@ namespace RANPARAM
 
 	DWORD				dwFogRange			= 0;
 
-	TCHAR				LoginAddress[128]	= "211.172.252.50";
-    int                 LoginServerPort = 5001;
-	TCHAR				WB_LoginAddress[128]	= "211.172.252.50";
-    int                 WB_LoginServerPort = 5001;
+	TCHAR				LoginAddress[128]	= "26.179.215.0"; // "211.172.252.50";
+    int                 LoginServerPort = 5003;
+	TCHAR				WB_LoginAddress[128]	= "26.179.215.0"; // "211.172.252.50";
+    int                 WB_LoginServerPort = 5003;
 
 	TCHAR				FtpAddressTable[MAX_FTP][128] =
 											{
@@ -776,7 +776,7 @@ namespace RANPARAM
 		return szDEC_USERID;
 	}
 
-	// 암호화된 string 중에 0이 들어가는경우가 있으므로 strlen 사용 불가
+	// 암호화된 string 중에 0이 들어가는경우가 있으므로 strlen 사용 불가  strlen cannot be used because there are cases where 0 is included in the encrypted string.
 	DWORD EncryptedStringLen( const char *pString )
 	{
 		int idx = 0;
