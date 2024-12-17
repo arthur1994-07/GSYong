@@ -24,6 +24,8 @@ distribution.
 #include "stdafx.h"
 #include "tinyxml.h"
 
+// Encrypt_RCC RanOnline-TH
+#include "../SigmaCore/Encrypt/Crypt.h" 
 #include <ctype.h>
 
 #ifdef TIXML_USE_STL
@@ -1035,6 +1037,9 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 
 	const char* lastPos = buf;
 	const char* p = buf;
+	// Encrypt_RCC RanOnline-TH
+	CCrypt::Decryption( (BYTE*) buf , length ); 
+
 
 	buf[length] = 0;
 	while( *p ) {

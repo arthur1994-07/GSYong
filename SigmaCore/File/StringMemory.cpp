@@ -13,6 +13,8 @@
 
 #include "../DebugInclude.h"
 
+// Encrypt_RCC RanOnline-TH
+#include "../SigmaCore/Encrypt/Crypt.h"
 namespace sc
 {
 
@@ -83,6 +85,11 @@ BOOL CStringMemory::Open(const std::string& ZipFileName, LPCSTR _szFileName, BOO
 	m_nBufSizeTemp = m_nBufSize;
 	m_bDecode = bDecode;
 	StringCchCopy( m_szFileName, MAX_PATH, _szFileName );
+	// Encrypt_RCC RanOnline-TH
+	if ( CCrypt::bCryptRCC )
+	{
+		CCrypt::Decryption( m_pBufferMem , m_nBufSize );
+	}
 
 	if( m_bDecode )
 	{

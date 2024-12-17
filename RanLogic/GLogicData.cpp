@@ -40,6 +40,45 @@ GLCONST_CHARCLASS::~GLCONST_CHARCLASS()
 	SAFE_DELETE(m_pSkinDataDummy);
 }
 //----------------------------------------------------------------------------------------
+// Encrypt_RCC RanOnline-TH
+namespace GLOGIC
+{
+	std::string	strGLOGIC_ZIPFILE;
+	std::string	strQUEST_ZIPFILE;
+	std::string	strLEVEL_ZIPFILE;
+	std::string	strNPCTALK_ZIPFILE;
+
+	void SetFullPath( BOOL bPack )
+	{
+		if( bPack )
+		{
+			strGLOGIC_ZIPFILE	= "\\data\\glogic\\";
+			strQUEST_ZIPFILE	= "\\data\\glogic\\quest\\";
+			strLEVEL_ZIPFILE	= "\\data\\glogic\\level\\";
+			strNPCTALK_ZIPFILE	= "\\data\\glogic\\npctalk\\";
+		}
+		else
+		{
+			strGLOGIC_ZIPFILE = GLOGIC::GetPath();
+			strGLOGIC_ZIPFILE += "GLogic.rcc";
+
+			strQUEST_ZIPFILE = GLOGIC::GetPath();
+			strQUEST_ZIPFILE += "Quest\\Quest.rcc";
+
+			strLEVEL_ZIPFILE = GLOGIC::GetPath();
+			strLEVEL_ZIPFILE += "Level\\Level.rcc";
+
+			strNPCTALK_ZIPFILE = GLOGIC::GetPath();
+			strNPCTALK_ZIPFILE += "NpcTalk\\NpcTalk.rcc";
+			
+			CUnzipper::LOADFILE_RCC( strGLOGIC_ZIPFILE );
+			CUnzipper::LOADFILE_RCC( strQUEST_ZIPFILE );
+			CUnzipper::LOADFILE_RCC( strLEVEL_ZIPFILE );
+			CUnzipper::LOADFILE_RCC( strNPCTALK_ZIPFILE );
+		}
+	}
+};
+
 void GLCONST_CHARCLASS::LoadAniSet(char* szSkinObj, bool bToolmode)
 {
 	if (szSkinObj[0]=='\0')
