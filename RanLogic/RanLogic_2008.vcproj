@@ -199,7 +199,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/MP"
 				Optimization="1"
 				InlineFunctionExpansion="0"
 				OmitFramePointers="false"

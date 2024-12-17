@@ -91,76 +91,19 @@ UINT CRanFilter::GetSectionCode_XML( const CString& strSection )
 BOOL CRanFilter::LOADCHAT( CONST TCHAR* szZipFile, CONST TCHAR* szPath )
 {
 	m_pCurrentFilter = &m_ChatFilter;
-	if ( GLUseFeatures::GetInstance().IsUsingDataIntegrate() )
-		return LOAD( szZipFile, szPath, _T("Filter_chat.xml") );
-	else
 		return LOAD( szZipFile, szPath, _T("moblogic1.bin") );
 }
 
 BOOL CRanFilter::LOADNAME( CONST TCHAR* szZipFile, CONST TCHAR* szPath )
 {
 	m_pCurrentFilter = &m_NameFilter;
-	if ( GLUseFeatures::GetInstance().IsUsingDataIntegrate() )
-		return LOAD( szZipFile, szPath, _T("Filter_name.xml") );
-	else
+
 		return LOAD( szZipFile, szPath, _T("moblogic2.bin") );
 }
 
 BOOL CRanFilter::LOAD(const std::string& ZipFileName, CONST TCHAR* szPath, CONST TCHAR* szFile )
 {
-	if ( GLUseFeatures::GetInstance().IsUsingDataIntegrate() == TRUE )
-	{
-		CString strPATH(szPath);
-		strPATH += szFile;
 
-		NS_TEXT_LOADER::STRFLAG mapFlag[language::LANGFLAG_TOTAL_NUM];
-		NS_TEXT_LOADER::LoadTextInZip( ZipFileName.c_str()
-			, strPATH
-			, szFile
-			, m_bPackFile
-			, mapFlag
-			, FALSE, RANPARAM::strCountry );
-
-		NS_TEXT_LOADER::STRFLAG_IT itr = mapFlag[RANPARAM::emProvideLangFlag].begin();
-		NS_TEXT_LOADER::STRFLAG_IT itrEND = mapFlag[RANPARAM::emProvideLangFlag].end();
-		if ( itr == itrEND )
-		{
-			std::string ErrorMsg = "Filter Load Error";
-			sc::writeLogError(ErrorMsg);
-			AfxMessageBox(ErrorMsg.c_str(), MB_OK|MB_ICONSTOP);
-			NS_TEXT_LOADER::ClearText(mapFlag);
-			return false;
-		}
-		while ( itr != itrEND )
-		{
-			const CString strNAME = static_cast<std::string>((*itr).first).c_str();
-			const UINT SectionCode = GetSectionCode_XML(strNAME);
-			CStringArray* pTextArray = static_cast<CStringArray*>((*itr).second);
-			for ( INT i = 0; i < pTextArray->GetSize(); ++i )
-			{
-				switch (SectionCode)
-				{
-				case EM_UNICODE:	InputStringUNICODE( pTextArray->GetAt(i) );	break;
-				case EM_HEX:		InputStringHEX( pTextArray->GetAt(i) );		break;
-				case EM_CHAR:		InputStringCHAR( pTextArray->GetAt(i) );		break;
-				case EM_ERROR_CODE: //¿¡·¯
-				default:
-					{
-						std::string ErrorMsg(
-							sc::string::format(
-							"CRanFilter::LOAD %1% SectionCode %2%",
-							pTextArray->GetAt(i),
-							SectionCode));
-						sc::writeLogError(ErrorMsg);
-					}
-					break;
-				}
-			}
-			++itr;
-		}	
-		NS_TEXT_LOADER::ClearText(mapFlag);
-	}
-	else
 	{
 		CString strPATH( szPath );
 		strPATH += szFile;

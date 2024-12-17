@@ -182,7 +182,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\Users\Arthu\Documents\source\projects\RanThirdParty\boost_1_56"
 				PreprocessorDefinitions="_NP30"
+				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

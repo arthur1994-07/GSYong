@@ -39,12 +39,12 @@ namespace RANPARAM
 	enum ENameDisplay
 	{
 		None		= 0x00000000,
-		CharAlly	= 0x00000001,	// 캐릭터 - 아군
-		CharEnemy	= 0x00000002,	// 캐릭터 - 적군
-		Mob			= 0x00000004,	// 몹
+		CharAlly	= 0x00000001,	// 캐릭터 - 아군 Character - Ally
+		CharEnemy	= 0x00000002,	// 캐릭터 - 적군 Character - Enemy
+		Mob			= 0x00000004,	// 몹  Mob
 		NPC			= 0x00000008,	// NPC
-		Summon		= 0x00000010,	// 소환수
-		Item		= 0x00000020,	// 드랍 아이템
+		Summon		= 0x00000010,	// 소환수 Summoner
+		Item		= 0x00000020,	// 드랍 아이템 Drop Items
 
 		All			= CharAlly | CharEnemy | Mob | NPC | Summon | Item
 	};
@@ -97,16 +97,16 @@ namespace RANPARAM
 	extern std::string		strENC_CHARID;
 	extern BOOL				bSAVE_USERID;
 
-	extern bool				bExchangeCheck;		//	'교환' 체크/비체크
-	extern BOOL				bDIS_CONFT;			//	'자동' 대련 거부.
-	extern BOOL				bDIS_TRADE;			//	'자동' 거래 거부.
-	extern BOOL				bDIS_PARTY;			//	'자동' 파티 거부.
+	extern bool				bExchangeCheck;		//	'교환' 체크/비체크    Check/uncheck 'Exchange'
+	extern BOOL				bDIS_CONFT;			//	'자동' 대련 거부. 'Automatic' sparring rejection.
+	extern BOOL				bDIS_TRADE;			//	'자동' 거래 거부. 'Automatic' transaction rejection.
+	extern BOOL				bDIS_PARTY;			//	'자동' 파티 거부.  'Automatic' party rejection.
 	extern BOOL				bDIS_FRIEND;
-	extern BOOL				bDIS_VEHICLE;		//	'자동' 오토바이 탑승 거부.
+	extern BOOL				bDIS_VEHICLE;		//	'자동' 오토바이 탑승 거부.  Refusal to ride 'automatic' motorcycles.
 	extern BOOL				bSHOW_SIMPLEHP;
-	extern BOOL				b3D_SOUND;			//	3차원 사운드
-	extern BOOL				bSHOW_TIP;			//	팁 보여주기
-	extern BOOL				bMOVABLE_ON_CHAT;	//	채팅창 위에서 움직이기
+	extern BOOL				b3D_SOUND;			//	3차원 사운드   3D Sound
+	extern BOOL				bSHOW_TIP;			//	팁 보여주기    Show tips
+	extern BOOL				bMOVABLE_ON_CHAT;	//	채팅창 위에서 움직이기  Move around the chat window
 	extern BOOL				bFORCED_ATTACK;		//	강제 공격
 	extern BOOL				bNAME_DISPLAY;		//	이름 항상 표시, 선택 대상과 몹들만 출력한다;
 	extern BOOL				bNON_Rebirth;		//	부활 스킬 금지
@@ -176,7 +176,7 @@ namespace RANPARAM
 	extern DWORD			dwShadowChar;	//	0~4
 	extern BOOL				bBuff;
 	//  [11/25/2016 gbgim];
-	// 아래의 기능은 '월드 품질'로 편입됨, 매우낮음-false, esle true;
+	// 아래의 기능은 '월드 품질'로 편입됨, 매우낮음-    The following features are included in 'World Quality', Very Low false, esle true;
 	extern BOOL				bShadowLand;
 	extern BOOL				bRealReflect;
 	extern BOOL				bRefract;
@@ -191,10 +191,10 @@ namespace RANPARAM
 
 	// 국가 선택;
 	extern language::SERVICENATION	emNation;
-	// SERVICENATION을 아래로 전환해야됨;
+	// SERVICENATION   need to be switched down;   을 아래로 전환해야됨;
 	extern language::EMPROVIDE_LANGFLAG emProvideLangFlag;
 
-	// 노말맵 사용할수 있는지 여부
+	// 노말맵 사용할수 있는지 여부  Whether normal maps can be used
 	extern BOOL				bPossibleNormalMap;
 
 	extern BOOL				bBUFF_SFX;
@@ -213,7 +213,7 @@ namespace RANPARAM
 	extern BOOL				bSndMuteMap;
 	extern BOOL				bSndMuteMusic;	
 
-	//	서버 설정.
+	//	서버 설정.  Server settings.
 	extern TCHAR			LoginAddress[STRING_NUM_128];
     extern int              LoginServerPort;
 	extern TCHAR			WB_LoginAddress[STRING_NUM_128];
@@ -234,7 +234,7 @@ namespace RANPARAM
     extern TCHAR			CustomerCenterAddress[STRING_NUM_128]; // 고객센터 주소.
 
 
-	// 중국 지역에 따른 서버 설정
+	// 중국 지역에 따른 서버 설정  Server settings according to China region
 	extern SERVER_SET		China_Region[MAX_CHINA_REGION];
 
 	//	언어 폰트 설정.
@@ -243,7 +243,7 @@ namespace RANPARAM
 	extern CString			strGDIFont;
 	extern CString			strFontType;
 
-	//	기본 설정 파일. ( 언어별 txt )
+	//	기본 설정 파일. ( 언어별 txt ) Default settings file. (language specific txt)
 	extern CString			strOriginalCountry;
 	extern CString			strCountry;
 	extern CString			strLauncherText;
@@ -268,8 +268,8 @@ namespace RANPARAM
 	extern CString			strUIInnerCfg03;
 	extern CString			strUIExtCfg;
 
-    extern CString          strUITextureList;   // 새로운 UI 텍스처 관리
-    extern CString          strUIXmlList;       // 새로운 UI 컨트롤 관리
+    extern CString          strUITextureList;   // 새로운 UI 텍스처 관리  New UI texture management
+    extern CString          strUIXmlList;       // 새로운 UI 컨트롤 관리 Managing new UI controls
 
     // 서버 인덱스
     extern DWORD		    dwServerNum;
@@ -284,7 +284,7 @@ namespace RANPARAM
 	extern TCHAR			RPFDataPath[STRING_NUM_128];
 
 	//  [4/27/2015 gbgim];
-	// 데이터 통합버전에서 도움말 UI 오픈시 사용하는 html;
+	// 데이터 통합버전에서 도움말 UI 오픈시 사용하는 html;  HTML used when opening the help UI in the data integration version;
 	extern TCHAR			MultiHelpAddress[language::LANGFLAG_TOTAL_NUM][STRING_NUM_128];
 
 	extern DWORD			dwNameDisplay;		// 이름 보기 설정

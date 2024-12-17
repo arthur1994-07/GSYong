@@ -1089,11 +1089,7 @@ HRESULT EFF_PROPGROUP::LoadFile( sc::BaseStream& stream, LPDIRECT3DDEVICEQ pd3dD
 	DWORD dwFileVer;
 	char szFileType[FILETYPESIZE] = "";
 	stream.GetFileType( szFileType, FILETYPESIZE, dwFileVer );
-	if ( dwFileVer > EFF_PROPGROUP::FILEVERSION )
-	{
-		MessageBox ( NULL, "현제 App의 버전보다 상위에서 편집된 파일입니다.\r\n상위버전을 이용하세요.", "ERROR", MB_OK );
-		return E_FAIL;
-	}
+
 
 	//	Note : EFF_PROPGROUP
 	//

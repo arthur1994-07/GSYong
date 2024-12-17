@@ -293,6 +293,7 @@
 			<Tool
 				Name="VCManifestTool"
 				EmbedManifest="true"
+				VerboseOutput="true"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
