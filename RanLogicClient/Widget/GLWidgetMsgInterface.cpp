@@ -1350,9 +1350,10 @@ void GLWidgetMsgInterface::ReqReferChar( const char* szTarName )
 	std::string strReq(szTarName);
 
 	const GLGaeaClient* const pGaeaClient = GLWidgetScript::GetInstance().m_pGaeaClient;
+	// YeXiuPH -- WidgetMSG
 	//if ( pGaeaClient->GetServiceProvider() == SP_TAIWAN  )
 	//	strReq = sc::string::utf8_to_ansi( std::string(szTarName) );
-	
+	// YeXiuPH -- WidgetMSG
 	GLWidgetScript::GetInstance().m_pGaeaClient->GetReferChar()->ReqReferChar( strReq.c_str() );
 }
 

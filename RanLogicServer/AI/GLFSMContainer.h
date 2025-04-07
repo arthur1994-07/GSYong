@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../../SigmaCore/Util/GLSingletone.h"
-#include <tr1/memory>
 
 namespace AISystem
 {
