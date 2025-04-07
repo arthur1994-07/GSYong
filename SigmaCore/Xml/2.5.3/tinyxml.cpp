@@ -1038,7 +1038,7 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 	const char* lastPos = buf;
 	const char* p = buf;
 	// Encrypt_RCC RanOnline-TH
-	CCrypt::Decryption( (BYTE*) buf , length ); 
+	//CCrypt::Decryption( (BYTE*) buf , length ); 
 
 
 	buf[length] = 0;

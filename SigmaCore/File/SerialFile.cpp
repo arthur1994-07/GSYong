@@ -105,7 +105,7 @@ BOOL SerialFile::OpenFile ( const FOPENTYPE _Type, const char *_szFileName, bool
 	m_bencode = bencode;
 	StringCchCopy( m_szFileName, _MAX_FNAME, _szFileName );    
     
-	// 이미 열려 있을때 파일 닫음.
+	// Close file when it is already open.
 	CloseFile ();
 
 	switch ( m_OpenType )
@@ -258,10 +258,9 @@ inline size_t SerialFile::read ( void* pbuffer, DWORD dwSize )
 	
 	size_t rdcount;
 
-	// dwSize가 0일 경우 전체를 넘겨준다.
+	// If dwSize is 0, the entire data is passed..
 	if ( dwSize == 0 )
 	{
-		// 테스트는 안해봐서 버그가 있을 수도 있다.
 		DWORD dwBufferOffset = GetfTell();
 		fseek( m_FileStream, 0, SEEK_END );
 		DWORD nFileSize = static_cast< UINT >( ftell( m_FileStream ) );
