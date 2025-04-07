@@ -16,17 +16,6 @@
 #include "./Product/GLProductRecipe.h"
 
 class DxSkinDataDummy;
-// Encrypt_RCC RanOnline-TH
-namespace GLOGIC
-{
-	extern BOOL			bGLOGIC_ZIPFILE;
-	extern std::string	strGLOGIC_ZIPFILE;
-	extern std::string	strQUEST_ZIPFILE;
-	extern std::string	strLEVEL_ZIPFILE;
-	extern std::string	strNPCTALK_ZIPFILE;
-
-	void SetFullPath( BOOL bPack );
-};
 
 enum GLCONST
 {
@@ -45,7 +34,7 @@ enum GLCONST
 
 	GRADE_NORMAL		= 4,
 	GRADE_HIGH			= 9,
-	GRADE_LIMIT_MAX		= 200,
+	GRADE_LIMIT_MAX		= 200, //Mars 20170622 開放物品最高等級
 
 	MAX_SERIALIZED_CHAR_SIZE =	36864,	//36 * 1024
 };

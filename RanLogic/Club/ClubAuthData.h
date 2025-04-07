@@ -9,7 +9,7 @@
 namespace club
 {
 
-
+//! 클럽 권한 설명
 class ClubDefineData
 {
 public:

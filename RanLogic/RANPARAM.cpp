@@ -20,8 +20,6 @@
 #include "./Activity/TitleManager.h"
 #include "./RANPARAM.h"
 
-// Encrypt_RCC RanOnline-TH
-#include "../SigmaCore/Encrypt/Crypt.h"
 // ----------------------------------------------------------------------------
 #include "../SigmaCore/DebugInclude.h"
 // ----------------------------------------------------------------------------
@@ -515,8 +513,7 @@ namespace RANPARAM
 	BOOL LOAD(const TCHAR* szRootPath, EMSERVICE_PROVIDER ServiceProvider, bool bToolMode, bool bServer)
 	{
         GLogicData::GetInstance().LoadCountryFile();
-		// Encrypt_RCC RanOnline-TH
-		CCrypt::LoadSetting ( szRootPath );
+
 		strRootPath = szRootPath;
 
 		if (!LOAD_PARAM(szRootPath, ServiceProvider, bToolMode))

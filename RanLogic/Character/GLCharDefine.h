@@ -252,12 +252,12 @@ enum EMSTATS
 
 struct FCHARSTATS
 {
-	float		fPow;	
-	float		fStr;	
-	float		fSpi;	
-	float		fDex;	
-	float		fInt;	
-	float		fSta;	
+	float		fPow;	//	힘.
+	float		fStr;	//	체력.
+	float		fSpi;	//	정신.
+	float		fDex;	//	민첩.
+	float		fInt;	//	지력.
+	float		fSta;	//	근력.
 
     MSGPACK_DEFINE(fPow, fStr, fSpi, fDex, fInt, fSta);
 
@@ -302,12 +302,12 @@ struct FCHARSTATS
 
 struct SCHARSTATS
 {
-	WORD		wPow;	//  Power
-	WORD		wStr;	//	String
-	WORD		wSpi;	//	Spirit
-	WORD		wDex;	//	Dex
-	WORD		wInt;	//	Inteligent
-	WORD		wSta;	//	Strength
+	WORD		wPow;	//	힘.   Power
+	WORD		wStr;	//	체력. String
+	WORD		wSpi;	//	정신. Spirit
+	WORD		wDex;	//	민첩. Dex
+	WORD		wInt;	//	지력. Inteligent
+	WORD		wSta;	//	근력. Strength
 
     MSGPACK_DEFINE(wPow, wStr, wSpi, wDex, wInt, wSta);
 
@@ -331,6 +331,7 @@ struct SCHARSTATS
 	{
 	}
 
+	//	Note : 현제의 수치가 요구수치에 부합되는지 검사.
 	BOOL CHECK_REQ ( SCHARSTATS sREQ, int nAccept=0 )
 	{
 		if ( wDex+nAccept < sREQ.wDex )	return FALSE;
@@ -510,32 +511,32 @@ inline FCHARSTATS& operator * ( const FCHARSTATS& lvalue, const int rvalue )
 
 struct SSEARCHITEMDATA
 {
-    std::string  m_ItemName;        //[MAP_NAME_LENGTH]
-	DWORD		 dwReqCharClass;			  
-	DWORD		 dwSuitType;				  
-	WORD		 wReqLevel;					  
-	SCHARSTATS	 sReqStats;					  
-	LONGLONG	 llPRICE;					  
+    std::string  m_ItemName;        //! 아이템 이름 [MAP_NAME_LENGTH]
+	DWORD		 dwReqCharClass;			  // 착용 클레스
+	DWORD		 dwSuitType;				  // 아이템 타입
+	WORD		 wReqLevel;					  // 착용 최소 레벨
+	SCHARSTATS	 sReqStats;					  // 아이템 착용 스텟치
+	LONGLONG	 llPRICE;					  // 아이템 가격
 		
-	BYTE		 RandOptTYPE1;				// 1
-	BYTE		 RandOptTYPE2;				// 2
-	BYTE		 RandOptTYPE3;				// 3
-	BYTE		 RandOptTYPE4;				// 4
+	BYTE		 RandOptTYPE1;				// 랜덤 옵션타입 1
+	BYTE		 RandOptTYPE2;				// 랜덤 옵션타입 2
+	BYTE		 RandOptTYPE3;				// 랜덤 옵션타입 3
+	BYTE		 RandOptTYPE4;				// 랜덤 옵션타입 4
 
-	float		 fRandOptValue1;			// 1	
-	float		 fRandOptValue2;			// 2
-	float		 fRandOptValue3;			// 3	
-	float		 fRandOptValue4;			// 4
+	float		 fRandOptValue1;			// 랜덤 옵션값 1	
+	float		 fRandOptValue2;			// 랜덤 옵션값 2
+	float		 fRandOptValue3;			// 랜덤 옵션값 3	
+	float		 fRandOptValue4;			// 랜덤 옵션값 4
 
 
-	BYTE		 cDAMAGE;					
-	BYTE		 cDEFENSE;					
+	BYTE		 cDAMAGE;					//	공격력 개조 등급.
+	BYTE		 cDEFENSE;					//	방어력 개조 등급.
 
-	BYTE		 cRESIST_FIRE;				
-	BYTE		 cRESIST_ICE;				
-	BYTE		 cRESIST_ELEC;				
-	BYTE		 cRESIST_POISON;			
-	BYTE		 cRESIST_SPIRIT;			
+	BYTE		 cRESIST_FIRE;				//	저항(화) 개조 등급.
+	BYTE		 cRESIST_ICE;				//	저항(빙) 개조 등급.
+	BYTE		 cRESIST_ELEC;				//	저항(전) 개조 등급.
+	BYTE		 cRESIST_POISON;			//	저항(독) 개조 등급.
+	BYTE		 cRESIST_SPIRIT;			//	저항(정) 개조 등급.
 
     MSGPACK_DEFINE(
         m_ItemName, dwReqCharClass, dwSuitType, wReqLevel, sReqStats, llPRICE,
@@ -590,7 +591,7 @@ enum EMELEMENT
 	EMELEMENT_ICE			= 2,
 	EMELEMENT_ELECTRIC		= 3,
 	EMELEMENT_POISON		= 4,	
-	EMELEMENT_OLDMAX		= 5,	
+	EMELEMENT_OLDMAX		= 5,	// 예전 최대치
 	
 	EMELEMENT_STONE			= 5,	
 	EMELEMENT_MAD			= 6,
@@ -599,22 +600,22 @@ enum EMELEMENT
 	EMELEMENT_MAXNUM		= 9,	// New
 	
 	EMELEMENT_ARM			= 9,
-
+	//	element 속성이 무기에 종속적일 경우.
 
 	EMELEMENT_MAXNUM2		= 10,
 };
 
 
-
+//	Note : 몹 100 버전의 정보에서 사용됨.
 struct SRESIST_100
 {	
-	int		nFire;		
-	int		nIce;		
+	int		nFire;		//	불.
+	int		nIce;		//	얼음.
 	
-	int		nElectric;	
-	int		nPoison;	
+	int		nElectric;	//	전기.
+	int		nPoison;	//	독.
 
-	int		nDivine;	
+	int		nDivine;	//	독.
 
 	SRESIST_100 () :
 		nFire(0),
@@ -629,19 +630,20 @@ struct SRESIST_100
 
 struct SRESIST_101
 {	
-	short	nFire;		
-	short	nIce;		
-	short	nElectric;	
-	short	nPoison;	
+	short	nFire;		//	불.
+	short	nIce;		//	얼음.
+	
+	short	nElectric;	//	전기.
+	short	nPoison;	//	독.
 };
 
 struct SRESIST
 {	
-	short	nFire;		
-	short	nIce;		
+	short	nFire;		//	불.
+	short	nIce;		//	얼음.
 	
-	short	nElectric;	
-	short	nPoison;	
+	short	nElectric;	//	전기.
+	short	nPoison;	//	독.
 
 	short	nSpirit;
 
@@ -815,21 +817,21 @@ enum EMACTIONTYPE
 	GLAT_IDLE, 
 	GLAT_MOVE,
 	GLAT_ATTACK,
-	GLAT_SKILL,				// Skill 
+	GLAT_SKILL,				// Skill 을 실제 사용하는 부분.
 	GLAT_SHOCK,
-	GLAT_PUSHPULL,    
+	GLAT_PUSHPULL,    // 새로운 EMACTIONTYPE을 추가할 경우, m_bSTATE_STUN 플래그로 인해 FrameMove함수에서 GLAT_SHOCK에 덮어씌워지는 것에 주의할 것
 	GLAT_GATHERING,
 	GLAT_TALK,
 	GLAT_CONFT_END,
 	GLAT_MOTION,
 
-	GLAT_AUTHED,	
+	GLAT_AUTHED,	//mjeon.CaptureTheField - 특정 학원에 의해 Crow가 인증되었음(GLAT_FALLING 대신).
 	GLAT_FALLING,
 	GLAT_DIE,
 	GLAT_FEIGN_FALLING,
 	GLAT_FEIGN_DIE,
 
-	GLAT_SKILL_WAIT,		
+	GLAT_SKILL_WAIT,		// Skill 을 사용하면 AniThread 때문에 딜레이가 생겨서 대기하도록 한다.
 
 	GLAT_SIZE,
 };
@@ -837,13 +839,13 @@ typedef EMACTIONTYPE*		PEMACTIONTYPE;
 
 enum EMTRIBE
 {
-	TRIBE_HUMAN			= 0,	
-	TRIBE_MONSTER		= 1,	
-	TRIBE_ANGEL			= 2,	
-	TRIBE_DEVIL			= 3,	
-	TRIBE_SPIRIT		= 4,	
-	TRIBE_FAIRY			= 5,	
-	TRIBE_DRAGON		= 6,	
+	TRIBE_HUMAN			= 0,	//	인간.
+	TRIBE_MONSTER		= 1,	//	괴물.
+	TRIBE_ANGEL			= 2,	//	천사.
+	TRIBE_DEVIL			= 3,	//	악마.
+	TRIBE_SPIRIT		= 4,	//	정령.
+	TRIBE_FAIRY			= 5,	//	요정.
+	TRIBE_DRAGON		= 6,	//	드래곤.
 
 	TRIBE_NSIZE			= 7		
 };
@@ -853,88 +855,94 @@ enum EMBRIGHT
 	BRIGHT_LIGHT		= 0,
 	BRIGHT_DARK			= 1,
 	
-	BRIGHT_BOTH			= 2,	
+	BRIGHT_BOTH			= 2,	//	모두 가능. ( item 항목에서. )
 
 	BRIGHT_SIZE			= 3,
 };
 
 enum EM_BRIGHT_FB
 {
-	BFB_DIS				= 0,	
-	BFB_AVER			= 1,	
-	BFB_ADV				= 2,	
+	BFB_DIS				= 0,	//	불리.
+	BFB_AVER			= 1,	//	보통.
+	BFB_ADV				= 2,	//	유리.
 
 	BFB_SIZE			= 3,
 };
 
 enum EMMOVETYPE
 {
-	MOVE_LAND			= 0,	
-	MOVE_FLY			= 1,	
-	MOVE_SWIM			= 2,	
+	MOVE_LAND			= 0,	//	지면 이동.
+	MOVE_FLY			= 1,	//	공중 이동.
+	MOVE_SWIM			= 2,	//	수면 이동.
 
 	MOVETYPE_NSIZE		= 3
 };
 
 enum EMIMPACT_TARGET
 {
-	TAR_SELF		= 0,		
-	TAR_SPEC		= 1,		
-	TAR_SELF_TOSPEC	= 2,		
-	TAR_ZONE		= 3,		
-	TAR_LAND		= 4,		
+	TAR_SELF		= 0,		//	자기 위치 영향.
+	TAR_SPEC		= 1,		//	대상 위치 영향.
+	TAR_SELF_TOSPEC	= 2,		//	자기 위치에서 대상 위치까지. ( 화살 관통 )
+	TAR_ZONE		= 3,		//	지면위치의 주변 타겟들을 가져온다.
+	TAR_LAND		= 4,		//  지면위치
 
 	EMIMPACT_TARGET_NSIZE		= 5,
 };
 
 enum EMIMPACT_REALM
 {
-	REALM_SELF		= 0,		
-	REALM_ZONE		= 1,		
-	REALM_KEEP_ZONE	= 2,		
-	REALM_FANWIZE	= 3,		
+	REALM_SELF		= 0,		//	'목표' 자신.
+	REALM_ZONE		= 1,		//	'목표' 주위.
+	REALM_KEEP_ZONE	= 2,		//	'목표' 주위 지속.
+	REALM_FANWIZE	= 3,		//	'목표'를 향한 부채꼴 모양.
 
 	EMIMPACT_REALM_NSIZE		= 4
 };
 
 enum EMIMPACT_SIDE
 {
-	EMIMPACT_SIDE_PARTY		= 0,		
-	EMIMPACT_SIDE_ENEMY		= 1,		
-	EMIMPACT_SIDE_ANYBODY	= 2,		
+	EMIMPACT_SIDE_PARTY		= 0,		//	자기편에게.
+	EMIMPACT_SIDE_ENEMY		= 1,		//	적에게.
+	EMIMPACT_SIDE_ANYBODY	= 2,		//	모두에게.
 
 	EMIMPACT_SIDE_NSIZE		= 3,
-    EMIMPACT_SIDE_OUR       = 4,        
 
 
-    //EMIMPACT_SIDE_ALLY      = 0x0010,  
-    //EMIMPACT_SIDE_NEUTRAL   = 0x0020,   
-    //EMIMPACT_SIDE_ENEMY     = 0x0040,   
-    //EMIMPACT_SIDE_FACTION   = 0x0080,  
+    // 이 부분은 스킬타겟시스템에는 없는 부분으로 GetSelectTargetAround (주변 타겟 검사) 때문에 임시로 만들어진 값;
+    // !다른곳에서는 사용 금지;
+    // 추후 스킬타겟 개편때 밑의 ENUM값으로 대체되어야 함;
+    EMIMPACT_SIDE_OUR       = 4,        // 아군에게;
 
-    //EMIMPACT_SIDE_PARTY     = 0x0100,   
-    //EMIMPACT_SIDE_CLUB      = 0x0200,  
-    //EMIMPACT_SIDE_EXPEDITION= 0x0400,   
-    //EMIMPACT_SIDE_SCHOOL    = 0x0800,   
+// 스킬 타겟 시스템의 개편시에 추가될만한 사항에 대해서 작성해놓은 부분;
+// (지금은 제대로 동작하지 않으니 사용하지 말것);
+    //EMIMPACT_SIDE_ALLY      = 0x0010,   // 아군;
+    //EMIMPACT_SIDE_NEUTRAL   = 0x0020,   // 중립;
+    //EMIMPACT_SIDE_ENEMY     = 0x0040,   // 적;
+    //EMIMPACT_SIDE_FACTION   = 0x0080,   // 자신의 진영;
+
+    //EMIMPACT_SIDE_PARTY     = 0x0100,   // 자신의 파티;
+    //EMIMPACT_SIDE_CLUB      = 0x0200,   // 자신의 클럽원;
+    //EMIMPACT_SIDE_EXPEDITION= 0x0400,   // 자신의 원정대;
+    //EMIMPACT_SIDE_SCHOOL    = 0x0800,   // 자신의 학원생;
 };
 
 enum EMDISORDER
 {
-	DIS_NULL			= 0x00,	
-	DIS_NUMB			= 0x01,	
-	DIS_STUN			= 0x02,	
-	DIS_STONE			= 0x04,	
-	DIS_BURN			= 0x08,	
-	DIS_FROZEN			= 0x10,	
+	DIS_NULL			= 0x00,	// 없음
+	DIS_NUMB			= 0x01,	// 마비.
+	DIS_STUN			= 0x02,	// 기절.
+	DIS_STONE			= 0x04,	// 석화.
+	DIS_BURN			= 0x08,	// 화염.
+	DIS_FROZEN			= 0x10,	// 냉동.
 
-	DIS_MAD				= 0x20,	
-	DIS_POISON			= 0x40,	
-	DIS_CURSE			= 0x80,	
+	DIS_MAD				= 0x20,	// 착란.
+	DIS_POISON			= 0x40,	// 중독.
+	DIS_CURSE			= 0x80,	// 저주.
 
 	DIS_ALL				= (DIS_NUMB | DIS_STUN | DIS_STONE | DIS_BURN | DIS_FROZEN | DIS_MAD | DIS_POISON | DIS_CURSE),
 };
 
-
+// 스킬효과 EMSPECA_FEIGN_DEATH 체크 플래그
 enum EMFEIGNDEATH
 {
 	FEIGN_DEATH_TARGETING_DISABLE = 0x01,
@@ -942,21 +950,22 @@ enum EMFEIGNDEATH
 
 	FEIGN_DEATH_ALL     = (FEIGN_DEATH_TARGETING_DISABLE | FEIGN_DEATH_BUF_DEL),
 };
-
+//	상태 이상 효과.
+//
 enum EMSTATE_BLOW
 {
-	EMBLOW_NONE		= 0,	
-	EMBLOW_NUMB		= 1,	
-	EMBLOW_STUN		= 2,	
-	EMBLOW_STONE	= 3,	
-	EMBLOW_BURN		= 4,	
-	EMBLOW_FROZEN	= 5,	
-	EMBLOW_SINGLE	= 5,	
+	EMBLOW_NONE		= 0,	//	상태 이상 유발 없음.
+	EMBLOW_NUMB		= 1,	//	마비.
+	EMBLOW_STUN		= 2,	//	기절.
+	EMBLOW_STONE		= 3,	//	석화.
+	EMBLOW_BURN			= 4,	//	화염.
+	EMBLOW_FROZEN		= 5,	//	냉동.
+	EMBLOW_SINGLE		= 5,	//	단독으로만 발생하는 "상태이상" 효과.
 
-	EMBLOW_MAD		= 6,	
-	EMBLOW_POISON	= 7,	
-	EMBLOW_CURSE	= 8,	
-	EMBLOW_PANT		= 9,	
+	EMBLOW_MAD			= 6,	//	착란.
+	EMBLOW_POISON		= 7,	//	중독.
+	EMBLOW_CURSE		= 8,	//	저주.
+	EMBLOW_PANT		= 9,	//	헐떡임.
 	
 	EMBLOW_SIZE			= 10,
 	EMBLOW_MULTI		= 4,
@@ -964,16 +973,16 @@ enum EMSTATE_BLOW
 
 enum EMSTATE_BLOW_FLAG
 {
-	EMBLOW_FLAG_NULL			= 0x00,	
-	EMBLOW_FLAG_NUMB		= (1 << EMBLOW_NUMB),		
-	EMBLOW_FLAG_STUN		= (1 << EMBLOW_STUN),		
-	EMBLOW_FLAG_STONE		= (1 << EMBLOW_STONE),		
-	EMBLOW_FLAG_BURN		= (1 << EMBLOW_BURN),		
-	EMBLOW_FLAG_FROZEN		= (1 << EMBLOW_FROZEN),	
-	EMBLOW_FLAG_MAD			= (1 << EMBLOW_MAD),	
-	EMBLOW_FLAG_POISON		= (1 << EMBLOW_POISON),	
-	EMBLOW_FLAG_CURSE		= (1 << EMBLOW_CURSE),	
-	EMBLOW_FLAG_PANT		= (1 << EMBLOW_PANT),	
+	EMBLOW_FLAG_NULL			= 0x00,	//	상태 이상 유발 없음.
+	EMBLOW_FLAG_NUMB		= (1 << EMBLOW_NUMB),		//	마비.
+	EMBLOW_FLAG_STUN		= (1 << EMBLOW_STUN),		//	기절.
+	EMBLOW_FLAG_STONE		= (1 << EMBLOW_STONE),		//	석화.
+	EMBLOW_FLAG_BURN		= (1 << EMBLOW_BURN),		//	화염.
+	EMBLOW_FLAG_FROZEN		= (1 << EMBLOW_FROZEN),	//	냉동.	
+	EMBLOW_FLAG_MAD			= (1 << EMBLOW_MAD),		//	착란.
+	EMBLOW_FLAG_POISON		= (1 << EMBLOW_POISON),	//	중독.
+	EMBLOW_FLAG_CURSE		= (1 << EMBLOW_CURSE),		//	저주.	
+	EMBLOW_FLAG_PANT		= (1 << EMBLOW_PANT),		//	저주.	
 };
 
 enum EMTRANSFORM_SET
@@ -1029,37 +1038,37 @@ enum EMGROUP
 enum EMIMPACT_ADDON
 {
 	EMIMPACTA_NONE			= 0,
-	EMIMPACTA_HITRATE		= 1,	
-	EMIMPACTA_AVOIDRATE		= 2,	
+	EMIMPACTA_HITRATE		= 1,	//	명중율 변화량.
+	EMIMPACTA_AVOIDRATE		= 2,	//	회피율 변화량.
 	
-	EMIMPACTA_DAMAGE		= 3,	
-	EMIMPACTA_DEFENSE		= 4,	
+	EMIMPACTA_DAMAGE		= 3,	//	공격치 변화량.
+	EMIMPACTA_DEFENSE		= 4,	//	방어치 변화량.
 
-	EMIMPACTA_VARHP			= 5,	
-	EMIMPACTA_VARMP			= 6,	
-	EMIMPACTA_VARSP			= 7,	
-	EMIMPACTA_VARAP			= 8,	
+	EMIMPACTA_VARHP			= 5,	//	HP 변화율.
+	EMIMPACTA_VARMP			= 6,	//	MP 변화율.
+	EMIMPACTA_VARSP			= 7,	//	SP 변화율.
+	EMIMPACTA_VARAP			= 8,	//	HP,MP,SP 변화율.
 
-	EMIMPACTA_DAMAGE_RATE	= 9,	
-	EMIMPACTA_DEFENSE_RATE	= 10,	
+	EMIMPACTA_DAMAGE_RATE	= 9,	//	공격치 변화율.
+	EMIMPACTA_DEFENSE_RATE	= 10,	//	방어치 변화율.
 
-	EMIMPACTA_PA			= 11,	
-	EMIMPACTA_SA			= 12,	
-	EMIMPACTA_MA			= 13,	
+	EMIMPACTA_PA			= 11,	//	격투치.
+	EMIMPACTA_SA			= 12,	//	사격치.
+	EMIMPACTA_MA			= 13,	//	방어치.
 
-	EMIMPACTA_HP_RATE		= 14,	
-	EMIMPACTA_MP_RATE		= 15,	
-	EMIMPACTA_SP_RATE		= 16,	
+	EMIMPACTA_HP_RATE		= 14,	//	HP 증폭율.
+	EMIMPACTA_MP_RATE		= 15,	//	MP 증폭율.
+	EMIMPACTA_SP_RATE		= 16,	//	SP 증폭율.
 
-	EMIMPACTA_RESIST		= 17,	
-	EMIMPACTA_STATS			= 18,	
+	EMIMPACTA_RESIST		= 17,	//	저항 수치 변경
+	EMIMPACTA_STATS			= 18,	//	스탯 수치 변경 ( 힘,민첩,정신 ) 
 
-    EMIMPACTA_HP_ADD        = 19,  
-    EMIMPACTA_MP_ADD        = 20,  
-    EMIMPACTA_SP_ADD        = 21,  
-    EMIMPACTA_CP_ADD        = 22,  
+    EMIMPACTA_HP_ADD        = 19,  //  HP 회복력 증감
+    EMIMPACTA_MP_ADD        = 20,  //  MP 회복력 증감
+    EMIMPACTA_SP_ADD        = 21,  //  SP 회복력 증감
+    EMIMPACTA_CP_ADD        = 22,  //  CP 회복력 증감
 
-    EMIMPACTA_CP_DUR        = 23,  
+    EMIMPACTA_CP_DUR        = 23,  //  CP 자동지속 증감
 
 	EIMPACTA_SIZE			= 24,
 };
@@ -1068,41 +1077,41 @@ enum EMIMPACT_ADDON
 #define IS_ADDITIONAL_ID( skillid )						((skillid >> 16) == 0xFFFF)
 #define SKILL_TO_ADDITIONAL( skillid )					(skillid & 0xFFFF)
 
-
+//추가가 아니라 중간 emum 인덱스가 수정 되면 GameWord.xml, ITEM_INFO_SET_BONUS 인덱스도 같이 수정해줘야함
 enum EMSPEC_ADDON
 {
-	EMSPECA_NULL						= 0,		
-	EMSPECA_PUSHPULL					= 1,		
-	EMSPECA_REFDAMAGE					= 2,		
-	EMSPECA_REBIRTH						= 3,		
+	EMSPECA_NULL						= 0,		//	기능 없음.
+	EMSPECA_PUSHPULL					= 1,		//	당기기/밀기.
+	EMSPECA_REFDAMAGE				= 2,		//	대미지 반사.
+	EMSPECA_REBIRTH					= 3,		//	부활.
 	
-	EMSPECA_HP_GATHER					= 4,		
-	EMSPECA_MP_GATHER					= 5,		
-	EMSPECA_SP_GATHER					= 6,		
+	EMSPECA_HP_GATHER				= 4,		//	HP의 일정량을 빼앗음.
+	EMSPECA_MP_GATHER				= 5,		//	MP의 일정량을 빼앗음.
+	EMSPECA_SP_GATHER				= 6,		//	SP의 일정량을 빼앗음.
 
-	EMSPECA_HP_DIV						= 7,	
-	EMSPECA_MP_DIV						= 8,		
-	EMSPECA_SP_DIV						= 9,	
+	EMSPECA_HP_DIV						= 7,		//	HP의 일부를 나누어 줌.
+	EMSPECA_MP_DIV					= 8,		//	MP의 일부를 나누어 줌.
+	EMSPECA_SP_DIV						= 9,		//	SP의 일부를 나누어 줌.
 
-	EMSPECA_NONBLOW						= 10,		
-	EMSPECA_RECBLOW						= 11,		
+	EMSPECA_NONBLOW					= 10,		//	상태이상 방지.
+	EMSPECA_RECBLOW					= 11,		//	상태이상 회복.
 
-	EMSPECA_PIERCE						= 12,	
-	EMSPECA_RANGE_PSY_LONG				= 13,		
+	EMSPECA_PIERCE						= 12,		//	관통정도.
+	EMSPECA_RANGE_PSY_LONG		= 13,		//	물리 사격형 사정거리 및 적용영역 증가( 감소 )
 
-	EMSPECA_MOVEVELO					= 14,		
-	EMSPECA_ONWARD						= 15,		
-	EMSPECA_INVISIBLE					= 16,	
-	EMSPECA_RECVISIBLE					= 17,		
+	EMSPECA_MOVEVELO				= 14,		//  이동속도.
+	EMSPECA_ONWARD					= 15,		//  진격.
+	EMSPECA_INVISIBLE					= 16,		//	은신.
+	EMSPECA_RECVISIBLE				= 17,		//	은신 감지.
 
-	EMSPECA_ATTACKVELO					= 18,		
-	EMSPECA_SKILLDELAY					= 19,		
-	EMSPECA_CRUSHING_BLOW				= 20,		
+	EMSPECA_ATTACKVELO				= 18,		//	공격속도.
+	EMSPECA_SKILLDELAY				= 19,		//	스킬 딜래이 시간 변화.
+	EMSPECA_CRUSHING_BLOW		= 20,		//	강한타격 스킬
 
-	EMSPECA_PSY_DAMAGE_REDUCE			= 21,		
-	EMSPECA_MAGIC_DAMAGE_REDUCE			= 22,		
-	EMSPECA_PSY_DAMAGE_REFLECTION		= 23,		
-	EMSPECA_MAGIC_DAMAGE_REFLECTION		= 24,		
+	EMSPECA_PSY_DAMAGE_REDUCE				= 21,		//  물리 데미지 흡수율
+	EMSPECA_MAGIC_DAMAGE_REDUCE			= 22,		//  매직 데미지 흡수율
+	EMSPECA_PSY_DAMAGE_REFLECTION		= 23,		//  물리 데미지 반사율
+	EMSPECA_MAGIC_DAMAGE_REFLECTION	= 24,		//  매직 데미지 반사율
 
 	EMSPECA_EFFECT_REMOVE			= 25,		//	효과 제거 ( 일반,버프,디버프,리미트 종류별로 ) 
 	EMSPECA_STUN							= 26,		//	스턴 효과

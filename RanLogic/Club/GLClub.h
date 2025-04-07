@@ -23,9 +23,9 @@ namespace club
 class GLClub
 {
 public:
-    //! VERSION 
-    //! VERSION  compile 
-    //! 0x0002 m_Country m_MasterLevel 
+    //! 구조를 변경시키면 VERSION 을 올리십시오.
+    //! VERSION 을 올리시면 compile 에러가 나는곳이 수정해야 할 부분입니다.
+    //! 0x0002 m_Country m_MasterLevel 추가
     enum { VERSION=0x0007, };
 
     GLClub();

@@ -104,6 +104,7 @@ public:
 	DWORD		GetDataSize();
 	BOOL		GetData( se::SerializeWritableData& data );
 	bool		SET_BYBUFFER(se::ByteStream& ByteStream) const;
+    //! Quest 세팅, bCheck 가 true 이면 data 에 없는 퀘스트는 삭제된다.
 	bool		GET_BYBUFFER(se::ByteStream& ByteStream, bool bCheck);
 
 	bool GET_BYBUFFER_FOR_MIGRATION( se::ByteStream& ByteStream, bool bCheck );

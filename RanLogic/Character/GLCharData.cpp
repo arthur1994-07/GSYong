@@ -9,7 +9,7 @@
 #include "../Inventory/GLInventoryStorage.h"
 #include "../GLogicDataMan.h"
 #include "../GLogicData.h"
-#include "GLCharData.h"
+#include "./GLCharData.h"
 
 
 // ----------------------------------------------------------------------------
@@ -30,8 +30,10 @@ namespace COMMENT
 		"REACT_NPC",
 		"REACT_P2P",
 		"REACT_PVP",
+
 		"REACT_ITEM",
 		"REACT_SKILL",
+
 		"REACT_NULL",
 	};
 };
@@ -196,6 +198,12 @@ const bool SEXPERIENCERATE::push_back(const SNATIVEID& _skillID, const DWORD _si
 {
 	if ( _sizeMax > 10 )
 		return false;
+	// 스킬 리뉴얼 전까지는 고정 값(4)로 버틴다;
+	// 기획팀과 협의 된 사항;
+	//  [2/23/2015 gbgim];
+	// 당시 스킬 리뉴얼 계획이 있었기 때문에 이전 작업자가 위와 같이 적용이 되어있었음;
+	// 그런데 스킬 리뉴얼 계획이 없어지고 중첩 횟수를 늘려달라는 요청이와서 단순 사이즈만 늘림;
+	// 스킬 리뉴얼 시 이 기능은 special, side effect로 관리가 되어야 모든 지속형 스킬등 범용성있게 사용이 가능해짐;
 
 	if ( _fLifeTime == 0.0f || _fIncreaseRate == 0.0f )
 		return false;
@@ -236,7 +244,6 @@ SAIRBORNE::Element::Element(const float _fTimeLife, const float _fTimeLevitate, 
 , fHeightMax(_fHeightMax)
 {
 }
-
 SAIRBORNE::Element::Element(const SAIRBORNE::Element& _rhs)
 : fTimeElapsed(_rhs.fTimeElapsed)
 , fUTimeLife(_rhs.fUTimeLife)
@@ -247,7 +254,6 @@ SAIRBORNE::Element::Element(const SAIRBORNE::Element& _rhs)
 , fHeightMax(_rhs.fHeightMax)
 {
 }
-
 const float SAIRBORNE::Element::update(const float _fTimeElapsed)
 { // ret : height, time over : height < 0.0f;
 	this->fTimeElapsed += _fTimeElapsed;
@@ -265,8 +271,6 @@ SAIRBORNE::SAIRBORNE(void)
 : fHeightCurrent(0.0f)
 {
 }
-
-
 void SAIRBORNE::update(const float _fTimeElapsed)
 {
 	float _fHeightCurrent(0.0f);
@@ -400,14 +404,17 @@ bool SCHARDATA::IsKEEP_STORAGE ( DWORD dwCHANNEL )
 
 CTime SCHARDATA::GetStorageTime (  DWORD dwCHANNEL )
 {
+	//	기본 창고일 경우 참.
 	if ( EMSTORAGE_CHANNEL_DEF <= dwCHANNEL && dwCHANNEL < EMSTORAGE_CHANNEL_DEF+EMSTORAGE_CHANNEL_DEF_SIZE )
         return CTime(0);
 
+	//	추가 창고일 경우.
 	if ( EMSTORAGE_CHANNEL_SPAN <= dwCHANNEL && dwCHANNEL < EMSTORAGE_CHANNEL_SPAN+EMSTORAGE_CHANNEL_SPAN_SIZE )
 	{
 		return CTime(m_tSTORAGE[dwCHANNEL-EMSTORAGE_CHANNEL_SPAN]);
 	}
 
+	//	추가 창고일 경우.
 	if ( EMSTORAGE_CHANNEL_PREMIUM <= dwCHANNEL && dwCHANNEL < EMSTORAGE_CHANNEL_PREMIUM+EMSTORAGE_CHANNEL_PREMIUM_SIZE )
 	{
 		return CTime(0);
@@ -418,7 +425,7 @@ CTime SCHARDATA::GetStorageTime (  DWORD dwCHANNEL )
 
 WORD SCHARDATA::GetOnINVENLINE ()
 {
-	// EInvenPremiumLine
+	// EInvenPremiumLine을 0으로 설정함으로써 인벤 확장하면서 인벤 마지막 라인이 프리미엄으로 열리던것을 제거
 	if( m_bPREMIUM )
 		return min( m_wINVENLINE + EInvenPremiumLine, EInvenTotalLine - GLCONST_CHAR::wInvenDefaultLine );
 	
@@ -598,6 +605,7 @@ void SCHARDATA2::Assign ( SCHARDATA2 &sDATA )
 	m_nContributionPoint = sDATA.m_nContributionPoint;
 
 //#if defined(_RELEASED) || defined(TW_PARAM) || defined(TH_PARAM) || defined(HK_PARAM) // ***Tracing Log print	
+	// 모든 국가에서 Tracing 기능을 사용할 수 있도록 변경
 	//if (sp == SP_OFFICE_TEST || sp == SP_TAIWAN || sp == SP_HONGKONG || sp == SP_THAILAND)
 	//{
 		//m_bTracingUser = sDATA.m_bTracingUser;
@@ -616,6 +624,7 @@ void SCHARDATA2::Assign ( SCHARDATA2 &sDATA )
 	m_wSlotIndex = sDATA.m_wSlotIndex;
 	memcpy( m_arrLockSlotState, sDATA.m_arrLockSlotState, sizeof(bool)*EMCHAR_SLOT_DATA_SIZE );
 
+	// Note : 음식버프(도시락) 배열
 	memcpy(m_sSAVESKILLFACT, sDATA.m_sSAVESKILLFACT, sizeof(SCHARSAVESKILLFACT)*SKILLFACT_SIZE);
 
 	m_sBackUpRebuildInvenItem = sDATA.m_sBackUpRebuildInvenItem;
@@ -753,6 +762,7 @@ BOOL SCHARDATA2::ValidatePutOnTurnNum()
 		case ITEM_LOCK_BOX:
 		case ITEM_SELECTIVEFORM_BOX:
 			{
+				// 최대 겹침 가능 개수가 1인데, 실제 가지고 있는 아이템의 겹침 개수가 2이상이라면 1개로 만들고 로그 남긴다.
 				if ( 1 == pItem->sDrugOp.wPileNum && m_PutOnItems[loop].wTurnNum > 1 )
 				{
 					sc::writeLogError( sc::string::format( 
@@ -765,6 +775,7 @@ BOOL SCHARDATA2::ValidatePutOnTurnNum()
 				}
 
 				/*
+				// 최대겹침개수보다 더많이 겹쳐져 있는 아이템 최대겹침개수로 변경
 				if ( m_PutOnItems[loop].wTurnNum > pItem->sDrugOp.wPileNum )
 				{
 					sc::writeLogError( sc::string::format( 
@@ -804,6 +815,7 @@ BOOL SCHARDATA2::ValidateVehicleRandomOption()
 			continue;
 		}
 
+		// 인첸트 초기화
 		m_PutOnItems[loop].cDAMAGE = 0;
 		m_PutOnItems[loop].cDEFENSE = 0;
 
@@ -1164,6 +1176,7 @@ BOOL SCHARDATA2::SETINVENTORY_BYBUF ( se::ByteStream &ByteStream )
 	if ( !bOk )
 		return TRUE;
 
+	// 프리미엄 계산.
 	CalcPREMIUM();
 	m_cInventory.SetAddLine( GetOnINVENLINE(), true );
 
@@ -1199,6 +1212,7 @@ BOOL SCHARDATA2::SETINVENTORY_BYBUF_FOR_MIGRATION( se::ByteStream &ByteStream )
 	if ( !bOk )
 		return TRUE;
 
+	// 프리미엄 계산.
 	CalcPREMIUM();
 	m_cInventory.SetAddLine( GetOnINVENLINE(), true );
 
@@ -1293,6 +1307,7 @@ BOOL SCHARDATA2::GETSTORAGE_BYBUF(se::ByteStream& ByteStream) const
 	return TRUE;
 }
 
+// 베트남 탐닉방지 추가에 따른 추가 인벤토리 셋팅
 BOOL SCHARDATA2::SETVTADDINVENTORY_BYBUF ( se::ByteStream &ByteStream )
 {
 	if ( ByteStream.IsEmpty() )
@@ -1305,11 +1320,13 @@ BOOL SCHARDATA2::SETVTADDINVENTORY_BYBUF ( se::ByteStream &ByteStream )
 
 	m_cVietnamInventory.SetAddLine ( 6, true );
 
+	// 베트남 탐닉 방지 아이템 표시 한다.
 	const GLInventory::CELL_MAP* pmapITEM = cInven.GetItemList();
 	GLInventory::CELL_MAP_CITER pos = pmapITEM->begin();
 	GLInventory::CELL_MAP_CITER end = pmapITEM->end();
 	for ( ; pos!=end; ++pos )
 	{
+		// 베트남 탐닉 아이템 표시
 		(*pos).second->sItemCustom.bVietnamGainItem = true;		
 	}
 
@@ -1452,6 +1469,7 @@ BOOL SCHARDATA2::GetVTAddInventoryData( BYTE* pDest, const DWORD dwDestSize )
 	return m_cVietnamInventory.GetItemData( data );
 }
 
+// 베트남 탐직 방지 추가에 따른 추가 인벤토리 정보 가져오기
 BOOL SCHARDATA2::GETVTADDINVENTORYE_BYBUF ( se::ByteStream &ByteStream ) const
 {
 	ByteStream.ClearBuffer ();
@@ -1772,6 +1790,7 @@ BOOL SCHARDATA2::ADDSHOPPURCHASE ( const char* szPurKey, SNATIVEID nidITEM )
 
 	sCUSTOM.wTurnNum = pITEM_DATA->GETAPPLYNUM();
 
+	// 아이템 에디트에서 입력한 개조 등급 적용
 	sCUSTOM.cDAMAGE = (BYTE)pITEM_DATA->sBasicOp.wGradeAttack;
 	sCUSTOM.cDEFENSE = (BYTE)pITEM_DATA->sBasicOp.wGradeDefense;
 
@@ -1949,6 +1968,7 @@ BOOL SCHARDATA2::SETINVENTORY_BYVECTOR( std::vector< SINVENITEM_SAVE >& vecItems
 	if ( !bOk )
 		return TRUE;
 
+	// 프리미엄 계산.
 	CalcPREMIUM();
 	m_cInventory.SetAddLine( GetOnINVENLINE(), true );
 
@@ -1983,6 +2003,11 @@ BOOL SCHARDATA2::SETSTORAGE_BYVECTOR( std::vector< SINVENITEM_SAVE >& vecItems )
 		m_cStorage[loop].DeleteItemAll();
 	}
 
+	// 캐릭터 인벤토리를 제외한 개인락커, 클럽락커는 인벤토리의 배열 구조로 되어있다.
+	// 각 인벤토리의 인덱스를 디비에 저장하기 보다는 x 좌표를 이렇게 계산해서 하는 방식으로 구현하였다.
+	// 0번 인벤토리 제외, 1~n 까지의 인벤토리의 아이템의 x 좌표를 수정해서 db 에 저장한다.
+	// 지금 캐릭터 인벤토리처럼 구조를 변경하는게 좋을 것 같지만, 각 락커의 경우 기간제로 인벤토리를 판매하기 때문에 어려움이 있다.
+	// 락커 인덱스 하드코딩이므로 인벤토리 개수 변경이 있다면 주의한다.
 	GASSERT( EMSTORAGE_CHANNEL == 5 );
 
 	size_t ItemSize = vecItems.size();
@@ -2020,6 +2045,11 @@ BOOL SCHARDATA2::SETSTORAGE_BYVECTOR( std::vector< SINVENITEM_SAVE >& vecItems )
 
 BOOL SCHARDATA2::GETSTORAGE_BYVECTOR( std::vector< SINVENITEM_SAVE >& vecItems )
 {
+	// 캐릭터 인벤토리를 제외한 개인락커, 클럽락커는 인벤토리의 배열 구조로 되어있다.
+	// 각 인벤토리의 인덱스를 디비에 저장하기 보다는 x 좌표를 이렇게 계산해서 하는 방식으로 구현하였다.
+	// 0번 인벤토리 제외, 1~n 까지의 인벤토리의 아이템의 x 좌표를 수정해서 db 에 저장한다.
+	// 지금 캐릭터 인벤토리처럼 구조를 변경하는게 좋을 것 같지만, 각 락커의 경우 기간제로 인벤토리를 판매하기 때문에 어려움이 있다.
+	// 락커 인덱스 하드코딩이므로 인벤토리 개수 변경이 있다면 주의한다.
 	GASSERT( EMSTORAGE_CHANNEL == 5 );
 
 	for ( size_t x = 0; x < EMSTORAGE_CHANNEL; x++ )
@@ -2172,8 +2202,10 @@ BOOL SSKILLFACT::IsAlive()
 
 void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime, const SSKILLFACT::STIME sTime, const EMTIMESTRINGFORMAT emTimeType)
 {
+    //! 만료날이 없고 무한시간이라면
     if ( !sTime.IsHaveExpiredTime() && sTime.IsAgeInfinite() )
     {
+        //! 무제한
         strDest = ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 3);
         return;
     }
@@ -2185,12 +2217,14 @@ void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime
     BOOL bNegative = FALSE;
     BOOL bExpired  = FALSE;
 
+    //! 만료날이 존재한다면
     if ( sTime.IsHaveExpiredTime() )
     {
         __time64_t tExpiredTime = static_cast<__time64_t>(sTime.nEXPIREDTIME);
         
         if ( tExpiredTime < tCurrentTime )
         {
+            //! 만료
             strDest = ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 5);
             return;
         }
@@ -2240,6 +2274,7 @@ void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime
 	switch ( emTimeType )
 	{
 	case EMTIMESTRINGFORMAT_DETAIL:
+        // Note : X일X시X분X초, X시X초, X분X초, X시, X분, X초, 0초 ....
         if (nDay)
             strDest.Append(sc::string::format(ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 4), nDay).c_str());
         if (nHour)
@@ -2250,6 +2285,7 @@ void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime
             strDest.Append(sc::string::format(ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 2), nSec).c_str());
 		break;
 
+		// Note : X일, X시 ,X분, X초, 0초 ...
     case EMTIMESTRINGFORMAT_SIMPLE:
         if (nDay)
             strDest.Append(sc::string::format(ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 4), nDay).c_str());
@@ -2262,6 +2298,7 @@ void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime
 		break;
 
 	case EMTIMESTRINGFORMAT_SMART:
+        // Note : X일, X시X분, X분X시, X시, X분, X초, 0초
         if (nDay)
             strDest.Append(sc::string::format( ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 4), nDay).c_str());
 		if (nHour)
@@ -2280,6 +2317,7 @@ void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime
 
     if ( bExpired )
     {
+        //! 뒤에 만료됨
         strDest.Append( ID2GAMEINTEXT("SKILLFACT_LIFETIME_DISPLAY", 6) );
     }
 }
@@ -2287,13 +2325,16 @@ void SSKILLFACT::GetTimeByStringFormat(CString& strDest, __time64_t tCurrentTime
 bool SSKILLFACT::GetTime( int& nDay, int& nHour, int& nMin, int& nSec, __time64_t tCurrentTime, 
 						  const SSKILLFACT::STIME sTime, const EMTIMESTRINGFORMAT emTimeType )
 {
+	//! 만료날이 없고 무한시간이라면
 	if( FALSE == sTime.IsHaveExpiredTime() && TRUE == sTime.IsAgeInfinite() )
 		return false;
 
+	//! 만료날이 존재한다면
 	if( TRUE == sTime.IsHaveExpiredTime() )
 	{
 		__time64_t tExpiredTime = static_cast< __time64_t >( sTime.nEXPIREDTIME );
 
+		//! 만료
 		if( tExpiredTime < tCurrentTime )
 			return false;
 

@@ -6,7 +6,6 @@
 #include <boost/tr1/unordered_map.hpp>
 #include <map>
 
-
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/set.hpp>
 #include <boost/serialization/string.hpp>
@@ -46,13 +45,15 @@ enum EMREACTION
 	REACT_SKILL,
 	REACT_GATHERING,
 
-	REACT_TOGGLE_VEHICLE,
-	REACT_SWAP_ARMS,	  
+	REACT_TOGGLE_VEHICLE, // 탈것 활성/비활성화
+	REACT_SWAP_ARMS,	  // 무기 스왑
 	REACT_SUMMON_NPC,
 
 	REACT_SIZE,
 };
 
+//! 엑션 행위 타겟들..( 우선순위 순으로 정렬. )
+//
 enum EMACTIONTAR
 {
 	EMACTAR_NULL	= 0,
@@ -71,7 +72,7 @@ enum EMACTIONTAR
 	EMACTAR_SUMMON_ATTACK	= 8,
 	EMACTAR_MATERIAL	= 9, 
 
-	EMACTAR_SUMMON_NPC = 10, 
+	EMACTAR_SUMMON_NPC = 10, // 소환수 NPC 일반 NPC와 거의 같은 기능
 };
 
 namespace COMMENT
@@ -83,12 +84,12 @@ namespace COMMENT
 enum EMCHARDATA
 {
     EMSKILLQUICK_VERSION	= 0x0102,
-    EMSKILLQUICK_SIZE_OLD	= 30,	
-    EMSKILLQUICK_SIZE		= 40,	
+    EMSKILLQUICK_SIZE_OLD	= 30,	//	이전 사이즈
+    EMSKILLQUICK_SIZE		= 40,	// EMSKILLQUICK_ROW * EMSKILLQUICK_COL
 	EMSKILLQUICK_ROW		= 4,
 	EMSKILLQUICK_COL		= 10,
     EMACTIONQUICK_SIZE		= 6,
-	EMSKILLQUICKTAB_SLOTSIZE = 10,	
+	EMSKILLQUICKTAB_SLOTSIZE = 10,	// 스킬 탭의 슬롯 개수;
 
     SKILLFACT_SIZE_NORMAL				= 14,
 	SKILLFACT_SIZE_ADDITIONAL			= 1,
@@ -96,7 +97,7 @@ enum EMCHARDATA
 	SKILLFACT_SIZE_EXP_LUNCHBOX	= 1,
     SKILLFACT_SIZE_SYSTEM	 			= 5,
     SKILLFACT_SIZE			 			= SKILLFACT_SIZE_NORMAL + SKILLFACT_SIZE_LUNCHBOX + SKILLFACT_SIZE_EXP_LUNCHBOX + SKILLFACT_SIZE_SYSTEM + SKILLFACT_SIZE_ADDITIONAL,
-	SKILLFACT_SIZE_NORMAL_INC_ADDITIONAL= SKILLFACT_SIZE_NORMAL + SKILLFACT_SIZE_ADDITIONAL + 1,	
+	SKILLFACT_SIZE_NORMAL_INC_ADDITIONAL= SKILLFACT_SIZE_NORMAL + SKILLFACT_SIZE_ADDITIONAL + 1,	// 한칸 띄우기를 가능하게 하기 위해 1을 더한다;
 
     SKILLFACT_INDEX_NORMAL_START				= 0,
     SKILLFACT_INDEX_NORMAL_END					= SKILLFACT_SIZE_NORMAL,
@@ -138,13 +139,13 @@ enum EMCHARDATA
 
 enum EMSKILLFACT_TYPE
 {
-    EMSKILLFACT_TYPE_NONE				= -1,
+    EMSKILLFACT_TYPE_NONE					= -1,
     EMSKILLFACT_TYPE_NORMAL				= 0,
-	EMSKILLFACT_TYPE_ADDITIONAL		    = 1,
+	EMSKILLFACT_TYPE_ADDITIONAL		= 1,
     EMSKILLFACT_TYPE_LUNCHBOX			= 2,
     EMSKILLFACT_TYPE_SYSTEM				= 3,
-	EMSKILLFACT_TYPE_EXP_LUNCHBOX	    = 4,
-	EMSKILLFACT_TYPE_FORCED_NORMAL	    = 5,
+	EMSKILLFACT_TYPE_EXP_LUNCHBOX	= 4,
+	EMSKILLFACT_TYPE_FORCED_NORMAL	= 5,
 };
 
 #define EMSKILLFACTTYPE_BY_INDEX(i)	(										\
@@ -158,10 +159,10 @@ enum EMSKILLFACT_TYPE
 
 enum EMGM_EVENT_TYPE
 {
-    EMGM_EVENT_NONE		= 0x00,	
-    EMGM_EVENT_SPEED	= 0x01,	
-    EMGM_EVENT_ASPEED	= 0x02,
-    EMGM_EVENT_ATTACK	= 0x04,	
+    EMGM_EVENT_NONE		= 0x00,	//	없음.
+    EMGM_EVENT_SPEED	= 0x01,	//	이동속도.
+    EMGM_EVENT_ASPEED	= 0x02,	//	공격속도.
+    EMGM_EVENT_ATTACK	= 0x04,	//	공격력.
 };
 
 enum EMVEHICLE_WHETHER
@@ -171,16 +172,16 @@ enum EMVEHICLE_WHETHER
     EMVEHICLE_PASSENGER			= 2,
 };
 
-
+// 행동 액션 제약
 enum EMACTION_LIMIT
 {
     EMACTION_LIMIT_NONE	   = 0x0000,
-    EMACTION_LIMIT_ITEM	   = 0x0001,	
-    EMACTION_LIMIT_DRUG	   = 0x0002,	
-    EMACTION_LIMIT_SKILL   = 0x0004,	
-    EMACTION_LIMIT_PET	   = 0x0008,	
-    EMACTION_LIMIT_DRUG_HP = 0x0010,	
-    EMACTION_LIMIT_CARD    = 0x0020,
+    EMACTION_LIMIT_ITEM	   = 0x0001,	//	물약, 카드 사용금지
+    EMACTION_LIMIT_DRUG	   = 0x0002,	//	물약 사용 금지
+    EMACTION_LIMIT_SKILL   = 0x0004,	//	스킬 사용 금지
+    EMACTION_LIMIT_PET	   = 0x0008,	//	펫카드 사용 금지
+    EMACTION_LIMIT_DRUG_HP = 0x0010,	//	체력 회복약 금지
+    EMACTION_LIMIT_CARD    = 0x0020,	//	카드 사용 금지
 };
 
 enum EMACTION_SLOT
@@ -189,13 +190,16 @@ enum EMACTION_SLOT
     EMACT_SLOT_DRUG	= 1,
 };
 
+//
+// PVP카운터값의 가치 비율 책정 (각 2가지의 값들을 비교할 경우에 필요하다.)
+//
 #define PVP_POINT_RATIO_HEAL_DAMAGE		10		//1 Heal = 10 Damage
 #define PVP_POINT_RATIO_REBIRTH_KILL	2		//1 Rebirth = 2 Kill
 
 //
 //mjeon.CaptureTheField
 //
-
+//  CTF 중에 Kill & Death 카운터를 관리 -> 이 구조체를 메시지에 실어서 클라이언트에게 CTF 결과를 보여준다.
 //
 struct PVP_PERFORMANCE
 {
@@ -204,20 +208,21 @@ struct PVP_PERFORMANCE
 	UINT		nRebirthTo;		//(4 bytes)	
 	UINT		nDamageTo;		//(4 bytes)
 	UINT		nHealTo;		//(4 bytes)
-	UINT		nContributionPoint;	//(4 bytes)
+	UINT		nContributionPoint;	//(4 bytes)	//이번 CTF에서 몇 점의 기여도를 획득했는가?
 
 public:
-	UINT64	nnDamageFrom;
-	UINT64	nnHealFrom;
 	//
-	//UINT		nPadding;		//(4 bytes)		
+	// 8-bytes를 사용할 경우
+	//
+	//UINT		nPadding;		//(4 bytes)		//nnDamageTo와 nnHealTo로의 access를 빠르게 하기위해 compiler에 의해 8-bytes 정렬이 이루어진다.
 	//UINT64	nnDamageTo;		//(8 bytes)
 	//UINT64	nnHealTo;		//(8 bytes)	
 	
 	/*
 		-- reserved : not used yet --
 
-
+	UINT64	nnDamageFrom;
+	UINT64	nnHealFrom;
 	*/
 
     MSGPACK_DEFINE(nKill, nDeath, nRebirthTo, nDamageTo, nHealTo, nContributionPoint);
@@ -316,19 +321,46 @@ public:
 		if (lKDR != rKDR)
 			return (lKDR > rKDR);
 
+
+		//
+		// 4.힐러에게 우선권을 주자
+		//
 		if (nHealTo != rhs.nHealTo)
 			return (nHealTo > rhs.nHealTo);
 
+
+		//
+		// 5.힐량마저 동일하다면, 부활 횟수가 많은 쪽에 우선권
+		//
 		if (nRebirthTo != rhs.nRebirthTo)
 			return (nRebirthTo > rhs.nRebirthTo);
 
+		//
+		// 6.Death가 적은쪽에 우선권
+		//
 		if (nDeath != rhs.nDeath)
-			return (nDeath < rhs.nDeath);	//Death
+			return (nDeath < rhs.nDeath);	//Death는 적은쪽이 유리
 
+		
+		//
+		// 7.이제 더 이상 비교할 카운터도 없다. 
+		//
 		//GASSERT(!"PVP_PERFORMANCE: (WARNING) There's no more counter to compare!!");
 		return false;
 	}
 
+	/*
+	* 1회 최대 획득가능 수 : 50
+	* 승리자 : +30
+	* 패배자 : +10
+	* 피해량 100,000 당 (기여도+1)
+	* 치유량 (기예부 스킬 정의 후)		-> 일단 1000당 1점으로
+	* 사살 수 2 마다 (기여도+1)
+	* 부활 성공 수 1마다 (기여도+1)
+	*/
+
+	/*
+		-- reserved : not used yet --
 
 	void DamageFrom(WORD wDamage)
 	{
@@ -343,7 +375,7 @@ public:
 
 		GASSERT(nnHealFrom < _UI64_MAX);
 	}
-
+	*/
 
 private:
 	friend class boost::serialization::access;
@@ -365,6 +397,9 @@ private:
 //
 struct CTF_STATISTICS_4_ONEPLAYER
 {
+	//
+	//Note: PVP_PERFORMANCE내에서 __int64를 사용할 경우에는, 이에 대한 access를 빠르게 하기위해 compiler에 의해 8-bytes 정렬이 이루어진다.
+	//
 
 	PVP_PERFORMANCE	pvpperf;				//(24 bytes)
 
@@ -372,10 +407,10 @@ struct CTF_STATISTICS_4_ONEPLAYER
 	WORD			wSchool;				//(2 bytes)
 	//UINT			nContributionPoint;		//(4 bytes)
 
-	char			szName[CHAR_SZNAME];	//(36 bytes)	3 bytes padding 
-											//Note: __int64
+	char			szName[CHAR_SZNAME];	//(36 bytes)	3 bytes padding 포함
+											//Note: __int64가 사용될 경우에는 7 bytes padding
 
-											//Total: 64 bytes
+											//Total: 64 bytes (__int64가 사용될 경우에는 80 bytes)
 
 	CTF_STATISTICS_4_ONEPLAYER()
 		:wClass(0)
@@ -402,12 +437,12 @@ const int MAX_CP = 8000;
 
 struct SDURATION_DAMAGE
 {
-    float m_fTickTime;	//	
-    float m_fDamage;	//	
-    float m_fTime;		//	
+    float m_fTickTime;	//	한틱시간
+    float m_fDamage;	//	데미지
+    float m_fTime;		//	남은 시간
 
-    STARGETID m_sID;	//
-	SNATIVEID m_sSkillID;	//ID
+    STARGETID m_sID;	//	스킬 걸어준 사람
+	SNATIVEID m_sSkillID;	// 스킬 ID
 
     //MSGPACK_DEFINE(m_fTickTime, m_fDamage, m_fTime, m_sID);
 
@@ -441,7 +476,7 @@ struct SDURATION_DAMAGE
         m_fDamage = 0.0f;
         m_sID.RESET();
 		m_sSkillID.Reset();
-        //		m_fTime = 0.0f;	// 
+        //		m_fTime = 0.0f;	// 얘는 Reset 안함
     }
 };
 
@@ -491,28 +526,28 @@ struct DAMAGE_SPEC
 		FLAG_ILLUSION					= 0X00000002,
 	}; //enum
 
-    float		m_fPsyDamageReduce;					
-    float		m_fPsyDamageReduceEFFRate;			
-	float		m_fPsyDamageReflection;					
-	float		m_fPsyDamageReflectionEffRate;			
-	float		m_fPsyDamageReflectionRate;			
-	float		m_fPsyDamageReflectionRateEffRate;	
+    float		m_fPsyDamageReduce;						// 물리 데미지 흡수율
+    float		m_fPsyDamageReduceEFFRate;			// 물리 데미지 흡수율 비율. by luxes.
+	float		m_fPsyDamageReflection;					// 물리 데미지 반사율
+	float		m_fPsyDamageReflectionEffRate;			// 물리 데미지 반사율 비율. by luxes.
+	float		m_fPsyDamageReflectionRate;			// 물리 데미지 반사확률
+	float		m_fPsyDamageReflectionRateEffRate;	// 물리 데미지 반사확률 비율. by luxes.
 
-    float		m_fMagicDamageReduce;						
-    float		m_fMagicDamageReduceEffRate;				   
-    float		m_fMagicDamageReflection;					
-    float		m_fMagicDamageReflectionEffRate;			
-    float		m_fMagicDamageReflectionRate;				
-    float		m_fMagicDamageReflectionRateEffRate;	
-    float		m_fDamageCurse;				
-    float		m_fDamageCurseEffRate;	
+    float		m_fMagicDamageReduce;						// 마법 데미지 흡수율
+    float		m_fMagicDamageReduceEffRate;				// 마법 데미지 흡수율 비율. by luxes.    
+    float		m_fMagicDamageReflection;					// 마법 데미지 반사율
+    float		m_fMagicDamageReflectionEffRate;			// 마법 데미지 반사율 비율. by luxes.
+    float		m_fMagicDamageReflectionRate;				// 마법 데미지 반사확률
+    float		m_fMagicDamageReflectionRateEffRate;	// 마법 데미지 반사확률 비율. by luxes.
+    float		m_fDamageCurse;				// 저주 데미지 반사율
+    float		m_fDamageCurseEffRate;	// 저주 데미지 반사율 비율. by luxes.
 	float		m_fIllusionJumpBound;
 	float		m_fIllusionLastTime;
 	WORD		m_wIllusionRemain;
-	STARGETID	m_sCurseTargetID;		
-    DWORD		m_dwFlags;					
-	DWORD		m_emImmuneApplyType;	
-	DWORD		m_emImmuneActionType;	
+	STARGETID	m_sCurseTargetID;		// 저주를 건 타켓 ( 스킬 사용자 ) 
+    DWORD		m_dwFlags;					// 데미지 무시 활성화 여부
+	DWORD		m_emImmuneApplyType;	// 면역 적용 타입;
+	DWORD		m_emImmuneActionType;	// 면역 행동 타입;	
 
     DAMAGE_SPEC()				 { AllReset(); }	
 
@@ -614,8 +649,8 @@ struct SIGNORED_DAMAGE
 		return (this->nIgnoreCount > 0) || (this->nIgnoreDamage > 0);
 	}
 
-	int nIgnoreCount; 
-	int nIgnoreDamage; 
+	int nIgnoreCount; // 흡수 횟수; // 지정된 횟수 만큼 데미지 무시;
+	int nIgnoreDamage; // 흡수량; // 지정된 양만큼 데미지 무시;
 
 	SIGNORED_DAMAGE(void)
 		: nIgnoreCount(0)
@@ -665,7 +700,7 @@ struct SINVISIBLE
 	SINVISIBLE(void)
 	{
 	}
-	const bool SET(const SKILL::SSPEC& sSPEC) //
+	const bool SET(const SKILL::SSPEC& sSPEC) // 은신;
 	{
 		const DWORD dwLevel = DWORD(sSPEC.fVAR1);
 		this->dwLevelINVISIBLE = dwLevel;
@@ -682,14 +717,14 @@ struct SRECVISIBLE
 	DWORD dwLevelRECVISIBLE;
 	float fRadiusRECVISIBLE;
 
-	BOOL bFLAG; 
-	float fLatestCheckTime; 
+	BOOL bFLAG; // 자동 은신 감지에서 사용;
+	float fLatestCheckTime; // 자동 은신 감지에서 사용;
 
 	SRECVISIBLE(void) : 	
 	bFLAG(FALSE), fLatestCheckTime(0.0f), dwLevelRECVISIBLE(0), fRadiusRECVISIBLE(0.0f)
 	{
 	}	
-	void SET(const SKILL::SSPEC& sSPEC)
+	void SET(const SKILL::SSPEC& sSPEC) // 은신 감지;
 	{
 		dwLevelRECVISIBLE = DWORD(sSPEC.fVAR1);
 		fRadiusRECVISIBLE= sSPEC.fVAR2;
@@ -705,8 +740,8 @@ struct SSTIGMA
 {	
 	struct SSTIGMA_PACK
 	{		
-		STARGETID sUserID;		
-		STARGETID sTakerID;	
+		STARGETID sUserID;		// 낙인 효과 사용자 ID
+		STARGETID sTakerID;	// 낙인 효과 피격자 ID
 		SNATIVEID sSkillID;		
 		DWORD dwFLAG;
 		float fRate;
@@ -759,14 +794,14 @@ struct SRELEASE_ENDURE
 	}
 };
 
-struct SDOMINATE	
+struct SDOMINATE	// 지배 효과;
 {	
-	STARGETID sControlTargetID;	
-	EMSPEC_DOMINATE_TYPE	emController;		
-	BOOL		bDominate;		
+	STARGETID sControlTargetID;	 // 지배 대상 ID;
+	EMSPEC_DOMINATE_TYPE	emController;		// 제어권 보유자;
+	BOOL		bDominate;		// 지배 여부 플래그; // 시전자 플래그;
 	DWORD	dwTimer;
 
-	float	fRadiusMoveable;		
+	float	fRadiusMoveable;		// 랜덤 이동 / 효과 해제 범위;	 VAR2
 	bool	bDomination;
 
 	SDOMINATE(void) :
@@ -791,9 +826,9 @@ struct SDOMINATE
 
 struct SDOMINATOR
 {
-	STARGETID sControlTargetID;	
-	BOOL bDominate;		
-	DWORD dwTimer;		
+	STARGETID sControlTargetID;	 // 지배하는 대상의 ID;
+	BOOL bDominate;		// 지배 여부 플래그; // 시전자 플래그;
+	DWORD dwTimer;		// 랜덤 이동 타이머;
 
 	SDOMINATOR(void) :	
 	bDominate(false),
@@ -806,10 +841,10 @@ struct SDOMINATOR
 	}
 };
 
-struct STAUNT  
+struct STAUNT  //도발 효과
 {
-    STARGETID sTauntTargetID;  
-    float fTauntDistance;  
+    STARGETID sTauntTargetID;  //강제공격해야하는 타겟의 ID (도발대상);
+    float fTauntDistance;  //도발이 해제 거리 (일정거리를 벗어나면 도발 해제)
     
     STAUNT() :
         fTauntDistance(0)
@@ -823,14 +858,14 @@ struct STAUNT
     }
 };
 
-struct SHALLUCINATE	
+struct SHALLUCINATE	// 환독 효과;
 {	
-	EMANI_SUBTYPE	emAni_SubType;	
-	DWORD dwTransformID;
+	EMANI_SUBTYPE	emAni_SubType;	// 강제 이모티콘 서브 타입; VAR2
+	DWORD dwTransformID; // 변신 ID; VAR1	
 	
-	bool bTransform; 
-	bool bEmoticon;
-	bool bNonTargetable; 	
+	bool bTransform; // 변신;
+	bool bEmoticon; // 강제 이모티콘;
+	bool bNonTargetable; // 타겟팅 불가;	
 
 	SHALLUCINATE(void) :
 	bTransform(false),
@@ -853,9 +888,9 @@ struct SHALLUCINATE
 	}
 };
 
-struct SINCREASEEFF 
+struct SINCREASEEFF // 강화 효과;
 {
-	DWORD dwApplyFlag; 
+	DWORD dwApplyFlag; // dwFLAG;
 	int nIncreaseCrushingBlowRate[SKILL::EMAPPLY_NSIZE]; // VAR1;
 	int nIncreaseDamageRate[SKILL::EMAPPLY_NSIZE]; // VAR2;
 
@@ -1023,18 +1058,19 @@ public:
 	SAIRBORNE(void);
 	
 private:
-	struct Element {
-		const float update(const float _fTimeElapsed); //test
+	struct Element
+	{ // (부양시간x2 <= 총시간);
+		const float update(const float _fTimeElapsed);
 		Element(const float _fTimeLife, const float _fTimeLevitate, const float _fHeightMax);
 		Element(const Element& _rhs);
 
 		float fTimeElapsed;
-		const float fUTimeLife;			
-		const float fLevitateT;			
-		const float fSlopeRiseFall;		
-		const float fSlopeLevitate;		
-		const float fInterceptY;		
-		const float fHeightMax;			
+		const float fUTimeLife;			// 총 시간 역수;
+		const float fLevitateT;			// 부양 시간 t;
+		const float fSlopeRiseFall;		// 떠오르는/내려앉는 시간;
+		const float fSlopeLevitate;		// 부양 시간;
+		const float fInterceptY;			// 부양 시간 공식에서 사용할 y-절편 값;
+		const float fHeightMax;			// 공중 부양 높이 최대치;
 	};
 
 	typedef std::list<Element> ElementList;
@@ -1074,7 +1110,7 @@ public:
 
 struct SVEHICLE
 {
-	EMVEHICLE_WHETHER	emVehicle;		
+	EMVEHICLE_WHETHER	emVehicle;		//! 탈것 활성화 여부
 	float	fVehicleSpeedRate;
 	float	fVehicleSpeedVol;
 
@@ -1089,32 +1125,32 @@ struct SVEHICLE
 };
 
 enum EMACTION_RATE{
-	EMACTION_RATE_HP_RECOVER,	//	HP
-	EMACTION_RATE_MP_RECOVER,	// MP
-	EMACTION_RATE_SP_RECOVER,	// SP
+	EMACTION_RATE_HP_RECOVER,	//	HP 회복율.
+	EMACTION_RATE_MP_RECOVER,	// MP 회복율.
+	EMACTION_RATE_SP_RECOVER,	// SP 회복율.
 
-	EMACTION_RATE_HP_INCREASE, // HP // m_fIncHP
-	EMACTION_RATE_MP_INCREASE, // MP  // m_fIncMP
-	EMACTION_RATE_SP_INCREASE, // SP // m_fIncSP
-	EMACTION_RATE_CP_INCREASE, // CP // m_fIncHP
+	EMACTION_RATE_HP_INCREASE, // HP 증가율; // m_fIncHP
+	EMACTION_RATE_MP_INCREASE, // MP 증가율; // m_fIncMP
+	EMACTION_RATE_SP_INCREASE, // SP 증가율; // m_fIncSP
+	EMACTION_RATE_CP_INCREASE, // CP 증가율; // m_fIncHP
 
-	EMACTION_RATE_DAMAGE,		
-	EMACTION_RATE_DEFENSE,		
+	EMACTION_RATE_DAMAGE,		// 피해 변화율;
+	EMACTION_RATE_DEFENSE,		// 발동 효과 변화율;
 
-	EMACTION_RATE_SKILL_COOLDOWN,	
+	EMACTION_RATE_SKILL_COOLDOWN,	// 스킬 딜레이 변화율; // m_fSTATE_DELAY
 
-	EMACTION_RATE_MOVE_STATE,			
-	EMACTION_RATE_MOVE_VELOCITY,		
+	EMACTION_RATE_MOVE_STATE,			// 이동 속도 비율; 1.0f = 100% // m_fSTATE_MOVE_RATE
+	EMACTION_RATE_MOVE_VELOCITY,		// 이동 속도 변화율; // m_fSKILL_MOVE
 
-	EMACTION_RATE_ATTACK_VELOCITY,	
-	EMACTION_RATE_ATTACK_RANGE,		
-	EMACTION_RATE_APPLY_RANGE,			
+	EMACTION_RATE_ATTACK_VELOCITY,	// 공격속도 변화율;
+	EMACTION_RATE_ATTACK_RANGE,		// 사정거리 변화율;
+	EMACTION_RATE_APPLY_RANGE,			// 적용범위 변화율;
 
-	EMACTION_RATE_EXP_GAIN,		
-	EMACTION_RATE_ITEM_DROP,	
-	EMACTION_RATE_MONEY_DROP,	
+	EMACTION_RATE_EXP_GAIN,		//	경험치 수신율.
+	EMACTION_RATE_ITEM_DROP,	//	아이템 발생율.
+	EMACTION_RATE_MONEY_DROP,	//	금액 발생율.
 
-	EMACTION_RATE_SUMMON_TIME,	
+	EMACTION_RATE_SUMMON_TIME,	// 소환 시간 증가율;
 	EMACTION_RATE_NSIZE,
 };
 struct SACTIONRATE
@@ -1170,28 +1206,28 @@ struct SACTIONRATE
 }
 */
 enum EMACTION_VARIATION{
-	EMACTION_VARIATION_POWER,			
-	EMACTION_VARIATION_STRENGTH,		
-	EMACTION_VARIATION_SPIRIT,			
-	EMACTION_VARIATION_DEXTERITY,		
-	EMACTION_VARIATION_INTELLIGENCE,	
-	EMACTION_VARIATION_STAMINA,		
+	EMACTION_VARIATION_POWER,			//	힘 증감; // m_sSUMSTATS_SKILL
+	EMACTION_VARIATION_STRENGTH,		//	체력 증감;
+	EMACTION_VARIATION_SPIRIT,			//	정신력 증감;
+	EMACTION_VARIATION_DEXTERITY,		//	민첩성 증감;
+	EMACTION_VARIATION_INTELLIGENCE,	//	지능 증감;
+	EMACTION_VARIATION_STAMINA,		//	근력 증감;
 
-	
-	EMACTION_VARIATION_FIRE_RESIST,			
-	EMACTION_VARIATION_ICE_RESIST,			
-	EMACTION_VARIATION_ELECTRIC_RESIST,	
-	EMACTION_VARIATION_POISON_RESIST,		
-	EMACTION_VARIATION_SPIRIT_RESIST,		
+	// 저항 추가 시 ""SPIRIT 다음/FIRE 이전""이 아닌 ""FIRE와 SPIRIT 사이""에 넣을 것;
+	EMACTION_VARIATION_FIRE_RESIST,			// 화염 저항;
+	EMACTION_VARIATION_ICE_RESIST,			// 냉기 저항;
+	EMACTION_VARIATION_ELECTRIC_RESIST,	// 전기 저항;
+	EMACTION_VARIATION_POISON_RESIST,		// 독 저항;
+	EMACTION_VARIATION_SPIRIT_RESIST,		// 정신 저항;
 
-	EMACTION_VARIATION_HP_ADD,		// HP // m_nHP_ADD
-	EMACTION_VARIATION_MP_ADD,		// MP // m_nMP_ADD
-	EMACTION_VARIATION_SP_ADD,		// SP // m_nSP_ADD
-	EMACTION_VARIATION_CP_ADD,		// CP // m_nCP_ADD
+	EMACTION_VARIATION_HP_ADD,		// HP 회복력 증감; // m_nHP_ADD
+	EMACTION_VARIATION_MP_ADD,		// MP 회복력 증감; // m_nMP_ADD
+	EMACTION_VARIATION_SP_ADD,		// SP 회복력 증감; // m_nSP_ADD
+	EMACTION_VARIATION_CP_ADD,		// CP 회복력 증감; // m_nCP_ADD
 
-	EMACTION_VARIATION_SUM_HIT,			// m_nSUM_HIT
-	EMACTION_VARIATION_SUM_AVOID,		// m_sSUM_AVOID
-	EMACTION_VARIATION_DEFENSE_SKILL,	// m_nDEFENSE_SKILL
+	EMACTION_VARIATION_SUM_HIT,			// 명중률 + 스킬 효과; // m_nSUM_HIT
+	EMACTION_VARIATION_SUM_AVOID,		// 회피율 + 스킬효과; // m_sSUM_AVOID
+	EMACTION_VARIATION_DEFENSE_SKILL,	// 방어력 ( DP + DEX*계수 + ITEM_DEF ) * 공간적응 보정 + 스킬; // m_nDEFENSE_SKILL
 
 	EMACTION_VARIATION_NSIZE,
 };
@@ -1254,11 +1290,11 @@ struct SACTIONVARIATION{
 
 struct SSTATEBLOW
 {
-    EMSTATE_BLOW	emBLOW;			
-    float			fAGE;			
-    float			fSTATE_VAR1;	
-    float			fSTATE_VAR2;	
-    WORD            wSchool;        
+    EMSTATE_BLOW	emBLOW;			//	상태 이상 종류.
+    float			fAGE;			//	적용 시간.
+    float			fSTATE_VAR1;	//	적용 값 1.
+    float			fSTATE_VAR2;	//	적용 값 2.
+    WORD            wSchool;        //  학원 값
 
     //MSGPACK_DEFINE(emBLOW, fAGE, fSTATE_VAR1, fSTATE_VAR2, wSchool);
 
@@ -1316,28 +1352,28 @@ struct SSKILLFACT
         FLAG_SKILLFACT_ALREADY_APPLY_INCREASE_TIME   =           0x00000001
     };
 
-    SNATIVEID		sNATIVEID;		
-    WORD			wLEVEL;			
-    float			fAGE;			
-    float           fLIFE;          
+    SNATIVEID		sNATIVEID;		//	스킬 ID.
+    WORD			wLEVEL;			//	스킬 레벨.
+    float			fAGE;			//	생성후 남은 시간.
+    float           fLIFE;          //  지속시간.  봉주
 	bool			bIsExpiredTime;
-    UINT            nEXPIREDTIME;   
-    DWORD           dwFLAG;                    //< enum ENSKILLFACT
+    UINT            nEXPIREDTIME;   //  만료시간.
+    DWORD           dwFLAG;         //  봉주                //< enum ENSKILLFACT
 
-    SKILL::EMTYPES	emTYPE;			
-    float			fMVAR;			
+    SKILL::EMTYPES	emTYPE;			//	기본 종류.
+    float			fMVAR;			//	기본 수치.
 
-    STARGETID		sID;			
+    STARGETID		sID;			//	스킬 걸어준 사람
 
     std::vector<SKILL::SIMPACT_ADDON_LEVEL>		vecADDON;
     std::vector<SKILL::SSPEC_ADDON_LEVEL>		vecSPEC;
 
 	SKILL::SSPEC_CA		pcCAData;
 
-    DWORD			dwSpecialSkill;		 
-    bool			bRanderSpecialEffect;     
+    DWORD			dwSpecialSkill;		  // 특수스킬
+    bool			bRanderSpecialEffect; // 특수 스킬 사용시 이펙트가 발동되었는지 여부    
 
-    BOOL            bEnable;			  
+    BOOL            bEnable;			  // 활성화 상태 여부	
 	BOOL			bSkillUserEnermy;
 		
     SSKILLFACT () :
@@ -1370,7 +1406,7 @@ struct SSKILLFACT
 
     void RESET ();
 
- 
+    //! 시간 계산용 구조체
     struct STIME
     {
         bool IsEXPIREDTIME;
@@ -1404,6 +1440,7 @@ struct SSKILLFACT
         BOOL IsAgeInfinite()		const { return (fAGE == FLT_MAX); }
     };
 
+    //! 시간을 지정된 StringFormat으로 변환하는 함수입니다.
     enum EMTIMESTRINGFORMAT
     {
         EMTIMESTRINGFORMAT_DETAIL = 0,
@@ -1554,9 +1591,10 @@ struct SPASSIVE_SKILL_DATA
     int		m_nAVOID;
 
     short	m_nPIERCE;
-    float	m_fRANGE_PSY_LONG;	
-    float	m_fTARRANGE_ALL;	
-    float	m_fAPPLYRANGE_ALL;
+    float	m_fRANGE_PSY_LONG;	//	물리 사격형 ( 사정거리, 적용영역 영향 )
+
+    float	m_fTARRANGE_ALL;	//	스킬 사정거리 영향
+    float	m_fAPPLYRANGE_ALL;	//	스킬 적용영역 영향
 
     float	m_fMOVEVELO;
     float	m_fATTVELO;
@@ -1579,9 +1617,9 @@ struct SPASSIVE_SKILL_DATA
     float	m_fMP_RATE;
     float	m_fSP_RATE;
 
-    SRESIST	m_sSUMRESIST;					
+    SRESIST	m_sSUMRESIST;					//	저항값.
 
-    float   m_fSUMMONACTIVETIME;            
+    float   m_fSUMMONACTIVETIME;            //  소환수 소환시간 증가.
 
 	int		m_nCP_ADD;
 	float	m_fDurationCPAdd;
@@ -1629,7 +1667,7 @@ struct SPASSIVE_SKILL_DATA
     }
 };
 
-//	CharClient
+//	CharClient에 필요한 정보들
 struct SPASSIVE_SKILL_DATA_CLIENT
 {
     float	m_fMOVEVELO;
@@ -1681,15 +1719,15 @@ struct SQITEM_FACT
 
 struct SEventState
 {
-    float				fItemGainRate;		
-    float				fExpGainRate;		
-    int					MinEventLevel;		
-    int					MaxEventLevel;		
-    bool				bEventStart;		
-    int					EventPlayTime;		
-    int					EventBusterTime;	
-    CTime				EventStartTime;		
-    DWORD				dwEventEndMinute;	
+    float				fItemGainRate;		// 이벤트 시 얻게되는 아이템 드랍율
+    float				fExpGainRate;		// 이벤트 시 얻게되는 경헙치 배율
+    int					MinEventLevel;		// 이벤트 최소 레벨
+    int					MaxEventLevel;		// 이벤트 최대 레벨
+    bool				bEventStart;		// 이벤트가 시작됐는지 아닌지
+    int					EventPlayTime;		// 이벤트가 적용 되는 플레이 시간
+    int					EventBusterTime;	// 이벤트가 지속되는 시간
+    CTime				EventStartTime;		// 이벤트가 최초 시작한 시간
+    DWORD				dwEventEndMinute;	// 이벤트 적용 시간
 
 
     SEventState()
@@ -1700,11 +1738,11 @@ struct SEventState
     {
         fItemGainRate    = 1.0f;
         fExpGainRate     = 1.0f;
-        MinEventLevel    = 0;		
-        MaxEventLevel    = 0;		
-        bEventStart      = FALSE;			
-        EventPlayTime    = 0;		
-        EventBusterTime  = 0;		
+        MinEventLevel    = 0;		// 이벤트 최소 레벨
+        MaxEventLevel    = 0;		// 이벤트 최대 레벨
+        bEventStart      = FALSE;			// 이벤트가 시작됐는지 아닌지
+        EventPlayTime    = 0;		// 이벤트가 시작 시간
+        EventBusterTime  = 0;		// 이벤트가 지속되는 시간
         EventStartTime   = 0;
         dwEventEndMinute = 0;
 
@@ -1817,55 +1855,55 @@ struct SDROP_CHAR_BASE
     };
 
     // 36
-    char			szName[CHAR_SZNAME];				//(33 bytes)
-    BYTE			m_bItemShopOpen;			     	//(Padding)
-    WORD			wSchool;					    	//(Padding)	
+    char			szName[CHAR_SZNAME];		//	이름			//(33 bytes)
+    BYTE			m_bItemShopOpen;			// ItemShopOpen		//(Padding)
+    WORD			wSchool;					//	학원			//(Padding)	
 
 
     // 36
-    char			szNick[CHAR_SZNAME];		//(33 bytes)
-    BYTE			m_bUseArmSub;				//(Padding)
-    WORD			wHair;						//Padding)
+    char			szNick[CHAR_SZNAME];		//	별명			//(33 bytes)
+    BYTE			m_bUseArmSub;				// 극강부를 위한 보조 무기 사용여부	//(Padding)
+    WORD			wHair;						//	머리카락		//(Padding)
 
 	// 36
-    //char			szClubName[CHAR_SZNAME];		//(33 bytes)	
+    //char			szClubName[CHAR_SZNAME];	//	클럽 이름		//(33 bytes)	
     //
     //mjeon.activity.title
     //
-    BYTE			byActivityClass;			//  (Padding)
-    WORD			wHairColor;					// (Padding)
+    BYTE			byActivityClass;			//						(Padding)
+    WORD			wHairColor;					//  머리카락 컬러		(Padding)
 
 	// 36
     char			szTitle[EM_TITLEID_MAXLENGTH];//XML-ID of the Activity title
 
 	// 32
-    int				nBright;					
-    DWORD			dwCharID;					
-    DWORD			dwGuild;					
-    DWORD			dwAlliance;					
-    DWORD			dwGuildMarkVer;				
-    DWORD			dwGuildMaster;				
-    DWORD			dwPMasterID;				
-    DWORD			dwGaeaID;					
+    int				nBright;					//	속성
+    DWORD			dwCharID;					//	케릭터ID, DB번호
+    DWORD			dwGuild;					//	길드 번호
+    DWORD			dwAlliance;					//	동맹 번호
+    DWORD			dwGuildMarkVer;				//	길드 마크 번호
+    DWORD			dwGuildMaster;				//	길드 마스터
+    DWORD			dwPMasterID;				//	파티 마스터 ID	
+    DWORD			dwGaeaID;					//	생성 메모리 인덱스용	
 
     // 32
-    DWORD			dwCeID;						
-    DWORD			dwActState;					
-    DWORD			dwFLAGS;					
-    float			m_fCDMSafeTime;             
-    SNATIVEID		sMapID;						//	ID  (size: 4)
-    GLPartyID		PartyID;					//  (size: 4)
-    GLDWDATA		sHP;						//	(size: 8)
+    DWORD			dwCeID;						//	셀 ID	
+    DWORD			dwActState;					//	현재 액션 플래그
+    DWORD			dwFLAGS;					//	기타 속성
+    float			m_fCDMSafeTime;             //  구버전 CDM 무적 시간;
+    SNATIVEID		sMapID;						//	생성 맵 ID  (size: 4)
+    GLPartyID		PartyID;					//	파티 번호   (size: 4)
+    GLDWDATA		sHP;						//	생명량 (현재/최대량)	(size: 8)
 
     // 12
-    DWORD           m_dwANIMAINTYPE;            
-    DWORD			m_dwANISUBTYPE;				
-    float           m_fAniRemainTime;           
+    DWORD           m_dwANIMAINTYPE;            //  애니메이션 메인타입 ( 현재 모션상태일때만 사용 중 )
+    DWORD			m_dwANISUBTYPE;				//	애니메이션 서브타입
+    float           m_fAniRemainTime;           //  애니메이션 지속 시간 ( 현재 모션상태일때만 사용 중 )
 
 	// 36
-    D3DXVECTOR3		vPos;						
-    D3DXVECTOR3		vDir;						
-    D3DXVECTOR3		vTarPos;					
+    D3DXVECTOR3		vPos;						//	위치
+    D3DXVECTOR3		vDir;						//	위치
+    D3DXVECTOR3		vTarPos;					//	현재 목표 위치
 
     // 12
     SQITEM_FACT		sQITEMFACT;
@@ -1877,12 +1915,12 @@ struct SDROP_CHAR_BASE
     SPASSIVE_SKILL_DATA_CLIENT	sPASSIVE_SKILL;			//	passive skill data.    
 
 	// 14
-    WORD			Action;						
-    WORD			emTribe;					
-    DWORD			emClass;					
-    WORD			wFace;						
-    WORD			wSex;						
-    WORD			wLevel;						
+    WORD			Action;						//	현재 액션
+    WORD			emTribe;					//	종족
+    DWORD			emClass;					//	직업	
+    WORD			wFace;						//	얼굴모양
+    WORD			wSex;						//  성별
+    WORD			wLevel;						//	레벨
 
 	// 12
     SEVENT_FACT		sEVENTFACT;
@@ -2067,13 +2105,13 @@ struct SDROP_CHAR
 
 struct SCHARSAVESKILLFACT_100
 {
-    WORD        wSLOT;              
+    WORD        wSLOT;              //  슬롯
 
-    SNATIVEID	sNATIVEID;			
-    WORD		wLEVEL;				
-    float		fAGE;				
-    STARGETID   sID;				
-    DWORD       dwCount;			
+    SNATIVEID	sNATIVEID;			//	스킬 ID.
+    WORD		wLEVEL;				//	스킬 레벨
+    float		fAGE;				//	생성후 남은 시간.
+    STARGETID   sID;				//	스킬 걸어준 사람
+    DWORD       dwCount;			//  스킬 커스텀 카운트
 
     SCHARSAVESKILLFACT_100(void)
 		: wSLOT(0)
@@ -2088,20 +2126,20 @@ struct SCHARSAVESKILLFACT_100
 
 struct SCHARSAVESKILLFACT_101
 {
-	WORD        wSLOT;             
+	WORD        wSLOT;              //  슬롯
 
-	SNATIVEID	sNATIVEID;			
-	WORD		wLEVEL;				
-	bool		IsEXPIREDTIME;  
+	SNATIVEID	sNATIVEID;			//	스킬 ID.
+	WORD		wLEVEL;				//	스킬 레벨
+	bool		IsEXPIREDTIME;  //	시간을 만료 시간으로 사용할 것인가.
 
 	union
 	{
-		float fAGE;			
-		UINT  nEXPIREDTIME; 
+		float fAGE;			// 생성후 남은 시간.
+		UINT  nEXPIREDTIME; // 만료 시간.
 	};
 	
-	STARGETID   sID;				
-	DWORD       dwCount;			
+	STARGETID   sID;				//	스킬 걸어준 사람
+	DWORD       dwCount;			//  스킬 커스텀 카운트
 
 	SCHARSAVESKILLFACT_101(void)
 		: wSLOT(0)
@@ -2117,20 +2155,20 @@ struct SCHARSAVESKILLFACT_101
 
 struct SCHARSAVESKILLFACT_102
 {
-	WORD        wSLOT;          
+	WORD        wSLOT;          //  슬롯
 
-	SNATIVEID	sNATIVEID;		
-	BYTE		cLEVEL;			
-	bool		IsEXPIREDTIME;  
+	SNATIVEID	sNATIVEID;		//	스킬 ID.
+	BYTE		cLEVEL;			//	스킬 레벨
+	bool		IsEXPIREDTIME;  //	시간을 만료 시간으로 사용할 것인가.
 
 	union
 	{
-		float fAGE;			
-		UINT  nEXPIREDTIME; 
+		float fAGE;			// 생성후 남은 시간.
+		UINT  nEXPIREDTIME; // 만료 시간.
 	};
 
-	STARGETID   sID;				
-	DWORD       dwCount;			
+	STARGETID   sID;				//	스킬 걸어준 사람
+	DWORD       dwCount;			//  스킬 커스텀 카운트
 	float fVAR1;
 	float fVAR2;
 
@@ -2155,20 +2193,20 @@ struct SCHARSAVESKILLFACT_103
 	static const DWORD VERSION;
 	static const DWORD SIZE;
 
-	WORD        wSLOT;          
+	WORD        wSLOT;          //  슬롯
 
-	SNATIVEID	sNATIVEID;		
-	BYTE		cLEVEL;			
-	bool		IsEXPIREDTIME;  
+	SNATIVEID	sNATIVEID;		//	스킬 ID.
+	BYTE		cLEVEL;			//	스킬 레벨
+	bool		IsEXPIREDTIME;  //	시간을 만료 시간으로 사용할 것인가.
 
 	union
 	{
-		float fAGE;			
-		UINT  nEXPIREDTIME; 
+		float fAGE;			// 생성후 남은 시간.
+		UINT  nEXPIREDTIME; // 만료 시간.
 	};
 
-	STARGETID   sID;				
-	DWORD       dwCount;			
+	STARGETID   sID;				//	스킬 걸어준 사람
+	DWORD       dwCount;			//  스킬 커스텀 카운트
 
 	float fLaunchTime[MAX_103_SIZE];
 	float fLaunchValue[MAX_103_SIZE];
@@ -2197,20 +2235,20 @@ struct SCHARSAVESKILLFACT
     static const DWORD VERSION;
     static const DWORD SIZE;
 
-    WORD        wSLOT;          
+    WORD        wSLOT;          //  슬롯
 
-    SNATIVEID	sNATIVEID;		
-    BYTE		cLEVEL;			
-    bool		IsEXPIREDTIME;  
+    SNATIVEID	sNATIVEID;		//	스킬 ID.
+    BYTE		cLEVEL;			//	스킬 레벨
+    bool		IsEXPIREDTIME;  //	시간을 만료 시간으로 사용할 것인가.
 
     union
     {
-        float fAGE;			
-        UINT  nEXPIREDTIME; 
+        float fAGE;			// 생성후 남은 시간.
+        UINT  nEXPIREDTIME; // 만료 시간.
     };
 
-    STARGETID   sID;				
-    DWORD       dwCount;			
+    STARGETID   sID;				//	스킬 걸어준 사람
+    DWORD       dwCount;			//  스킬 커스텀 카운트
 
 	float fLaunchTime[MAX_SIZE];
 	float fLaunchValue[MAX_SIZE];
@@ -2398,11 +2436,11 @@ struct SCHARSAVESKILLFACT
 struct DEFENSE_SKILL
 {
 
-    SNATIVEID	m_dwSkillID;					//	MID/SID
-    WORD		m_wLevel;						
-    float		m_fRate;						//	 MID/SID 
-    float		m_fRateEffRate;					
-    bool		m_bActive;						
+    SNATIVEID	m_dwSkillID;					//	발동형 스킬 MID/SID
+    WORD		m_wLevel;						//	발동형 스킬 레벨
+    float		m_fRate;						//	발동형 스킬 MID/SID 확률
+    float		m_fRateEffRate;					//	발동형 스킬 MID/SID 확률 비율 적용. by luxes.
+    bool		m_bActive;						//	발동형 스킬 구동상태
 
     DEFENSE_SKILL() 
         : m_dwSkillID ( NATIVEID_NULL() )
@@ -2429,97 +2467,97 @@ protected:
     DWORD				m_dwUserID; //! User Db Num
 
 public:
-    DWORD				m_dwUserLvl;				//  Level. EMUSERTYPE
-    __time64_t			m_tPREMIUM;					
-    bool				m_bPREMIUM;					
-    __time64_t			m_tCHATBLOCK;				
+    DWORD				m_dwUserLvl;				//	사용자 권한 Level. EMUSERTYPE
+    __time64_t			m_tPREMIUM;					//	프리미엄 기한.
+    bool				m_bPREMIUM;					//	현재 프리미엄 상태.
+    __time64_t			m_tCHATBLOCK;				//	귓말 차단.
 
-    __time64_t			m_tSTORAGE[EMSTORAGE_CHANNEL_SPAN_SIZE];	
-    bool				m_bSTORAGE[EMSTORAGE_CHANNEL_SPAN_SIZE];	
+    __time64_t			m_tSTORAGE[EMSTORAGE_CHANNEL_SPAN_SIZE];	//	창고 기한.
+    bool				m_bSTORAGE[EMSTORAGE_CHANNEL_SPAN_SIZE];	//	창고 2 사용.
 
-    WORD				m_wINVENLINE;				
+    WORD				m_wINVENLINE;				//	추가된 인벤토리 줄수.
 
     DWORD				m_dwServerID;				//ServerGroupNum
-    DWORD				m_CharDbNum;				
+    DWORD				m_CharDbNum;				//! 캐릭터 DB 번호
 
-    char				m_szName[CHAR_SZNAME];		
+    char				m_szName[CHAR_SZNAME];		//	이름. (고정)
 
-    EMTRIBE				m_emTribe;					
-    EMCHARCLASS			m_emClass;					
-    WORD				m_wSchool;					
-	WORD				m_wRebornNum;				
-    WORD				m_wSex;						
-    WORD				m_wHair;					
-    WORD				m_wHairColor;				
-    WORD				m_wFace;					
+    EMTRIBE				m_emTribe;					//	종족. (고정)
+    EMCHARCLASS			m_emClass;					//	직업. (고정)
+    WORD				m_wSchool;					//	학원.
+	WORD				m_wRebornNum;					//	학원.
+    WORD				m_wSex;						//	성별.
+    WORD				m_wHair;					//	머리스타일.
+    WORD				m_wHairColor;				//	머리색상
+    WORD				m_wFace;					//	얼굴모양.
 
-    int					m_nBright;					
-    int					m_nLiving;					
+    int					m_nBright;					//	속성.
+    int					m_nLiving;					//	생활.
 
-    WORD				m_wLevel;					
-    LONGLONG			m_lnMoney;					
+    WORD				m_wLevel;					//	레벨.
+    LONGLONG			m_lnMoney;					//! 인벤토리 소지 금액
 
-    bool				m_bMoneyUpdate;				
-    bool				m_bStorageMoneyUpdate;		
-    WORD				m_wTempLevel;				
-    LONGLONG			m_lnTempMoney;				
-    LONGLONG			m_lnTempStorageMoney;		
+    bool				m_bMoneyUpdate;				// 돈이 업데이트 되었는지 아닌지
+    bool				m_bStorageMoneyUpdate;		// 창고 돈이 업데이트 되었는지 아닌지
+    WORD				m_wTempLevel;				// 비교용 레벨 임시 변수
+    LONGLONG			m_lnTempMoney;				// 비교용 소지 금액 임시 변수
+    LONGLONG			m_lnTempStorageMoney;		// 비교용 창고  금액 임시 변수
 
-    LONGLONG			m_lVNGainSysMoney;			
+    LONGLONG			m_lVNGainSysMoney;			//  베트남 탐닉 방지 저장 금액
 
-    DWORD				m_ClubDbNum;				
-    char				m_szNick[CHAR_SZNAME];		
-    __time64_t			m_tSECEDE;					
+    DWORD				m_ClubDbNum;				//	클럽 번호
+    char				m_szNick[CHAR_SZNAME];		//	클럽 별명
+    __time64_t			m_tSECEDE;					//	탈퇴시간.
 
     SCHARSTATS			m_sStats;					//	Stats.
-    WORD				m_wStatsPoint;				
+    WORD				m_wStatsPoint;				//	가용 stats 포인트.
 	
-    int						m_powerAttack;				
-    int						m_powerDefence;				
+    int						m_powerAttack;				//	기본 공격력.
+    int						m_powerDefence;				//	기본 방어력.
 
-	int						m_powerAttribute[SKILL::EMAPPLY_NSIZE]; 
+	int						m_powerAttribute[SKILL::EMAPPLY_NSIZE]; // 격투/사격/마력;
 
-    GLLLDATA			m_sExperience;				
-    LONGLONG			m_lnRestorableExp;					
+    GLLLDATA			m_sExperience;				//	경험치. ( 현재/다음레밸도달값 )
+    LONGLONG			m_lnRestorableExp;					//  회복할수 있는 경험치
 
     DWORD				m_dwSkillPoint;				//	Skill Point.
 
-    LONGLONG			m_lVNGainSysExp;			
+    LONGLONG			m_lVNGainSysExp;			// 베트남 탐닉 방지 저장 경험치
 
-    GLDWDATA			m_sHP;						
-    GLDWDATA			m_sMP;						
-    GLDWDATA			m_sSP;						
-    GLPADATA			m_sCP;						//  Combat Point. 
+    GLDWDATA			m_sHP;						//	생명량. ( 현재/최대량 )
+    GLDWDATA			m_sMP;						//	정신량. ( 현재/최대량 )
+    GLDWDATA			m_sSP;						//	근력량.	( 현재/최대량 )
+    GLPADATA			m_sCP;						//  Combat Point. (현재/최대량 )
 
-    WORD				m_wPK;						
+    WORD				m_wPK;						//	총 PK 횟수.
 
-    bool				m_bEventBuster;				
+    bool				m_bEventBuster;				//	이벤트 중인지 아닌지
 
-    __time64_t			m_tLoginTime;				
+    __time64_t			m_tLoginTime;				//  로긴 시간이나 이벤트 시작시간
 
-    int					m_EventStartLv;				
-    int					m_EventEndLv;				
+    int					m_EventStartLv;				//  이벤트 최소 레벨
+    int					m_EventEndLv;				//  이벤트 최대 레벨
 
-    int					m_RemainEventTime;			
-    int					m_RemainBusterTime;			
+    int					m_RemainEventTime;			//  이벤트 적용까지 남은 시간
+    int					m_RemainBusterTime;			//  부스터 남은시간
 
-    bool				m_bEventApply;				
-    bool				m_bEventStart;				
+    bool				m_bEventApply;				//  이벤트 적용대사 여부
+    bool				m_bEventStart;				//  이벤트 시작했는지 아닌지, 이벤트 대상인지
 
-    int					m_EventStartTime;			
-    int					m_EventBusterTime;			
-	float				m_EventBusterExpGain;		
-	float				m_EventBusterItemGain;		
+    int					m_EventStartTime;			//  이벤트 적용 시작 시간
+    int					m_EventBusterTime;			//  이벤트 부스터 타임
+	float				m_EventBusterExpGain;		//	이벤트 부스터 - 경험치 획득 배율
+	float				m_EventBusterItemGain;		//	이벤트 부스터 - 아이템 드랍 배율
 
-    
-    LONGLONG			m_VietnamGameTime;			
-    BYTE				m_dwVietnamGainType;		
-    DWORD				m_dwVietnamInvenCount;	
+    /// 베트남 탐닉 방지 시스템 변수
+    LONGLONG			m_VietnamGameTime;			//	저장된 누적 시간
+    BYTE				m_dwVietnamGainType;		//  베트남 탐닉 방지 시스템 
+    DWORD				m_dwVietnamInvenCount;		// 옮길수 있는 아이템의 갯수
 
-    TCHAR				m_szPhoneNumber[SMS_RECEIVER]; 
+    TCHAR				m_szPhoneNumber[SMS_RECEIVER]; // 캐릭터 폰 번호
 
-    float				m_fCDMSafeTime;				// CDM 
-	float				m_fRemainMacroTime;			
+    float				m_fCDMSafeTime;				// CDM 부활안전 시간
+	float				m_fRemainMacroTime;			// 매크로 남은 시간;
 
 public:
 	SCHARDATA ();
@@ -2528,7 +2566,7 @@ public:
     void SetUserID( DWORD dwUserID) { m_dwUserID = dwUserID; }
     DWORD GetUserID() { return m_dwUserID; }
 
-
+    //! 클럽 번호
     DWORD GetClubDbNum() const { return m_ClubDbNum; }
 
     VOID RegistProperty();
@@ -2536,23 +2574,23 @@ public:
     SCHARDATA &GETCHARDATA ()			{ return *this; }
     EMCHARINDEX GETCHARINDEX () const	{ return CharClassToIndex ( m_emClass ); }
 
-    bool IsKEEP_STORAGE ( DWORD dwCHANNEL );	
+    bool IsKEEP_STORAGE ( DWORD dwCHANNEL );	//	해당 번호의 락커에 물건을 맡길수 있는지 검사.
     CTime GetStorageTime (  DWORD dwCHANNEL );
     WORD GetOnINVENLINE ();
     void CalcPREMIUM ();
 
-	
+	// 캐릭터의 전체 스탯포인트를 구한다;
 	inline const DWORD GetSumStats () { return m_sStats.GetSumStats() + m_wStatsPoint; }
 
-    
+    //! 사용자 권한 Level
     inline void SetUserLevel(DWORD UserLevel) { m_dwUserLvl=UserLevel; }
     inline DWORD UserLevel() const { return m_dwUserLvl; }
-    
+    //! 캐릭터 DB 번호
     inline DWORD CharDbNum() const { return m_CharDbNum; }
 
 	inline DWORD SvrGroupNum() const { return m_dwServerID; }	//ServerGroupNum
 
-    
+    //! 인벤토리 소지 금액
     inline LONGLONG GetInvenMoney() const { return m_lnMoney; }
     void SetInvenMoney( LONGLONG llMoney );
 	/*inline void InvenMoneySubtract(LONGLONG SubtractMoney)
@@ -2575,7 +2613,7 @@ public:
 	inline LONGLONG GetTempInvenMoney() const { return m_lnTempMoney; }
 	void SetTempInvenMoney( LONGLONG llMoney );
 
-    
+    //! 이름
     const char* GetName() const { return m_szName; }
 
     void SetName(const char* szName)
@@ -2589,7 +2627,7 @@ public:
         StringCchCopy(m_szName, CHAR_SZNAME, Name.c_str());
     }
 
-    
+    //! 별명
     void SetNickName(const char* szName)
     {
         if (szName)
@@ -2603,12 +2641,12 @@ public:
 
     const char* GetNickName() const { return m_szNick; }
 
-    
+    //! 클럽 탈퇴시간
     void SetClubSecedeTime(const __time64_t& sTime) { m_tSECEDE = sTime; }
     __time64_t GetClubSecedeTime() const { return m_tSECEDE; }
 
 
-	
+	// 캐릭터 Validation 에서 잘못된 데이터를 바로 잡기 위해서 사용
 	void SetChaStats( SCHARSTATS &sStats ) { m_sStats = sStats; }
 	void SetChaAttack( int nAttack ) { m_powerAttack = nAttack; }
 	void SetChaDefence( int nDefence ) { m_powerDefence = nDefence; }	
@@ -2748,7 +2786,7 @@ enum EMSHOP
     PURKEY_LENGTH = 30,
 };
 
-
+//! Shop 에서 구매한 아이템리스트를 가져오기 위한 구조체
 struct SHOPPURCHASE
 {    
     WORD wItemMain;
@@ -2816,7 +2854,7 @@ typedef MAPSHOP::value_type                 MAPSHOP_VALUE;
 typedef std::map<DWORD,std::string>			MAPSHOP_KEY;
 typedef MAPSHOP_KEY::iterator				MAPSHOP_KEY_ITER;
 
-//Serialization 
+//Serialization - 일단 다 넣자
 
 typedef std::map<DWORD,SCHARSKILL>			SKILL_MAP;
 typedef SKILL_MAP::iterator					SKILL_MAP_ITER;
@@ -2826,102 +2864,102 @@ struct SCHARDATA2 : public SCHARDATA
 {
     char					m_szUID[USR_ID_LENGTH+1];
 
-	SKILL_MAP				m_ExpChangeSkills;					
-	SKILL_MAP				m_ExpSkills;						
-    SITEMCUSTOM				m_PutOnItems[SLOT_TSIZE];			
+	SKILL_MAP				m_ExpChangeSkills;					//  변장후 스킬리스트
+	SKILL_MAP				m_ExpSkills;						//	수련 스킬 속성.
+    SITEMCUSTOM				m_PutOnItems[SLOT_TSIZE];			//	착용 Item.
 
-    WORD					m_wSKILLQUICK_ACT;					
-    SNATIVEID				m_sSKILLQUICK[EMSKILLQUICK_SIZE];	
-    SACTION_SLOT			m_sACTIONQUICK[EMACTIONQUICK_SIZE];	
+    WORD					m_wSKILLQUICK_ACT;					//	스킬 퀵슬롯중 액티브된 스킬.
+    SNATIVEID				m_sSKILLQUICK[EMSKILLQUICK_SIZE];	//	스킬 퀵슬롯.
+    SACTION_SLOT			m_sACTIONQUICK[EMACTIONQUICK_SIZE];	//	액션 퀵슬롯.
 
-    GLInventory				m_cInventory;						
-	SINVEN_MOVE_ITEM_SORT	m_sSwapInventory[ EInvenTotalSlot ]; 
+    GLInventory				m_cInventory;						//	인벤토리.
+	SINVEN_MOVE_ITEM_SORT	m_sSwapInventory[ EInvenTotalSlot ]; // 인벤토리 정리를 위해서 사용되는 임시 저장공간
 
-    BOOL					m_bServerStorage;					
-    LONGLONG				m_lnStorageMoney;					
-    BOOL					m_bStorage[EMSTORAGE_CHANNEL];		
-    GLInventoryStorage		m_cStorage[EMSTORAGE_CHANNEL];		
+    BOOL					m_bServerStorage;					//	창고 유효함. ( 서버측. ) ( 새로 생성되는 캐릭터는 무조건 유효하게 생성시 체크함. - GLCHARLOGIC::INIT_DATA() )
+    LONGLONG				m_lnStorageMoney;					//	창고 소지 금액.
+    BOOL					m_bStorage[EMSTORAGE_CHANNEL];		//	창고 유효함. ( 클라이언트측. )
+    GLInventoryStorage		m_cStorage[EMSTORAGE_CHANNEL];		//	창고.
 
-    GLQuestPlay				m_cQuestPlay;						
+    GLQuestPlay				m_cQuestPlay;						//	퀘스트.
 	
-	
-	VSSETITEMINFO			m_vInfoPutOnSetItem;				
+	//셋트 아이템 검색 정보
+	VSSETITEMINFO			m_vInfoPutOnSetItem;				// 장착된 셋트아이템 검색 정보
 
-    
-    MAPSHOP					m_mapCharged;						
+    //	서버 전용.
+    MAPSHOP					m_mapCharged;						//	구입한 아이템 목록.
 
-    
-    GLInventoryBank			m_cInvenCharged;					
-    MAPSHOP_KEY				m_mapChargedKey;					
+    //	클라이언트 전용.
+    GLInventoryBank			m_cInvenCharged;					//	구입한 아이템 인벤.
+    MAPSHOP_KEY				m_mapChargedKey;					//	구입한 아이템 인벤의 해당 위치 purkey 찾기.
 
-    
+    //	Note : 초기 시작될 맵, 맵 위치값.
     //
-    SNATIVEID			m_sStartMapID;				
-    DWORD				m_dwStartGate;				
-    D3DXVECTOR3			m_vStartPos;				
+    SNATIVEID			m_sStartMapID;				//	초기 시작 맵.
+    DWORD				m_dwStartGate;				//	초기 시작 개이트.
+    D3DXVECTOR3			m_vStartPos;				//	초기 시작 위치.
 
-    SNATIVEID			m_sSaveMapID;				
-    D3DXVECTOR3			m_vSavePos;					
+    SNATIVEID			m_sSaveMapID;				//	종료 맵.
+    D3DXVECTOR3			m_vSavePos;					//	종료 위치.
 
-    SNATIVEID			m_sLastCallMapID;			
-    D3DXVECTOR3			m_vLastCallPos;				
+    SNATIVEID			m_sLastCallMapID;			//	직전귀환 맵.
+    D3DXVECTOR3			m_vLastCallPos;				//	직전귀환 위치.
 
-    EMIP_BONUS_CLASS	m_emIPBonus;				
-    SChinaTime			m_sChinaTime;				
-    SEventTime			m_sEventTime;				
+    EMIP_BONUS_CLASS	m_emIPBonus;				// IP보너스
+    SChinaTime			m_sChinaTime;				// 중국 시간별 수익
+    SEventTime			m_sEventTime;				// 이벤트 시간
 
-    SVietnamGainSystem  m_sVietnamSystem;			
-    GLInventory			m_cVietnamInventory;		
-    bool				m_bVietnamLevelUp;			
+    SVietnamGainSystem  m_sVietnamSystem;			// 베트남 탐닉방지 시스템
+    GLInventory			m_cVietnamInventory;		// 베트남 저장한 탐닉 인벤토리
+    bool				m_bVietnamLevelUp;			// 베트남 경험치 획득 아이템 사용시 여러단계의 레벨을 증가시킬 수 있다.
 
-    
-    BOOL			m_bRebuildOpen;					
+    // 아이템 개조 정보	// ITEMREBUILD_MARK
+    BOOL			m_bRebuildOpen;					// 개조창 오픈 유무
 	WORD			m_wRebuildType;
-    SINVEN_POS		m_sRebuildItem;				
-	SINVEN_POS		m_sStampItem;				
-	SINVEN_POS		m_sPreInventoryItem;		
-	ITEM_RANDOMOP_UTILL::FixOption	m_fixOption;			
-    LONGLONG						m_i64RebuildCost;			
-    LONGLONG						m_i64RebuildInput;			
+    SINVEN_POS		m_sRebuildItem;				// 개조창 등록된 인벤토리 아이템
+	SINVEN_POS		m_sStampItem;				// 개조창 등록된 인장 카드;
+	SINVEN_POS		m_sPreInventoryItem;		// 개조용 인벤토리에서 들어올린 임시 아이템	
+	ITEM_RANDOMOP_UTILL::FixOption	m_fixOption;			// 인장 카드로 고정 시킨 아이템 옵션;
+    LONGLONG						m_i64RebuildCost;			// 개조시 필요한 금액
+    LONGLONG						m_i64RebuildInput;			// 개조창 등록한 금액
 
-    bool				m_bTracingUser;		
+    bool				m_bTracingUser;			// 현재 추적중인 유저인지 아닌지
 
-	
+	// 우편
 	SINVEN_POS			m_sPostItemPos;
 	SITEMCUSTOM			m_sPostItem;
 
-    
-    SCHARSAVESKILLFACT m_sSAVESKILLFACT[SKILLFACT_SIZE]; 
+    // Note : 서버전용 저장,로드 지속 SKILLFACT
+    SCHARSAVESKILLFACT m_sSAVESKILLFACT[SKILLFACT_SIZE]; // 저장용 스킬 정보 배열
 
     typedef std::map<DWORD, ITEM_COOLTIME>	COOLTIME_MAP;
     typedef COOLTIME_MAP::iterator			COOLTIME_MAP_ITER;
     typedef COOLTIME_MAP::const_iterator	COOLTIME_MAP_CITER;
     typedef COOLTIME_MAP::value_type        COOLTIME_MAP_VALUE;
 
-    COOLTIME_MAP m_mapCoolTimeType; 
-    COOLTIME_MAP m_mapCoolTimeID;   
+    COOLTIME_MAP m_mapCoolTimeType; //! 아이템 타입별 쿨타임
+    COOLTIME_MAP m_mapCoolTimeID;   //! 아이템 MID/SID별 쿨타임
 
 	//
 	//mjeon.CaptureTheField
 	//
-	int					m_nContributionPoint;		
-	int					m_nRewardContribution;		
+	int					m_nContributionPoint;		//누적 기여도 ( = RewardContribution의 누적값)
+	int					m_nRewardContribution;		//직전 CTF에서 보상받은 기여도 (DB 저장 후에는 반드시 0으로 리셋하자)
 
 	PVP_PERFORMANCE		m_PvPPerformance;
 
 	LONGLONG m_TexasHoldemChip;
     __time64_t m_ConfignmentSaleSlotExpansionDate;
 
-	// Hire Summon 
-	
-	SNATIVEID m_sBasicSummonID;		
-	SSUMMONABLE	m_sSummonable;		
+	// Hire Summon 관련;
+	// Field <-> Field 간의 이동에도 반응해야하기 때문에 상단으로 올렸다;
+	SNATIVEID m_sBasicSummonID;		// 고용 소환수 ID;
+	SSUMMONABLE	m_sSummonable;		// 고용 소환수 소환가능 효과;
 
-	
+	// 캐릭터 슬롯 데이터;
 	WORD m_wSlotIndex;
 	bool m_arrLockSlotState[ EMCHAR_SLOT_DATA_SIZE ];
 
-	
+	//	개조 후 확정 짓기 전의 백업 인벤토리 아이템 정보;
 	SINVENITEM m_sBackUpRebuildInvenItem;
 
     SCHARDATA2();
@@ -2930,7 +2968,7 @@ struct SCHARDATA2 : public SCHARDATA
 
     EMCHARINDEX GETCHARINDEX () const { return CharClassToIndex ( m_emClass ); }
 
-	
+	// 캐릭터 데이터중 일부가 해킹 또는 버그등의 원인으로 잘못된 값이 들어가는 경우가 있어서 일정 범위를 벗어나면 0으로 셋팅
 	BOOL ValidationCharData();
 	BOOL ValidationCharStateMin(WORD *value);
 	BOOL ValidationCharValueMin(int *value);
@@ -2974,7 +3012,7 @@ struct SCHARDATA2 : public SCHARDATA
     BOOL SETSTORAGE_BYBUF ( se::ByteStream &ByteStream );
     BOOL GETSTORAGE_BYBUF ( se::ByteStream &ByteStream ) const;
 
-    
+    //! Quest 세팅, bCheck 가 true 이면 data 에 없는 퀘스트는 삭제된다.
 	DWORD		GetQuestPlayDataSize();
 	BOOL		GetQuestPlayData( BYTE* pDest, const DWORD dwDestSize );
     BOOL		SETQUESTPLAY(se::ByteStream& ByteStream, bool bCheck);
@@ -2991,7 +3029,7 @@ struct SCHARDATA2 : public SCHARDATA
 
     BOOL SETSHOPPURCHASE ( VECSHOP &vecSHOP );
 
-    
+    // 베트남 탐닉방지 시스템 추가에 따른 캐릭터 추가 인벤토리 확장
     DWORD		GetVTAddInventoryDataSize();
 	BOOL		GetVTAddInventoryData( BYTE* pDest, const DWORD dwDestSize );
 	BOOL SETVTADDINVENTORY_BYBUF ( se::ByteStream &ByteStream );
@@ -3008,7 +3046,7 @@ struct SCHARDATA2 : public SCHARDATA
     BOOL SETSKILLFACT_BYBUF( se::ByteStream &ByteStream ); 
     BOOL GETSKILLFACT_BYBUF( se::ByteStream &ByteStream ) const; 
 
-	
+	//! 개인락커 소지 금액
 	inline LONGLONG GetStorageMoney() const { return m_lnStorageMoney; }
 	void SetStorageMoney( LONGLONG llMoney );
 	void AddStorageMoney( LONGLONG llMoney );
@@ -3028,7 +3066,7 @@ public:
     BOOL LOADFILE(const std::string& FileName);
 
 public:
-    
+    //	클라이언트 전용.
     BOOL ADDSHOPPURCHASE ( const char* szPurKey, SNATIVEID nidITEM );
     BOOL DELSHOPPURCHASE ( const DWORD dwID );
 
@@ -3036,7 +3074,7 @@ public:	// ITEMREBUILD_MARK
     SITEMCUSTOM GET_REBUILD_ITEM() const;
 	SITEMCUSTOM GET_REBUILD_ITEM_BACKUP() const;
 	SITEMCUSTOM GET_STAMP_ITEM() const;
-    SITEMCUSTOM GET_PREHOLD_ITEM() const;	
+    SITEMCUSTOM GET_PREHOLD_ITEM() const;	// 임시로 들어올린 아이템;
 	void RESET_FIX_OPTION();
 	void PUSH_FIX_OPTION(const BYTE cOptType, const DWORD nFixMaximum);
 	const BYTE GET_FIX_OPTION_TYPE ( const UINT _nIndex ) const;
@@ -3080,8 +3118,8 @@ public:
 	const SITEMCUSTOM& GetPostItem() { return m_sPostItem; }
 
 public:
-	SCHARDATA2( SCHARDATA2& data )		{ Assign(data); }//GASSERT
-	SCHARDATA2& operator= ( SCHARDATA2& data )	{ Assign(data); return *this; }//GASSERT; return *this; }
+	SCHARDATA2( SCHARDATA2& data )		{ Assign(data); }//GASSERT(0&&"묵시적 복사 불허!"); }
+	SCHARDATA2& operator= ( SCHARDATA2& data )	{ Assign(data); return *this; }//GASSERT(0&&"묵시적 복사 불허!"); return *this; }
 
 private:
 	friend class boost::serialization::access;
