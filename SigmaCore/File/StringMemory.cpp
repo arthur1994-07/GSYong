@@ -86,10 +86,10 @@ BOOL CStringMemory::Open(const std::string& ZipFileName, LPCSTR _szFileName, BOO
 	m_bDecode = bDecode;
 	StringCchCopy( m_szFileName, MAX_PATH, _szFileName );
 	// Encrypt_RCC RanOnline-TH
-	if ( CCrypt::bCryptRCC )
-	{
-		CCrypt::Decryption( m_pBufferMem , m_nBufSize );
-	}
+	//if ( CCrypt::bCryptRCC )
+	//{
+	//	CCrypt::Decryption( m_pBufferMem , m_nBufSize );
+	//}
 
 	if( m_bDecode )
 	{

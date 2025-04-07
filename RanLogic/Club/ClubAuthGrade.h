@@ -27,12 +27,12 @@ public:
     bool SetFlag(size_t Index, DWORD Flag);
     bool CheckAuth(size_t Index, AUTHORITY Auth);
     
-
+    //! 클럽 계급 문자열
     std::string GetName(size_t Index) const;
     bool HaveSameName(const std::string& GradeName) const;
     bool ChangeName(size_t Index, const std::string& GradeName);
     
-
+    //! 클럽 계급 갯수
     WORD Size() const { return AUTHORITY_GRADE; }
 };
 

@@ -2,7 +2,6 @@
 
 #include <boost/unordered_map.hpp>
 #include <vector>
-#include <tr1/memory>
 
 struct DxSkeleton;
 struct DxSkeletonPart;

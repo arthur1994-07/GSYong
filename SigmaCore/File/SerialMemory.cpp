@@ -120,10 +120,10 @@ BOOL SerialMemory::OpenFile(
 	StringCchCopy(m_szFileName, _MAX_FNAME, FileName.c_str());
 	StringCchCopy(m_szZipFileName, _MAX_PATH, ZipFileName.c_str());
 
-	if ( CCrypt::bCryptRCC )// Encrypt_RCC RanOnline-TH
-	{
-		CCrypt::Decryption( (BYTE*) m_pBuffer , m_nBufSize );
-	}
+	//if ( CCrypt::bCryptRCC )// Encrypt_RCC RanOnline-TH
+	//{
+	//	CCrypt::Decryption( (BYTE*) m_pBuffer , m_nBufSize );
+	//}
 
 
 	//if( m_bencode )

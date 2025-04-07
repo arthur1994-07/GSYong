@@ -337,37 +337,22 @@ public:
 	typedef VECNODE::iterator			VECNODE_ITER;
 	typedef VECNODE::const_iterator		VECNODE_CITER;
 
-public:
+protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	//					Thread 상에서 변경되는 것.
 	//		여기에 있는건 Thread 상에서 사용되므로 사용시 주의해야 함.
 	//////////////////////////////////////////////////////////////////////////
 
-	// 본 DxSkinAniControl 하나에 Char 하나가 매칭된다. 
-	// One Char is matched to each one.
-
-
+	// 본 DxSkinAniControl 하나에 Char 하나가 매칭된다.
 	// Key 에 반응하여 각 본에 누적되지 않은 순수한 Matrix 값을 계산한다.
-	//In response to the key, a pure Matrix value that is not accumulated in each bone is calculated.
-
-
 	// 내부적으로 PANIMCONTNODE 값을 참조해서 변형한다.
-	// Internally, it is transformed by referring to the PANIMCONTNODE value.
-
-
 	// m_vecReserveFunction 를 사용하여 Thread 안정성 향상. <추후 깔끔하게 만들자>
-	// Improved Thread stability using m_vecReserveFunction. <Let’s make it neat later>
-
-
 	// 사운드는 Main Thread 에서 돌리기 때문에 문제 없다.
 	DxAniControlCORE	m_sAniControlCORE;
 
 	// DxSkeletonManager 관리되는 static 한 Data.
-	// Static Data managed by DxSkeletonManager.
-
 	// 누적된 Matrix 값이 계산된다.
-	// The accumulated Matrix value is calculated.
     DxSkeletonResource	m_skeletonResThread;
 
 	// Thread 상에서 m_skeletonResThread 에 있는 값을 복사한 Data
@@ -784,7 +769,7 @@ public:
 	PANIMCONTNODE	GETANI_none_const( EMANI_MAINTYPE MType, EMANI_SUBTYPE SType, DWORD dwCount ) const;
 	//void SETANIUPBODY( const TCHAR* szAnim );
 	//void SETANIUPBODY( EMANI_MAINTYPE MType, EMANI_SUBTYPE SType );
-	BOOL			LoadSkeletonForEdit( const TCHAR* szSkeleton, LPDIRECT3DDEVICEQ pd3dDevice );
+
 	// 내부에서만 쓰인다.
 private:
 	void			InitAnimation( LPDIRECT3DDEVICEQ pd3dDevice, DxSkinAnimation* pAnimCont );
@@ -800,14 +785,13 @@ private:
 
 
 	//////////////////////////////////////////////////////////////////////////
-	//			 Edit 상에서만 호출된다. It is called only on
+	//			 Edit 상에서만 호출된다.
 	//////////////////////////////////////////////////////////////////////////
 
 private:
 	void SETCURKEYTIME_FOR_EDIT ( DWORD dwCurKeyTime );
 
 	// CharEdit 상에서 Bone 이 로딩되어 있는 상태인지 아닌지도 확인 할 수 있는 코드임.
-	// This is a code that can check whether the Bone is loaded or not.
 	inline DxSkeleton*	GetSkeletonForEdit() const { return m_skeletonResThread.IsValid() ? m_skeletonResThread.get() : NULL; }
 
 	const DEQ_BONESCALE&	GetBoneScaleList() { return m_deqBoneEditScale; }
@@ -818,7 +802,7 @@ private:
 	DxSkinAnimation*		findanicont_none_const( const TCHAR* szAnimNode );
 	void					ReAttachBoneForEdit();
 
-//	BOOL					LoadSkeletonForEdit( const TCHAR* szSkeleton, LPDIRECT3DDEVICEQ pd3dDevice );
+	BOOL					LoadSkeletonForEdit( const TCHAR* szSkeleton, LPDIRECT3DDEVICEQ pd3dDevice );
 	BOOL					LoadAnimationForEdit(const std::string& AnimName, LPDIRECT3DDEVICEQ pd3dDevice );
 	BOOL					ReleaseAnimationForEdit(const std::string& AnimName);
 

@@ -184,17 +184,17 @@ struct GLPET
 	WORD			m_wColor;
 	float			m_fWalkSpeed;
 	float			m_fRunSpeed;
-	int				m_nFull; 
+	int				m_nFull; //! 펫 포만감
 	SITEMCUSTOM		m_PutOnItems[ACCETYPESIZE];
 	MapID			m_sMapID;
 	DWORD			m_dwCellID;
-	DWORD			m_DbNum; 
-	SNATIVEID		m_sPetCardID;	
+	DWORD			m_DbNum; //! Pet DB 번호
+	SNATIVEID		m_sPetCardID;				// 소환을 요청한 팻카드의 Mid/Sid
 	SPetSkinPackState	m_sPetSkinPackState;
 	SPETSKINPACKDATA	m_sPetSkinPackData;
 
     bool bChangeableColor;
-    int nFullDecrement[MAX_PETSKILLSLOT]; 
+    int nFullDecrement[MAX_PETSKILLSLOT]; // 포만감 감소치
 
 public:
 	// constructor & operator
@@ -267,11 +267,11 @@ public:
 	//! File Load
     BOOL LoadFile(const std::string& FileName, int emType);
 
-	
+	// 스킬 중복 검사
 	BOOL				IsSkillDuplicated	  ( const SNATIVEID& sSkillID, const WORD wIndex ); 
 	EMPETEQUALITY_SKILL IsSkillDuplicatedEx   ( BYTE** ppOutActiveSkillArray=NULL );
 
-	
+	// 습득 스킬 Flag
 	DWORD				GetSkillGetItemFlag ();
 };
 
@@ -286,7 +286,7 @@ struct SDROPPET
 	SNATIVEID		m_sActiveSkillID[MAX_PETSKILLSLOT];
 	WORD			m_dwMaxSkillSlot;
 	
-	DWORD			m_dwOwner;					
+	DWORD			m_dwOwner;					// 주인 GaeaID
 	WORD			m_wStyle;
 	WORD			m_wColor;
 	float			m_fWalkSpeed;
@@ -306,7 +306,7 @@ struct SDROPPET
 
 	SPETSKINPACKDATA m_petSkinPackData;
 
-	WORD			m_wAniSub;					 
+	WORD			m_wAniSub;					 // 애니메이션 관련
 
 	DWORD			m_dwPetID;
 

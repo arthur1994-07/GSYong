@@ -9,7 +9,6 @@
 #include "../../DxTools/Collision.h"
 #include "../../DxTools/editmeshs.h"
 #include "../../DxTools/DxViewPort.h"
-#include "../../DxCommon/dxutil.h"
 #include "./DxSkinDefine.h"
 
 #include "DxSkeletonManager.h"

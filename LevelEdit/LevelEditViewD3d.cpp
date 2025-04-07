@@ -264,14 +264,14 @@ HRESULT CLevelEditView::InitDeviceObjects()
 	DxFontMan::GetInstance().InitDeviceObjects ( m_pd3dDevice );
 	CD3DFontPar* pD3dFont9 = DxFontMan::GetInstance().LoadDxFont ( _DEFAULT_FONT, 9, _DEFAULT_FONT_FLAG );
 
-	//	Note	:	디버그셋 경로 설정 및 초기화
+	//	Note	: Setting and initializing the debugset path
 	CDebugSet::InitDeviceObjects( pD3dFont9 );
 
-	// 각종 장치들.
+	// Various devices.
 	//
 	m_pEngineDevice->InitDeviceObjects ( m_pd3dDevice );
 
-	// 뷰포트.
+	// Viewport.
 	//
 	DxViewPort::GetInstance().SetToolCamera();
 
@@ -288,22 +288,22 @@ HRESULT CLevelEditView::InitDeviceObjects()
 
 	pGaeaServer->GetRootMap()->InitDeviceObjects ( m_pd3dDevice );
 
-	// 메트릭스 에디트의 초기화.
+	// Initializing the matrix edit.
 	//
 	m_pDxEditmat->InitDeviceObjects ( m_pd3dDevice );
 	m_p3dPosMesh->InitDeviceObjects ( m_pd3dDevice );
 	m_EditBox.InitDeviceObjects ( m_pd3dDevice );
 
-	{	// Note : 인터페이스 스킬 텍스트 로딩
+	{	// Note : Loading interface skill text
 		TCHAR szFullPath[MAX_PATH] = {0};
 
 		StringCchCopy(szFullPath, MAX_PATH, pFrame->m_szAppPath);
 		StringCchCat(szFullPath, MAX_PATH, pPath->GuiFileRoot().c_str()); //SUBPATH::GUI_FILE_ROOT);
 		CGameTextMan::GetInstance().SetPath(szFullPath);
 
-		//CGameTextMan::GetInstance().LoadText(RANPARAM::strGameWord.GetString(),   CGameTextMan::EM_GAME_WORD, TRUE ,RANPARAM::strCountry);
+		CGameTextMan::GetInstance().LoadText(RANPARAM::strGameWord.GetString(), CGameTextMan::EM_GAME_WORD, RANPARAM::strCountry, CGameTextMan::GAMETEXTMAN_LOADOP_REFACT);
 		CGameTextMan::GetInstance().LoadText(RANPARAM::strGameInText.GetString(), CGameTextMan::EM_GAME_IN_TEXT, RANPARAM::strCountry, CGameTextMan::GAMETEXTMAN_LOADOP_REFACT);
-		//CGameTextMan::GetInstance().LoadText(RANPARAM::strGameExText.GetString(), CGameTextMan::EM_GAME_EX_TEXT, TRUE,RANPARAM::strCountry);
+		CGameTextMan::GetInstance().LoadText(RANPARAM::strGameExText.GetString(), CGameTextMan::EM_GAME_EX_TEXT, RANPARAM::strCountry, CGameTextMan::GAMETEXTMAN_LOADOP_REFACT);
 	}
 
 	return S_OK;

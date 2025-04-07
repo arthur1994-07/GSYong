@@ -5,8 +5,8 @@
 
 #include "../../Common/StlFunctions.h"
 #include "./NSTexCompress.h"
+
 #include "NSTexture16Bit.h"
-#include <tr1/memory>
 
 // ----------------------------------------------------------------------------
 #include "../../../SigmaCore/DebugInclude.h"

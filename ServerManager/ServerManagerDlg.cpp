@@ -180,8 +180,8 @@ BOOL CServerManagerDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
-	// IDM_ABOUTBOX는 시스템 명령 범위에 있어야 합니다.
+	// Adds an "About..." menu item to the system menu.
+	// IDM_ABOUTBOX must be in the system command range.
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -197,15 +197,15 @@ BOOL CServerManagerDlg::OnInitDialog()
 		}
 	}
 
-	// 이 대화 상자의 아이콘을 설정합니다. 응용 프로그램의 주 창이 대화 상자가 아닐 경우에는
-	// 프레임워크가 이 작업을 자동으로 수행합니다.
-	SetIcon(m_hIcon, TRUE);			// 큰 아이콘을 설정합니다.
-	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
+	// Sets the icon for this dialog box. If the application's main window is not a dialog box,
+	// The framework does this automatically.
+	SetIcon(m_hIcon, TRUE);			// Set large icons.
+	SetIcon(m_hIcon, FALSE);		// Set small icons.
 
 	GLogicData::GetInstance().LoadCountryFile();
     m_ServiceProvider = GLogicData::GetInstance().GetServiceProvider();
 
-	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	// TODO: Add some additional initialization work here.
 
     // csv 파일 생성
     SAFE_DELETE(m_pLogFile);

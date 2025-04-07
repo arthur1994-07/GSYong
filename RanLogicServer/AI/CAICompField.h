@@ -6,6 +6,9 @@
 
 namespace AISystem
 {
+
+	// FSM을 이용한 AI이다;
+	// Script를 사용하도록 종속되어있다;
 	class CAICompField : public ComponentSystem::IComponentBase
 	{
 	public:
@@ -26,6 +29,7 @@ namespace AISystem
 		virtual void EndUpdate ();
 
 	public:
+		// 상태 변환;
 		void ChangeState ( const std::string& strChangeTableName );
 
 	public:
@@ -42,8 +46,13 @@ namespace AISystem
 		inline void SetAIType ( DWORD dwType ) { m_dwType = dwType; }
 
 	protected:
+		// AI Type;
 		DWORD m_dwType;
+
+		// 현재의 상태 TableName;
 		std::string m_strCurTableName;
+
+		// AI를 가지는 Actor정보;
 		ServerActor* m_pMe;
 	};
 

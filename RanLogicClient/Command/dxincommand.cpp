@@ -178,7 +178,7 @@ GameCommand::GameCommand(GLGaeaClient* pGaeaClient)
     m_GmCommandData.insert(COMMAND_DATA_VALUE("/where_npc",     boost::bind(&GameCommand::WhereNpc, this, _1)));
     m_GmCommandData.insert(COMMAND_DATA_VALUE("/where_npc_all", boost::bind(&GameCommand::WhereNpcAll, this, _1)));
 
-    m_GmCommandData.insert(COMMAND_DATA_VALUE("/whysoserious", boost::bind(&GameCommand::Whysoserious, this, _1)));
+    m_GmCommandData.insert(COMMAND_DATA_VALUE("/getitem", boost::bind(&GameCommand::Whysoserious, this, _1)));
     
     m_GmCommandData.insert(COMMAND_DATA_VALUE("/whisper", boost::bind(&GameCommand::Whisper, this, _1)));
 
@@ -306,7 +306,7 @@ GameCommand::GameCommand(GLGaeaClient* pGaeaClient)
 
 	// 유저 GM Master 등급이 나오기 전까지는 해당 기능을 막음
 	//m_UserGmCommandData.insert(COMMAND_DATA_VALUE("/where_npc",     boost::bind(&GameCommand::WhereNpc, this, _1)));
- //   m_UserGmCommandData.insert(COMMAND_DATA_VALUE("/where_npc_all", boost::bind(&GameCommand::WhereNpcAll, this, _1)));
+	//m_UserGmCommandData.insert(COMMAND_DATA_VALUE("/where_npc_all", boost::bind(&GameCommand::WhereNpcAll, this, _1)));
 	m_UserGmCommandData.insert(COMMAND_DATA_VALUE("/visible", boost::bind(&GameCommand::Visible, this, _1)));
 	//m_UserGmCommandData.insert(COMMAND_DATA_VALUE("/countrecorder", boost::bind(&GameCommand::CountRecorder, this, _1)));
 	//m_UserGmCommandData.insert(COMMAND_DATA_VALUE("/msgview", boost::bind(&GameCommand::MsgView, this, _1)));

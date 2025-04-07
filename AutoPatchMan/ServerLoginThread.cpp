@@ -111,7 +111,7 @@ BOOL CServerLoginThread::GETFILE_USEHTTP( CHttpPatch* pHttpPatch, std::string st
 
 	std::string strSubPath( strRemoteSubPath );
 
-	//	'\\'문자를 '/'로 변경한다.
+	//	'\\'문자를 '/'로 변경한다. Change '\\' character to '/'
 	std::replace( strSubPath.begin(), strSubPath.end(), '\\','/' );
 
 	GLogicData::GetInstance().LoadCountryFile();
@@ -152,11 +152,11 @@ BOOL CServerLoginThread::GETFILE_USEHTTP( CHttpPatch* pHttpPatch, std::string st
 	int nADDRESS_NULL_COUNT = 0;
 	while ( nTRY_FILESIZE_CHECK < 3 )
 	{
-		//	강제 종료시
+		//	 When forced to quit
 		if ( IsForceTerminate () ) return FALSE;		
 
 		//	NOTE
-		//		최대 시도 회수 초과시
+		//	When the maximum number of attempts is exceeded
 		if ( nADDRESS_NULL_COUNT == RANPARAM::MAX_HTTP ) return FALSE;
 
 		if ( RANPARAM::MAX_HTTP == nTRY ) nTRY = 0;
@@ -167,12 +167,12 @@ BOOL CServerLoginThread::GETFILE_USEHTTP( CHttpPatch* pHttpPatch, std::string st
 		CString strRealAddress = RANPARAM::HttpAddressTable[nTRY];
 		if ( !strRealAddress.GetLength () )
 		{
-			nADDRESS_NULL_COUNT++;		//	MAX_HTTP가 모두 널인가?
+			nADDRESS_NULL_COUNT++;		//	Is MAX_HTTP all null?
 			nTRY++;
 			continue;
 		}
 
-		//	널 체크를 통과했다는 것은 nADDRESS_NULL_COUNT을 초기화해야함을 의미한다.
+		//	Passing the null check means that nADDRESS_NULL_COUNT must be initialized.
 		nADDRESS_NULL_COUNT = 0;
 
 		CString strHttpAddress = strHTTP + strRealAddress; // "http://ranp.daumgame.com"
@@ -194,7 +194,7 @@ BOOL CServerLoginThread::GETFILE_USEHTTP( CHttpPatch* pHttpPatch, std::string st
 			continue;
 		}
 
-		//	강제 종료시
+		//	When forced to quit
 		if ( IsForceTerminate() )
 			return FALSE;
 

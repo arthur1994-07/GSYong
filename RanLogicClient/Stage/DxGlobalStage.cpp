@@ -458,7 +458,8 @@ HRESULT DxGlobalStage::OneTimeSceneInitPrev( const char* szAppPath, HWND hWnd, B
 		GLOGIC::OpenPackFile(szAppPath , RANPARAM::RPFDataPath);
 //#ifdef TEST_INTRO_VIDEO
 		// TEST (인트로 영상)
-		if( NULL != pd3dDevice )
+
+		/*if( NULL != pd3dDevice )
 		{
 			NSDSHOW::InitPlayer( m_hWnd, MSG_DSHOW_PLAYER, pd3dDevice );
 			NSDSHOW::DShowTextureMan::GetInstance().OnCreateDevice( pd3dDevice );
@@ -466,7 +467,7 @@ HRESULT DxGlobalStage::OneTimeSceneInitPrev( const char* szAppPath, HWND hWnd, B
 			NSDSHOW::g_strVideoPath.append( "/data/video/" );
 
 			NSDSHOW::LoadAndPlay( "Mincomunication.wmv" );
-		}
+		}*/
 //#endif
 	}
 	else

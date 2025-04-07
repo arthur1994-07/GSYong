@@ -51,6 +51,7 @@ enum EMFIND_OPTION
 	EMFIND_OPTION_P2PMENU	= 0x0002,
 };
 
+// 확인 후 삭제 해도 되는 Data
 enum DoActWait_TYPE
 {
 	DoActWait_Zero,
@@ -63,7 +64,7 @@ enum DoActWait_TYPE
 	DoActWait_TeleportFB,
 };
 
-
+// 아이템 사용 후 홀드 유지 상태
 enum ESlotHold
 {
 	Release = 0,
@@ -120,9 +121,6 @@ typedef MAPNAMEVECTOR::iterator MAPNAMEVECTORITER;
 typedef std::vector< GLSKILL* >		VEC_GLSKILL;
 typedef VEC_GLSKILL::iterator		VEC_GLSKILL_ITER;
 
-//typedef SKILL_MAP::iterator					SKILL_MAP_ITER;
-//typedef SKILL_MAP::const_iterator			SKILL_MAP_CITER;
-
 class GLCharacter : public GLCHARLOGIC, public ClientActor
 {
 public:
@@ -154,8 +152,8 @@ protected:
 	LPDIRECT3DDEVICEQ	m_pd3dDevice;
 	DxSkinChar*	m_pSkinChar;
 	SkinCharMulti* m_pSkinCharMulti;
-	GLTransformSet*	m_pTransformSet; 
-	GLWorkingSkill* m_pWorkingSkill; 
+	GLTransformSet*	m_pTransformSet; // 환독등 스킬로 인한 변신;
+	GLWorkingSkill* m_pWorkingSkill; //  현재진행 중인 스킬
 
 	CSkillSThrow	m_SkillSTrow;
 	CSkillCameraHit m_SkillCHit;
@@ -167,10 +165,12 @@ protected:
     EMSERVICE_PROVIDER m_ServiceProvider;
 
 public:
-	SUMMONIDLIST            m_dwSummonGUIDList; 
+	SUMMONIDLIST            m_dwSummonGUIDList; // 소환수 GUID 리스트
 
+	//! 행동.
+	//
 protected:
-	EMACTIONTYPE		m_Action;				
+	EMACTIONTYPE		m_Action;				//	현제 액션.
 	
 	STARGETID			m_sActionID;
 	STARGETID			m_sSelectID;
@@ -178,20 +178,20 @@ protected:
 	
 	SKILLTARGETDATA		m_sSkillTargetData;
 
-	TARIDRC_SET			m_setTAR_SELECTED;			
+	TARIDRC_SET			m_setTAR_SELECTED;			// 타겟 셀렉트용 참조 카운터
 
-	SNATIVEID			m_sRunSkill;				
-	SNATIVEID			m_sActiveSkill;				
-	SKILLID				m_sScopeSkill;				
+	SNATIVEID			m_sRunSkill;				// 선택한 스킬
+	SNATIVEID			m_sActiveSkill;				// 발동중인 스킬
+	SKILLID				m_sScopeSkill;				// 범위 지정 스킬
 
 	DWORD				m_dwANISUBCOUNT;
 	DWORD				m_dwANISUBSELECT;
 
 	DWORD				m_dwANISUBGESTURE;
 
-	EMITEM_QUESTION		m_emOldQuestionType;	
+	EMITEM_QUESTION		m_emOldQuestionType;	//	효과 생성/종료용으로 직전의 타입을 저장하고 있음.
 
-	float				m_fQUEST_TIMER;				
+	float				m_fQUEST_TIMER;				//	퀘스트 정보 갱신.
 
 protected:
 	float				m_fLastMsgMoveSend;
@@ -214,22 +214,22 @@ protected:
 	DWORD				m_dwNumStorageItem[EMSTORAGE_CHANNEL];	//	창고에 들어있는 아이템 갯수.
 	SCONFTING_CLT		m_sCONFTING;							//	진행 대련 정보.
 
-	
+	// 창고에 있는  특정 아이템를 받아 캐쉬해두는것
 	DWORD				m_StorageSpecificItemCacheCount;
 	std::vector<DWORD>  m_StorageSpecificItemCacheVec;
 public:
-	WORD				m_wPMPosX;								
+	WORD				m_wPMPosX;								//	개인상점 개설 허가권.
 	WORD				m_wPMPosY;
-	GLPrivateMarket		m_sPMarket;								
+	GLPrivateMarket		m_sPMarket;								//	개인 상점.
 
-	MAPMARKETCLICK		m_mapMarketClick;						
+	MAPMARKETCLICK		m_mapMarketClick;						//	클릭한 개인상점 리스트
 
-	BOOL				m_bCLUB_CERTIFY;						
-	float				m_fCLUB_CERTIFY_TIMER;					
-    bool				m_bForcedPKMode;						
+	BOOL				m_bCLUB_CERTIFY;						//	선도 클럽 결정전 인증 유무.
+	float				m_fCLUB_CERTIFY_TIMER;					//	선도 클럽 결정전 인증 시간.
+    bool				m_bForcedPKMode;						//  강제 PK모드
 
 protected:
-	GLClubClient*		m_pMyClub;								
+	GLClubClient*		m_pMyClub;								//! 나의 클럽 정보.
 
 public:
 	WORD				m_wInvenPosX1;				// Temp
@@ -237,7 +237,7 @@ public:
 	WORD				m_wInvenPosX2;				// Temp
 	WORD				m_wInvenPosY2;
 
-	
+	// 임시 값을 원래는 다 가지고 있어야 하는데 지금은 3개만 가지고 있도록 한다.
 	WORDWORD			m_wwInvenPos_FaceStyle;		// Temp
 	WORDWORD			m_wwInvenPos_HairStyle;		// Temp
 	WORDWORD			m_wwInvenPos_HairColor;		// Temp
@@ -246,7 +246,7 @@ public:
 
 	MAPENTRYINFO		m_mapEntryLimitInfo;
 
-	
+	// Note : 헤어샾에서 머리를 바꿀 경우 임시로 데이터를 가지고 있음.
 private:
 	//BOOL			m_bEnableHairSytle;
 	//BOOL			m_bEnableHairColor;
@@ -255,15 +255,15 @@ private:
 	//WORD			m_wHairStyleTEMP;
 	//WORD			m_wFaceStyleTEMP;
 
-	BOOL			m_bAttackable;							
+	BOOL			m_bAttackable;							// 공격가능유무
 	BOOL			m_bMiniGameOpen;
 
 	float			m_fPartyRecruitTime;
 
-    float           m_fCheckActivityItem;       
+    float           m_fCheckActivityItem;       //  특별활동 관련 아이템 갯수 업데이트
 
 private:
-	EMSLOT			m_emCostumSelectSlot;		
+	EMSLOT			m_emCostumSelectSlot;		// Note : 코스튬 염색을 할 경우 염색할 슬롯.
 
     float           m_fLimitTimeItemSort;
     float           m_fItemSortMsgDelayTime;
@@ -273,18 +273,18 @@ private:
 
     RebuyItem::REBUY_VEC m_vecRebuy;
 
-	EMANI_MAINTYPE		m_eMotionMID;			
-	EMANI_SUBTYPE		m_eMotionSID;			
-	FLOAT				m_fMotionSec;			
+	EMANI_MAINTYPE		m_eMotionMID;			//! 모션 MID
+	EMANI_SUBTYPE		m_eMotionSID;			//! 모션 SID
+	FLOAT				m_fMotionSec;			//! 모션 플레이 시간 (초)
 
     CharState           m_bMovement;
 	SNATIVEID			m_sGeneralEffItemID;
 
-	
+	// 현재 캐릭터가 가지는 캐릭터 슬롯 개수 ( Lock, Unlock 슬롯 모두 포함 );
 	int					m_nOpenCharSlot;
 
 public:
-    unsignedState       m_sResurrectAbleState;     
+    unsignedState       m_sResurrectAbleState;      // 부활 가능 상태정보;
 
 public:
     TitleManager    m_TitleManager;

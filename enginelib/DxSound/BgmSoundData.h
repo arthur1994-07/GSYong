@@ -4,6 +4,8 @@ namespace sc {
     class SerialFile;
 }
 
+//	만약, 포인터형 데이타가 생길경우,
+//	연산자 오버로딩 해야합니다.
 
 struct	SBGMDATA
 {

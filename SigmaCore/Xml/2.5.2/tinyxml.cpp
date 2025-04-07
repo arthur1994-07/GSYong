@@ -1005,6 +1005,7 @@ bool TiXmlDocument::LoadFile( const char* _filename, TiXmlEncoding encoding )
 	value = filename;
 
 	// reading in binary mode so that tinyxml can normalize the EOL
+
 	FILE* file = fopen( value.c_str (), "rb" );	
 
 	if ( file )
@@ -1022,6 +1023,8 @@ bool TiXmlDocument::LoadFile( const char* _filename, TiXmlEncoding encoding )
 
 bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 {
+	bool test = !file;
+
 	if ( !file ) 
 	{
 		SetError( TIXML_ERROR_OPENING_FILE, 0, 0, TIXML_ENCODING_UNKNOWN );
@@ -1083,7 +1086,7 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 	const char* lastPos = buf;
 	const char* p = buf;
 	// Encrypt_RCC RanOnline-TH
-	CCrypt::Decryption( (BYTE*) buf , length );
+	//CCrypt::Decryption( (BYTE*) buf , length );
 
 
 	buf[length] = 0;

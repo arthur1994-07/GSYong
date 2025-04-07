@@ -305,20 +305,20 @@ void DxLobyStage::ShiftCharHair ( EMSHIFT emShift )
 
 void DxLobyStage::SelCharClass ( WORD wIndex )
 {
-	//	케릭터 선택.
+	//	Character selection.
 	m_sCharNewInfo.m_emIndex = (EMCHARINDEX) wIndex;
 
 	m_sCharNewInfo.m_wHair = 0;
 	m_sCharNewInfo.m_wFace = 0;
 	m_sCharNewInfo.m_wHairColor = HAIRCOLOR::GetHairColor ( m_sCharNewInfo.m_emIndex, 0 );
 
-	// 성별 설정
+	// Gender setting
 	m_sCharNewInfo.m_wSex = SEXUAL::GetSex ( m_sCharNewInfo.m_emIndex );
 }
 
 void DxLobyStage::SelCharSchool ( WORD wIndex )
 {
-	//	학교 선택.
+	//	School Selection.
 	GASSERT(wIndex<GLCONST_CHAR::wSCHOOLNUM);
 	m_sCharNewInfo.m_wSchool = (WORD)wIndex;
 
@@ -485,7 +485,7 @@ void DxLobyStage::ShiftChar( float fElapsedTime )
 }
 
 //***********************************************
-// 초기 캐릭터 렌더링시 애니메이션을 1초정도 스킵
+// Skip animation for about 1 second when initially rendering a character.
 //***********************************************
 void DxLobyStage::InitRenderSkip()
 {
@@ -512,8 +512,8 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
 
 	m_pd3dDevice = pd3dDevice;
 
-	// 로비에서는 Texture Quality 를 최고로 해주자.
-	// 강제로 원하는 셋팅을 넣는다.
+	//In the lobby, set Texture Quality to the highest.
+	// Force the desired settings.
 	RENDERPARAM::SetTextureQuality_FORCE( TEXTURE_QUALITY_HIGH );
 
 	hr = m_pd3dDevice->GetDeviceCaps ( &m_d3dCaps );
@@ -522,7 +522,7 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
 	WORD wWidth = 800;
 	WORD wHeight = 600;
 
-	//	Note : 현재해상도 받아오기.
+	//	Note : Get current resolution.
 	//
 	LPDIRECT3DSURFACEQ pBackBuffer=NULL;
 	m_pd3dDevice->GetBackBuffer ( 0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer );
@@ -540,9 +540,10 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
     NSLoadingDirect::FrameMoveRender( FALSE );
     //---------------------------------------------------//
 
-	//	Note : 뷰포트.
+	//	Note : Viewport.
 	//
-	D3DXVECTOR3 vFromPt		= D3DXVECTOR3( 0.0f, 70.0f, -70.0f );
+	// D3DXVECTOR3 vFromPt		= D3DXVECTOR3( 0.0f, 70.0f, -70.0f );
+	D3DXVECTOR3 vFromPt		= D3DXVECTOR3( -10.0f, -15.0f, -108.475f ); //-1.0f, -10.0f, -100.475f
 	D3DXVECTOR3 vLookatPt	= D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
 	D3DXVECTOR3 vUpVec		= D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
 	DxViewPort::GetInstance().SetViewTrans ( vFromPt, vLookatPt, vUpVec );
@@ -551,7 +552,7 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
     NSLoadingDirect::FrameMoveRender( FALSE );
     //---------------------------------------------------//
 
-	//	Note : 캐릭터 선택 배경 지형 파일 초기화.
+	//	Note : Initialize character selection background terrain file.
 	//
 	m_spLandCharSlt->InitDeviceObjects ( m_pd3dDevice );
 	m_spLandCharSlt->LoadFile ( "cha_select.wld", m_pd3dDevice, FALSE );
@@ -588,7 +589,7 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
     NSLoadingDirect::FrameMoveRender( FALSE );
     //---------------------------------------------------//
 
-	// Note : 미리 로딩..
+	// Note : Preloading..
 	D3DXVECTOR3 vMax = D3DXVECTOR3(100000,100000,100000);
 	D3DXVECTOR3 vMin = D3DXVECTOR3(-100000,-100000,-100000);
 	m_spLandCharSlt->LoadBasicPos( m_pd3dDevice, vMax, vMin );
@@ -598,9 +599,9 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
 	m_spLandLogin->LoadBasicPos( m_pd3dDevice, vMax, vMin );
 
 	//	NOTE
-	//		BGM 세팅, 로비는 고정
-	m_spLandLogin->SetBgmFile( ID2GAMEWORD("LOBY_BGM") );		// 강제 셋팅.
-	m_spLandCharSlt->SetBgmFile( ID2GAMEWORD("LOBY_BGM") );	// 강제 셋팅.
+	//		BGM setting, lobby is fixed
+	m_spLandLogin->SetBgmFile( ID2GAMEWORD("LOBY_BGM") );		// Forced setting.
+	m_spLandCharSlt->SetBgmFile( ID2GAMEWORD("LOBY_BGM") );	// Forced setting.
 
 	m_spLandLogin->ActiveMap ( m_spLandLogin );
 
@@ -609,7 +610,7 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
     //---------------------------------------------------//
 
 	//	NOTE
-	//		BGM 세팅, 로비는 고정
+	//		BGM Settings, lobby is fixed
 	//DxBgmSound::GetInstance().SetFile ( ID2GAMEWORD("LOBY_BGM") );
 	//DxBgmSound::GetInstance().Play ();
 
@@ -617,7 +618,7 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
     NSLoadingDirect::FrameMoveRender( FALSE );
     //---------------------------------------------------//
 
-	//	Note : 캐릭터 선택 오브젝트 초기화.
+	//	Note : Initialize character selection object.
 	//
 	char szName[MAX_PATH] = {0};
 	for ( int i=0; i<MAX_SELECTCHAR; i++ )
@@ -625,7 +626,7 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
 		StringCchPrintf ( szName, MAX_PATH, "character[%02d]", i+1 );
 		DxLandGateMan* pLandGateMan = m_spLandCharSlt->GetLandGateMan();
 		PDXLANDGATE pLandGate = pLandGateMan->FindLandGate ( szName );
-		GASSERT(pLandGate&&"character[%02d]를 찾지 못하였습니다." );
+		GASSERT(pLandGate&&"character[%02d] Could not find." );
 		if ( pLandGate )
 		{
             //---------------------------------------------------//
@@ -652,14 +653,14 @@ HRESULT DxLobyStage::InitDeviceObjects ( LPDIRECT3DDEVICEQ pd3dDevice )
 	StringCchPrintf ( szName, MAX_PATH, "Create_Char" );
 	DxLandGateMan* pLandGateMan = m_spLandCharSlt->GetLandGateMan();
 	PDXLANDGATE pLandGate = pLandGateMan->FindLandGate ( szName );
-	GASSERT(pLandGate&&"Create_Char를 찾지 못하였습니다." );
+	GASSERT(pLandGate&&"Create_Char Could not find." );
 	if ( pLandGate )
 	{
 		D3DXVECTOR3 vPos = (pLandGate->GetMax()+pLandGate->GetMin())/2.0f;
 		m_NewCharSham.Create( &vPos, m_pd3dDevice, TRUE, MAX_SELECTCHAR );
 	}
 
-	// wld 로딩시 ZoomOut 값이 변하기 때문에 Lobby용 ZoomOut 값으로 재 셋팅함.
+	// Since the ZoomOut value changes when loading wld, reset it to the ZoomOut value for Lobby.
 	DxViewPort::GetInstance().SetLobyCamera ();
 	return S_OK;
 }
@@ -673,7 +674,7 @@ HRESULT DxLobyStage::RestoreDeviceObjects ()
     pBackBuffer->GetDesc( &m_d3dsdBackBuffer );
     pBackBuffer->Release();
 
-	//	Note : 뷰포트
+	//	Note : Viewport
 	//
 	DxViewPort::GetInstance().SetProjection ( D3DX_PI/4, (float)m_d3dsdBackBuffer.Width, 
 		(float)m_d3dsdBackBuffer.Height, 5.0f, 3000.0f );
@@ -681,7 +682,7 @@ HRESULT DxLobyStage::RestoreDeviceObjects ()
 	hr = DxViewPort::GetInstance().SetViewPort ();
 	if ( FAILED(hr) )	return hr;
 
-	//	Note : 캐릭터 선택 배경 지형 파일 초기화.
+	//	Note : Initialize character selection background terrain file.
 	//
 	m_spLandCharSlt->RestoreDeviceObjects ( m_pd3dDevice );
 	//m_LandCharSlt_s01.RestoreDeviceObjects ( m_pd3dDevice );
@@ -690,7 +691,7 @@ HRESULT DxLobyStage::RestoreDeviceObjects ()
 
 	m_spLandLogin->RestoreDeviceObjects ( m_pd3dDevice );
 
-	//	Note : 캐릭터 선택 오브젝트 초기화.
+	//	Note : Initialize character selection object.
 	//
 	for ( int i=0; i<MAX_SELECTCHAR; i++ )
 	{
@@ -1580,8 +1581,8 @@ void DxLobyStage::RenderWorldCharEffect()
 		m_pd3dDevice->SetRenderState ( D3DRS_FOGENABLE, TRUE );
 	}
 
-	// [2013.07.01] 강제로 Fog를 끄도록 한다.
-	//				현재 맵상 이렇게 할 수 밖에 없다. 배치를 너머 멀리해놓았다. 정상적인 맵이 만들어지면 되돌리도록 하자.
+	// [2013.07.01] Forces Fog to be turned off.
+	//				Currently, this is the only way to do it on the map. The layout is too far away. Let's revert it when a normal map is created.
 	DxFogMan::GetInstance().RenderFogSB ( m_pd3dDevice, TRUE );
 
 	DxLandMan* pWLD( NULL );
@@ -1589,22 +1590,22 @@ void DxLobyStage::RenderWorldCharEffect()
 	// g_emGroundQulity BackUp
 	TnL_MODE emTnL_BackUp = RENDERPARAM::g_emGroundQulity;
 
-	// CSM 문제로 인해 이상하게 나오는 문제가 있어서 옵션이 높을 경우 한단계 낮춰서 렌더링 하도록 한다.
+	//There is a strange issue due to CSM issues, so if the option is high, lower it by one level to render.
 	if ( RENDERPARAM::g_emGroundQulity >= TnL_PS_3_0_CSM )
 	{
 		RENDERPARAM::g_emGroundQulity = TnL_PS_3_0_DF;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	//							그림자
+	//							shadow
 
-	// 속도 확인
-	// 다 그린 후 ZBuffer 를 다 지워주기 때문에 빠진 구역 없이 다 그리면 문제가 없다.
+	// Check speed
+	//Since the ZBuffer is completely cleared after drawing, there is no problem as long as you draw everything without missing any areas.
 	if ( !RANPARAM::IsAutoOptionSame() && RENDERPARAM::g_emTnLMode >= TnL_PS_3_0_DF && m_spLandLogin->GetUsedMaterialSystem() )
 	{
 		DxEnvironmentRender( m_spLandLogin.get() );
 
-		// 단계를 낮춘다.
+		// Lower the level.
 		if ( RENDERPARAM::g_emTnLMode == TnL_PS_3_0_CSM )
 		{
 			RENDERPARAM::g_emGroundQulity = TnL_PS_3_0_CSM;
@@ -1619,13 +1620,13 @@ void DxLobyStage::RenderWorldCharEffect()
 		}
 
 		// Test Rendering
-		// 원하는 옵션으로 렌더링을 시작하도록 한다.
-		// 저사양에서는 이부분을 렌더하면서 많은 속도 저하가 있을 것이다.
+		// Lets you start rendering with your desired options.
+		// On low specs, there will be a lot of speed degradation when rendering this part..
 		{
 			DxCamAniMan* pCamAniMan = m_spLandLogin->GetCamAniMan();
 			pCamAniMan->ActiveCameraPos ( "login" );
 
-			// 속도 체크를 위한 렌더를 하도록 한다.
+			// Let's do a render for speed check.
 			DxRenderDefferedOpaque( m_spLandLogin.get() );
 			DxRenderDefferedSoftAlpha( m_spLandLogin.get() );
 			m_spLandLogin->RenderEff_Deffered( m_pd3dDevice, DxViewPort::GetInstance().GetClipVolume() );
@@ -1634,13 +1635,13 @@ void DxLobyStage::RenderWorldCharEffect()
 			m_pd3dDevice->Clear( 0L, NULL, D3DCLEAR_ZBUFFER, 0L, 1.0f, 0L );
 		}
 
-		// 속도 확인을 위하여 기본 렌더링은 1_1 버젼으로 돌리도록 한다.
-		// 실제 렌더는 낮은 Option 으로 렌더링 한다.
-		// 속도 확인 중이다.
+		// To check the speed, the basic rendering is set to version 1_1.
+		// The actual render is rendered with low options..
+		// Checking speed.
 		RENDERPARAM::g_emGroundQulity = TnL_PS_1_1;
 	}
 
-	//	Note : 캐릭터 선택 배경 지형 파일.
+	//	Note : Character selection background terrain file.
 	//
 
 	switch( m_nStageBG )
@@ -1696,7 +1697,7 @@ void DxLobyStage::RenderWorldCharEffect()
 				m_spLandCharSlt->Render ( m_pd3dDevice, CV );
 			}
 
-			//	Note : 캐릭터 선택 오브젝트.
+			//	Note : Character selection object.
 			//
 			if( !m_bRenderSkip )
 			{
@@ -1709,7 +1710,7 @@ void DxLobyStage::RenderWorldCharEffect()
 					if ( nTempIdx < 0 || nTempIdx >= MAX_SERVERCHAR )
 						continue;
 
-					// Note : 캐릭터 잠금 이미지 렌더.
+					// Note : Character Lock Image Render.
 					if ( m_CharInfo[ nTempIdx ].IsLock() )
 					{
 						//!! SF_TODO
@@ -1807,7 +1808,7 @@ void DxLobyStage::RenderWorldCharEffect()
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-	// [2014.08.27][shhan] Lobby 는 Bloom 을 보여주지 않는다.
+	// [2014.08.27][shhan] Lobby does not show Bloom.
 	//////////////////////////////////////////////////////////////////////////
 	//			HDR - Bloom 적용.
 	if ( RENDERPARAM::g_bEnable_HDR )
@@ -1829,11 +1830,11 @@ void DxLobyStage::RenderWorldCharEffect()
 	DxEffGroupPlayer::GetInstance().Render ( m_pd3dDevice );
 	PROFILE_END("DxEffGroupPlayer::Render");
 
-	// Note : 최적화한 Eff
+	// Note : Optimized Eff
 	OPTMManager::GetInstance().Render();
 
 
-	// Note : LightShafts 작업을 한다.
+	// Note : LightShafts Do the work.
 	{
 		DxBackupTarget sBackupTarget;
 		sBackupTarget.Backup( m_pd3dDevice );
@@ -1845,18 +1846,18 @@ void DxLobyStage::RenderWorldCharEffect()
 		NSLightShafts::OnRender(m_pd3dDevice);
 	}
 
-	//	Note : 큐브 텍스쳐 렌더링..!!
+	//	Note : Cube texture rendering..!!
 	//DxCubeMap::GetInstance().Render ( m_pd3dDevice );
 	NSCubeMapUtil::NSCubeMapBlend::OnRender( m_pd3dDevice, NSCubeMapCulling::GetCubeMapTexture( DxViewPort::GetInstance().GetLookatPt() ) );
 
-	//	Note : 글로우 처리를 하기위해 사용 한다.
+	//	Note :Used for glow treatment.
 	//
 	DxGlowMan::GetInstance().RenderTex ( m_pd3dDevice );
 	DxGlowMan::GetInstance().Render ( m_pd3dDevice );
 	DxGlowMan::GetInstance().RenderBURN( m_pd3dDevice );
 
 
-	// StarGlow 렌더링
+	// StarGlow Rendering
 	if ( DxSurfaceTex::GetInstance().m_pGlowSuf_SRC )
 	{
 		DxBackupTarget sBackupTarget;
@@ -1874,13 +1875,13 @@ void DxLobyStage::RenderWorldCharEffect()
 
 	if ( pWLD )
 	{
-		// 지금까지 그린것을 굴절을 위해 복사해놓는다.
+		//Copy what you have drawn so far for refraction..
 		PROFILE_BEGIN("DxEnvironment::UserToRefraction()");
 		DxEnvironment::GetInstance().UserToRefraction ( m_pd3dDevice );
 		PROFILE_END("DxEnvironment::UserToRefraction()");
 	}
 
-	//	Note : Wave 되야 하는것을 저장후 마지막으로 뿌린다.
+	//	Note :After saving what needs to be waved, spray it last.
 	//
 
 	PROFILE_BEGIN("DxEnvironment::RenderWave()");
@@ -2074,7 +2075,7 @@ void  DxLobyStage::RotateChar( bool bLeft, float fDegree )
 	if( false == bLeft )
 		fDegree *= -1.0f;
 
-	// y축 기준으로 회전시킨다.
+	// Rotate around the y-axis.
 	m_vDir = scmath::RotateVectorFromAxis( m_vDir, fDegree, D3DXVECTOR3( 0.0f, 1.0f, 0.0f ) );
 }
 

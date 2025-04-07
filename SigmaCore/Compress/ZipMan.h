@@ -10,9 +10,9 @@
 
 typedef unz_file_pos UNZ_FILE_POS;
 
-//! 게임내 사용하는 zip 파일 관리
-//! Open Close 를 자주하지 않기 위해서 제작
-//! 원래 CUnzipper 를 사용했다.
+//! Manage zip files used in the game
+//! Made to avoid frequent Open Close
+//! Originally I used CUnzipper.
 //! 2011-08-17 jgkim
 class ZipMan : public sc::DefaultLock
 {
@@ -86,19 +86,19 @@ private:
     
 public:
 
-    //! 미리 Zip 파일속의 위치와 압축정보를 읽어둔다.
+    //! Read the location and compression information in the Zip file in advance.
     BOOL LOADFILE_RCC(const std::string& strZipName);
 
-	//! 미리 Zip 파일속의 위치와 압축정보를 읽어둔다.
+	//! Read the location and compression information in the Zip file in advance.
 	//
-	// fclose(pFile) 는 ZipMan 에서 해주므로 외부에서 할 필요는 없다. ( return TRUE 일 경우 )
-	// return FALSE 일 경우는 fclose(pFile) 가 필요하다.
+	// There is no need to do fclose(pFile) externally since it is done by ZipMan. (If return TRUE)
+	// If return FALSE, fclose(pFile) is required.
 	//
-	// 꼭 DeleteMemory 를 해주도록 하자. 
-	// LOADFILE_RCC 랑은 다르다.
+	// Be sure to use DeleteMemory.
+	// It is different from LOADFILE_RCC.
 	//
-	// strZipName	: m_mapZipPos, m_ZipData 에 insert 하기 위해 필요하다. (FullPath)
-	// pFile		: 이걸 기준으로 unzFile 을 만든다.
+	// strZipName	:Required to insert into m_mapZipPos and m_ZipData. (FullPath)
+	// pFile		: Create unzFile based on this.
 	BOOL LOAD_Memory( const std::string& strZipName, FILE* pFile );
 
 	// LOAD_Memory ~ DeleteMemory

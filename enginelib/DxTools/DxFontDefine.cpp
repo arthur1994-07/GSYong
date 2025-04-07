@@ -21,15 +21,15 @@ namespace language
 	TCHAR strNationFont[NATION_SIZE][20] =
 	{
 		_T("µ¸¿òÃ¼"),		// KR
-		_T("Tahoma"),		// Global Service
-		_T("Tahoma"),		// Europe
-		_T("Tahoma"),		// America
+		_T("MingLiU"),		// Global Service
+		_T("MingLiU"),		// Europe
+		_T("MingLiU"),		// America
 		_T("MingLiU"),		// Taiwan
 		_T("Tahoma"),		// Indonesia
 		_T("Arial"),		// Thailand
-		_T("Tahoma"),		// Malaysia EN
+		_T("MingLiU"),		// Malaysia EN
 		_T("MingLiU"),		// Malaysia CN
-		_T("Tahoma"),		// Philippines
+		_T("MingLiU"),		// Philippines
 		_T("NSimSun"),		// Chinese
 	};
 

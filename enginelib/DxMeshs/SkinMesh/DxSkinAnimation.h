@@ -11,7 +11,7 @@ struct	IDirectXFileData;
 struct	DxSkeleton;
 struct	DxAnimationList;
 
-// 한 프레임에서 각각의 본의 애니메이션 정보   Animation information for each bone in one frame
+// 한 프레임에서 각각의 본의 애니메이션 정보
 struct DxSkinAnimation : public SANIMCONINFO
 {
 public:
@@ -27,7 +27,7 @@ protected:
 	HRESULT LoadAnimation( IDirectXFileData* pxofobjCur );
 
 public:
-	DxSkeletonResource	m_skeletonRes;		// 본 포인터. bone pointer	// 참조값이다. It is a reference value.
+	DxSkeletonResource	m_skeletonRes;		// 본 포인터.	// 참조값이다.
 
 	HRESULT CreateAnimationDataFromTool(BOOL bRefesh);
 
@@ -36,7 +36,7 @@ public:
 
     DxAnimationListResource GetAniListResource() { return m_dxAniListRes; }
 
-	//!	기본 정보 설정. Set basic information
+	//!	기본 정보 설정.
 	void LoadSkeleton( BOOL bPreLoad );
 
 	void SetAnimationList( BOOL bThread );

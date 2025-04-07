@@ -52,14 +52,14 @@ namespace compbyte
             pbuffer[i] = DEARRAY[static_cast<DWORD>(pbuffer[i])];
     }
 
-    //! RC4를 사용한 암호화 함수
-    //! \param pbKey 는 암호화 하는데 사용되는 키 버퍼
-    //! \param dwKeySize 는 암호화 하는데 사용되는 키 버퍼의 크기
-    //! \param pbPlaintText 는 암호화 하는데 사용되는 원문
-    //! \param pbCipherText 는 암호화 된 문장이 저장될 버퍼(원문의 크기 이상이어야 함)
-    //! \param dwHowMuch 는 암호화 하는데 사용되는 원문의 크기
-    //! \return GetLastError의 반환값, 성공한 경우 0 리턴
-    //! \remark 모든 버퍼는 문자열이 아닌 바이트 스트림으로 간주해야 함.
+    //! Encryption function using RC4
+    //! \param pbKey is the key buffer used for encryption.
+    //! \param dwKeySize is the size of the key buffer used for encryption.
+    //! \param pbPlaintText is the original text used for encryption.
+    //! \param pbCipherText is the buffer where the encrypted text will be stored (must be larger than the original text size)
+    //! \param dwHowMuch is the size of the original text used for encryption.
+    //! \return Return value of GetLastError, 0 if successful
+    //! \remark All buffers should be considered byte streams, not strings.
 
     DWORD encrypt ( UCHAR *pbKey, DWORD dwKeySize, const UCHAR *pbPlaintext, UCHAR *pbCipherText, DWORD dwHowMuch )
     {
@@ -103,14 +103,14 @@ namespace compbyte
 
     //////////////////////////////////////////////////////////////////////////
     //
-    //! RC4를 사용한 암호 해독 함수
-    //! \param pbKey 는 암호화 하는데 사용되는 키 버퍼
-    //! \param dwKeySize 는 암호화 하는데 사용되는 키 버퍼의 크기
-    //! \param pbCipherText 는 암호화된 버퍼
-    //! \param pbPlaintText 는 암호가 해독된 원문(암호화된 버퍼 크기 이상이어야 함)
-    //! \param dwHowMuch 는 암호화된 버퍼 크기
-    //! \return GetLastError의 반환값, 성공한 경우 0 리턴
-    //! \remark 모든 버퍼는 문자열이 아닌 바이트 스트림으로 간주해야 함.
+    //! Decryption function using RC4
+    //! \param pbKey is the key buffer used for encryption.
+    //! \param dwKeySize is the size of the key buffer used for encryption.
+    //! \param pbCipherText is the encrypted buffer
+    //! \param pbPlaintText is the decrypted original text (must be larger than the encrypted buffer size)
+    //! \param dwHowMuch is the encrypted buffer size
+    //! \return Return value of GetLastError, 0 if successful
+    //! \remark All buffers should be considered byte streams, not strings..
 
     DWORD decrypt ( UCHAR *pbKey, DWORD dwKeySize, const UCHAR *pbCipherText, UCHAR *pbPlaintext, DWORD dwHowMuch )
     {
@@ -154,11 +154,11 @@ namespace compbyte
 
     //////////////////////////////////////////////////////////////////////////
     //
-    //! 바이트 버퍼를 헥사값으로 출력하는 함수
-    //! \param pbText 는 출력될 바이트 버퍼
-    //! \param dwLength 는 출력될 바이트 버퍼 크기
-    //! \return 은 없음
-    //! \remark 이 함수는 출력을 완료한 후 개행함
+    //! Function to output byte buffer as hex value
+    //! \param pbText is the byte buffer to be output
+    //! \param dwLength is the size of the byte buffer to be output.
+    //! \return There is no silver
+    //! \remark This function returns a new line after completing the output.
 
     void hex2string ( const UCHAR *pbText, const DWORD dwLength, std::string& strDestName )
     {
@@ -205,7 +205,7 @@ namespace compbyte
         case 'e': return 14;
         case 'f': return 15;
 
-        default: MIN_ASSERT(0&&"헥사 텍스트의 문자는 0~9, A~F, a~f 사이의 값이어야함.");
+        default: MIN_ASSERT(0&&"Characters in hex text must be between 0 and 9, A and F, and a and f..");
         };
 
         return 0;
@@ -219,10 +219,10 @@ namespace compbyte
         if( !pbText )	return false;
 
         bool bvalid = pbText!=NULL && pbHEX!=NULL;
-        MIN_ASSERT( bvalid && "pbText, pbHEX 버퍼가 무효한 값이다." );
+        MIN_ASSERT( bvalid && "pbText, pbHEX buffer is invalid." );
 
         bvalid = (strlen((char*)pbText)%2)==0;
-        MIN_ASSERT( bvalid && "헥사 텍스트는 반드시 짝수의 길이를 가져야 한다." );
+        MIN_ASSERT( bvalid && "Hex text must have an even length." );
 
         for ( i=0, j=0; i<dwLength; i+=2, ++j )
         {
@@ -245,7 +245,7 @@ namespace compbyte
         MIN_ASSERT( bvalid && "pbText, pbHEX 버퍼가 무효한 값이다." );
 
         bvalid = (strlen((char*)pbText)%2)==0;
-        MIN_ASSERT( bvalid && "헥사 텍스트는 반드시 짝수의 길이를 가져야 한다." );
+        MIN_ASSERT( bvalid && "Hex text must have an even length." );
 
         for( i=0, j=0; i<dwLength; i+=4, ++j )
         {
