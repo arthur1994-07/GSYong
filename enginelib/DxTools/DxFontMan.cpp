@@ -73,7 +73,7 @@ char CD3DFontPar::szDefaultFontName[language::LANG_NUM][50] =
 
 TCHAR CD3DFontPar::szEnglishFontName[language::LANG_NUM][20] =
 {
-	_T("Tahoma"),		// Default font
+	_T("MingLiU"),		// Default font
 	_T("MingLiU"),		// TRADITIONAL_CHINESE font
 	_T("MS PGothic"),	// JAPANESE font
 	_T("Gulim"),		// KOREAN font
@@ -86,7 +86,7 @@ TCHAR CD3DFontPar::szEnglishFontName[language::LANG_NUM][20] =
 char CD3DFontPar::szLocaleName[language::LANG_NUM][50] =
 {
 	// C, 중국어(번체), 일본어, 한국어, 중국어(간체), 태국어, 베트남어;
-	_T("C"),					// Default font
+	_T("Chinese_Taiwan"),					// Default font
 	_T("Chinese_Taiwan"),		// TRADITIONAL_CHINESE font
 	_T(" "),					// JAPANESE font
 	_T("Korean"),				// KOREAN font

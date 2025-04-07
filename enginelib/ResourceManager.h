@@ -41,7 +41,6 @@ typedef unsigned char BYTE;
 #include "../SigmaCore/Util/Lock.h"
 #include "../SigmaCore/Memory/SmartPtr.h"
 #include "../SigmaCore/String/StringUtil.h"
-#include "../SigmaCore/gassert.h"
 #include "../InternalCommonLib/dxstdafx.h"
 #include "./Common/FileSystem.h"
 

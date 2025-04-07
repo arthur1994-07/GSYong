@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <boost/tr1/memory.hpp>
 namespace sc
 {
 	class SerialFile;

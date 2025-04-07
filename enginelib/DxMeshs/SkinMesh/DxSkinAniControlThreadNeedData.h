@@ -3,7 +3,7 @@
 #include <list>
 #include <deque>
 #include <vector>
-#include <tr1/memory>
+
 #include "../../DxTools/DxVertexFVF.h"
 
 struct SMeshContainer;

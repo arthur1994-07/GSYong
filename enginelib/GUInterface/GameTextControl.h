@@ -4,8 +4,6 @@
 #include "../DxTools/DxFontDefine.h"
 #include "./GameTextLoader.h"
 
-#include <vector>
-
 #define STRUCT_STRFLAG( value )							\
 	struct S##value										\
 	{													\

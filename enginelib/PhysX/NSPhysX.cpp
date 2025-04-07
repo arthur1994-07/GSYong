@@ -32,7 +32,7 @@
 
 #include "NSPhysX.h"
 
-#include "../../SigmaCore/Math/Random.h"	
+#include "../../SigmaCore/Math/Random.h"	// 삭제
 
 // ----------------------------------------------------------------------------
 #include "../../SigmaCore/DebugInclude.h"
@@ -102,7 +102,7 @@ namespace NSPhysX
 			SFile.BeginBlock();
 			{
 				int nPhysX_OK(0);
-				SFile << nPhysX_OK;		// 아직은 정상이라 할 수 없다
+				SFile << nPhysX_OK;		// 아직은 정상이라 할 수 없다.
 			}
 			SFile.EndBlock();
 
@@ -119,7 +119,7 @@ namespace NSPhysX
 			SFile.BeginBlock();
 			{
 				int nPhysX_OK(1);
-				SFile << nPhysX_OK;		
+				SFile << nPhysX_OK;		// 이제 정상이다라고 할 수 있다.
 			}
 			SFile.EndBlock();
 
@@ -129,7 +129,12 @@ namespace NSPhysX
 
 	void InitNx_AvoidUnknownError( LPDIRECT3DDEVICEQ pd3dDevice, const TCHAR* pAppName )
 	{
+		// 파일 있는지 체크한다.
+		// 있으면 InitNx 하지 않는다. ( 문제 PC )
+		// 없으면 생성하고 InitNx 를 하도록 하고 파일을 삭제한다.. ( 문제 없는 PC )
+
 		//////////////////////////////////////////////////////////////////////////
+		// 경로를 만든다.
 		// CreteDirectory...
 		TCHAR szSpecialFolder[MAX_PATH]={0};
 		SHGetSpecialFolderPath( NULL, szSpecialFolder, CSIDL_PERSONAL, FALSE );
@@ -146,14 +151,20 @@ namespace NSPhysX
 		BOOL bOPEN = SFile.OpenFile ( FOT_READ, strPathname.c_str() );
 		if ( bOPEN )
 		{
+			//////////////////////////////////////////////////////////////////////////
+			// 들어온적 있다.
+
 			DWORD dwVer, dwBufferSize;
 			SFile >> dwVer;
 			SFile >> dwBufferSize;
 
+			// 만약 다르다면 Save 를 새로 해줘서 정상파일을 만들도록 한다.
+			// 이렇게 안하면 유저가 직접 이 파일을 지우지 않는 이상 맵에 접속이 불가능할 수도 있다.
 			if ( !SFile.IsSameRemindLoadSize( dwBufferSize ) || (dwBufferSize==0) ) 
 			{
 				SFile.CloseFile();
 
+				// 이전 Save에서 문제가 발생했을 수도 있으므로(거의 낮은확률,하지만 BugTrap은 왔음) 일단 재 Save 하는 방향으로 한다.
 				SaveLog_InitNx( pd3dDevice, strPathname.c_str() );
 
 				return;
@@ -164,27 +175,33 @@ namespace NSPhysX
 
 			SFile.CloseFile();
 
+			// 이전에 PhysX 가 정상동작 하였는가~?
 			if ( nPhysX_OK )
 			{
+				//////////////////////////////////////////////////////////////////////////
+				// 정상동작 되었었다.
 				InitNx( pd3dDevice );
 				return;
 			}
 			else
 			{
 				//////////////////////////////////////////////////////////////////////////
-			
+				// 이전에 문제가 되었었다.
 				return;
 			}
 		}
 		else
 		{
 			//////////////////////////////////////////////////////////////////////////
+			// 처음 작업된다.
+
+			// 파일이 없다면 파일을 만들고 로딩을 하고 삭제를 다시 한다.
 			int fh;
 
-			
+			// 처음이면 폴더는 없을 수 있다.
 			CreateDirectory ( strFolderPath.c_str(), NULL );
 
-		
+			// 파일을 새로 만들도록 한다.
 			fh = _creat( strPathname.c_str(), _S_IREAD | _S_IWRITE );
 			if( fh == -1 )
 				perror( "Couldn't create data file" );
@@ -332,7 +349,7 @@ namespace NSPhysX
 	{
 		if (g_pScene)
 		{
-			// g_setNxActor
+			// g_setNxActor 정리
 			{
 				SET_NXACTOR_ITER iter = g_setNxActor.begin();
 				for ( ; iter!=g_setNxActor.end(); )
@@ -342,7 +359,7 @@ namespace NSPhysX
 				}
 			}
 
-			// g_setNxJoint 
+			// g_setNxJoint 정리
 			{
 				SET_NXJOINT_ITER iter = g_setNxJoint.begin();
 				for ( ; iter!=g_setNxJoint.end(); )
@@ -453,7 +470,7 @@ namespace NSPhysX
 			return NULL;
 		}
 
-		// 
+		// 충돌처리를 켜거나 끕니다.
 		shape->setFlag( PxShapeFlag::eSIMULATION_SHAPE,bCollsion ? true : false );
 
 		if(fd)
@@ -495,7 +512,9 @@ namespace NSPhysX
 		if ( (*ppActor) )
 			DeleteActor( (*ppActor) );
 
-	
+		// [2012.4.4] 밑에 코드가 의문이 듬.
+		//				여러번 돌면 성공하는 건인가~?
+		//				그렇다면 말이 안되게 실패하는 경우가 있는가~?
 		size_t nFailCount(0);
 		physx::PxRigidDynamic* pActor(NULL);
 		while( !pActor )
@@ -522,7 +541,9 @@ namespace NSPhysX
 		if ( (*ppActor) )
 			DeleteActor( (*ppActor) );
 
-	
+		// [2012.4.4] 밑에 코드가 의문이 듬.
+		//				여러번 돌면 성공하는 건인가~?
+		//				그렇다면 말이 안되게 실패하는 경우가 있는가~?
 		size_t nFailCount(0);
 		physx::PxRigidDynamic* pActor(NULL);
 		while( !pActor )
@@ -548,6 +569,9 @@ namespace NSPhysX
 		if ( (*ppActor) )
 			DeleteActor( (*ppActor) );
 
+		// [2012.4.4] 밑에 코드가 의문이 듬.
+		//				여러번 돌면 성공하는 건인가~?
+		//				그렇다면 말이 안되게 실패하는 경우가 있는가~?
 		size_t nFailCount(0);
 		physx::PxRigidDynamic* pActor(NULL);
 		while( !pActor )
@@ -572,7 +596,7 @@ namespace NSPhysX
 	{
 		typedef std::map<TSTRING,physx::PxRigidActor*>	MAP_NXACTOR;
 		typedef MAP_NXACTOR::iterator		MAP_NXACTOR_ITER;
-		MAP_NXACTOR mapNxActor;			
+		MAP_NXACTOR mapNxActor;			// 데이터 참조용.
 
 		float segHeight = 0.01f;
 		float segRadius = 0.1f;
@@ -594,7 +618,9 @@ namespace NSPhysX
 				dir.z = 0.1f * fHalfLength;
 			}
 
-
+			// [2012.4.4] 밑에 코드가 의문이 듬.
+			//				여러번 돌면 성공하는 건인가~?
+			//				그렇다면 말이 안되게 실패하는 경우가 있는가~?
 			size_t nFailCount(0);
 			physx::PxRigidDynamic* pActor(NULL);
 			while( !pActor )
@@ -633,8 +659,8 @@ namespace NSPhysX
 			//	pActor->raiseActorFlag( NX_AF_DISABLE_COLLISION );
 			}
 
-			vecNxActor.push_back( pActor );															
-			mapNxActor.insert( std::make_pair( vecBoneTrans[i].m_rBoneTransJoint->GetName(), pActor ) );	
+			vecNxActor.push_back( pActor );															// 실제 정보를 가지고 있는 곳
+			mapNxActor.insert( std::make_pair( vecBoneTrans[i].m_rBoneTransJoint->GetName(), pActor ) );	// 허상 정보
 		}
 
 		D3DXVECTOR3 vJointOffset(0.f,0.f,0.f);
@@ -645,6 +671,10 @@ namespace NSPhysX
 			{
 				vJointOffset = vecBoneTrans[i].m_rBoneTransChild->m_pQuatPosORIG.m_vPos * fScale;
 			}
+
+			// [2012.4.4] 밑에 코드가 의문이 듬.
+			//				여러번 돌면 성공하는 건인가~?
+			//				그렇다면 말이 안되게 실패하는 경우가 있는가~?
 			int nFailCount(0);
 			physx::PxD6Joint* pJoint(NULL);
 			while( !pJoint )
@@ -711,6 +741,8 @@ namespace NSPhysX
 				physx::PxTransform poseParent(PxTransform::createIdentity());
 				if ( i == 1 )
 				{
+					// 기준 Bone 이기 때문에 Joint 쪽으로 붙이면 안된다.
+					// 다음 Bone 과의 거리는 유지되야 되기 때문에 0.5f 를 하면 안된다.
 					poseParent.p = PxVec3( vecBoneTrans[i].m_rBoneTransJoint->m_pQuatPosORIG.m_vPos.x * fScale, 
 											vecBoneTrans[i].m_rBoneTransJoint->m_pQuatPosORIG.m_vPos.y * fScale, 
 											vecBoneTrans[i].m_rBoneTransJoint->m_pQuatPosORIG.m_vPos.z * fScale );
@@ -804,7 +836,7 @@ namespace NSPhysX
 				}
 			}
 
-			
+			// 추가
 			if ( pJoint )
 			{
 				vecNxJoint.push_back( pJoint );
@@ -986,7 +1018,7 @@ namespace NSPhysX
 								const DxClothColl* rClothColl )
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// PxClothMeshDesc 
+		// PxClothMeshDesc 정보 얻어오기.
 		// create the cloth cape mesh from file
 		PxClothMeshDesc meshDesc;
 		std::vector<PxVec3> vertices;
@@ -1003,7 +1035,7 @@ namespace NSPhysX
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		// PxCloth
+		// PxCloth 정보 얻어오기.
 		// create the cloth
 		std::vector<PxClothCollisionSphere> vecSpheres;
 		std::vector<DWORD>					vecIndexPairs;
@@ -1039,7 +1071,7 @@ namespace NSPhysX
 		{
 			particles[i] = readData->particles[i];
 
-			// Mesh 의 Diffuse Alpha 
+			// Mesh 의 Diffuse Alpha 값으로 수치를 정한다.
 			if ( arrayInvWeight )
 			{
 				if ( arrayInvWeight[i] == 0.f )
@@ -1057,12 +1089,12 @@ namespace NSPhysX
 			}
 
 			//////////////////////////////////////////////////////////////////////////
-			// AttachParentBone 의 Scale 
+			// AttachParentBone 의 Scale 변화 의 3 설명 ( /fAttParentBoneScale )
 			//////////////////////////////////////////////////////////////////////////
-			// 3. LockParticle 은 Bone_Matrix 
+			// 3. LockParticle 은 Bone_Matrix 와 연산이 되기 때문에, 작게 만들면 안되고, 사이즈가 원본 사이즈로 되어 있어야 한다.
 			//////////////////////////////////////////////////////////////////////////
 			//
-			// LockParticle 를
+			// LockParticle 를 얻는다.
 			if ( particles[i].invWeight == 0.f )
 			{
 				LockParticle sLockParticle;
@@ -1073,8 +1105,8 @@ namespace NSPhysX
 				vecLockParticle.push_back( sLockParticle );
 			}
 
-			// [shhan][2014.11.20] 
-			//						
+			// [shhan][2014.11.20] 실제 위치로 움직여줘야 한다.
+			//						이걸 하지 않으면 Cloth 가 튀는 현상이 심하게 보일 것이다.
 			D3DXVECTOR3* pPos = reinterpret_cast<D3DXVECTOR3*>( &particles[i].pos );
 			D3DXVec3TransformCoord( pPos, pPos, &matWorld );
 
@@ -1087,13 +1119,13 @@ namespace NSPhysX
 		cloth.setSolverFrequency( static_cast<physx::PxReal>( sMaterialSystem.m_nClothSolverFrequency ) );		// 
 
 		// damp global particle velocity to 90% every 0.1 seconds
-		//cloth.setDampingCoefficient(0.1f); // damp local particle velocity // 
+		//cloth.setDampingCoefficient(0.1f); // damp local particle velocity // 감쇠 계수
 		cloth.setDampingCoefficient( sMaterialSystem.m_fClothDampingCoefficient ); // damp local particle velocity
-		//cloth.setDragCoefficient(0.1f); // transfer frame velocity // 
+		//cloth.setDragCoefficient(0.1f); // transfer frame velocity // 공기 저항 계수
 		cloth.setDragCoefficient(0.1f); // transfer frame velocity	
 
 		// reduce effect of local frame acceleration
-		//cloth.setInertiaScale(0.3f);	
+		//cloth.setInertiaScale(0.3f);	// 글로벌 포즈 변화에 관성 효과를 조정하기 위해 가속 축척 비율을 설정합니다. 
 		cloth.setInertiaScale(0.f);
 
 
@@ -1103,7 +1135,9 @@ namespace NSPhysX
 		//if (useVirtualParticles)
 		//{
 		//	//////////////////////////////////////////////////////////////////////////
-		//	// createVirtualParticles 
+		//	// 천 시뮬레이션은 충돌Bone 과 천의 삼각형 끼이는 현상이 자주 발생 할 수 있다.
+		//	// 보통은 끼여도 대충 흘러내리면서 나온다.
+		//	// createVirtualParticles 셋팅을 하면은 끼이면서 나오질 못하고 지속되는 문제가 보인다.
 		//	// 
 		//	//NSClothHelpers::createVirtualParticles(cloth, meshDesc, 4);
 		//	//NSClothHelpers::createVirtualParticles(cloth, meshDesc, 7);
@@ -1111,7 +1145,9 @@ namespace NSPhysX
 		//}
 
 		//////////////////////////////////////////////////////////////////////////
-		// eSWEPT_CONTACT : true 
+		// 천 시뮬레이션은 충돌Bone 과 천의 삼각형 끼이는 현상이 자주 발생 할 수 있다.
+		// 보통은 끼여도 대충 흘러내리면서 나온다.
+		// eSWEPT_CONTACT : true 셋팅을 하면은 끼이면서 나오질 못하고 지속되는 문제가 보인다.
 		//
 		// ccd
 		//cloth.setClothFlag(PxClothFlag::eSWEPT_CONTACT, useSweptContact);
@@ -1244,7 +1280,8 @@ namespace NSPhysX
 		bool useConstrainedOnly(true);
 		if ( D3DXVec3Length( &vPosDiffAdd ) > 6.f )
 		{
-		
+			// rm #3228 - [아이템]마술부 망또 수정 요청
+			// 너무 이동이 크면 튐현상의 문제라고 보인다. 전체점을 움직이도록 한다.
 			useConstrainedOnly = false;
 			for( DWORD i=0; i<numVerts && i<positions.size(); ++i )
 			{

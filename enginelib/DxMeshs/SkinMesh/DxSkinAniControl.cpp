@@ -204,9 +204,7 @@ void DxAniControl::FrameMoveLayer( float fElapsedTime, BOOL bContinue, DWORD dwF
         /*
             앞 애니가 정상적으로 끝났는데 굳이 블랜딩을 다시 해줌으로써 뒤 애니 앞 부분이
             앞 애니 끝부분과 블랜딩 되어서 튀게 되는 문제 수정            
-			
-			The front animation ended normally, but by blending it again, the front part of the back animation
-            Fixed an issue where the end of the previous animation would blend and stand out
+
         */
 // 		m_fTime = (float)(m_rAnimNode->m_pDxSkinAni->m_dwETime - m_rAnimNode->m_pDxSkinAni->m_UNITTIME);
 // 		m_rAnimNode->FrameMove ( m_fTime, bContinue, dwFlags );
@@ -846,7 +844,7 @@ PANIMCONTNODE DxSkinAniControl::GETANI_none_const ( EMANI_MAINTYPE MType, EMANI_
 	if ( dwAmount==0 )
         return m_vecAnim[0];
 
-	// Finding animations that fit the order.
+	//	순서에 맞는 에니메이션 찾음.
 	if ( m_vecAniType[MType][SType].size()<dwCount )
         dwCount = 0;
 
@@ -948,8 +946,8 @@ BOOL DxSkinAniControl::LoadSkeletonForEdit ( const TCHAR* szSkeleton, LPDIRECT3D
 	m_skeletonResThread = DxSkeletonManager::GetInstance().LoadSkeleton( m_strSkeleton, TRUE );
 	
 	////////////////////////////////////////////////////////////////////////////
-	//// Make sure to stand with your arms spread wide.
-	//// Without this, the first character appears, but there is no bone information.
+	//// 팔벌리고라도 서 있도록 한다. 
+	//// 이게 없으면 처음 캐릭터가 나왔지만 Bone 정보가 없게 된다.
 	//m_pSkeleton->Import( m_skeletonResThread.get() );
 
 	return TRUE;
@@ -999,7 +997,7 @@ BOOL DxSkinAniControl::ReleaseAnimationForEdit(const std::string& AnimName)
 
 	if ( !(*found)->m_pDxSkinAni->m_strCfgFile.compare(AnimName))
 	{
-		g_poolANICONTNODE.destroy( (*found) );	// Returns what was taken from the memory pool.
+		g_poolANICONTNODE.destroy( (*found) );	// 메모리 풀에서 가져왔던 것을 되돌려 준다.
 		(*found) = NULL;
 		m_vecAnim.erase ( found );
 	}

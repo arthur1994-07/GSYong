@@ -2,6 +2,7 @@
 
 #include "../../../SigmaCore/File/SerialFile.h"
 #include "../../../SigmaCore/Util/Util.h"
+
 #include "DxSkinObject.h"
 
 // ----------------------------------------------------------------------------
@@ -26,20 +27,19 @@ DxSkinObject::~DxSkinObject(void)
 
 DxSkinMesh9* DxSkinObject::CreateSkinMesh ( const char* szFile, const char* szSkeleton, LPDIRECT3DDEVICEQ pd3dDevice, BOOL bThread )
 {
-	/*MIN_ASSERT(szFile);
-	MIN_ASSERT(szSkeleton);
-	MIN_ASSERT(pd3dDevice);
+	//MIN_ASSERT(szFile);
+	//MIN_ASSERT(szSkeleton);
+	//MIN_ASSERT(pd3dDevice);
 
-	if( !DxSkinAniControl::LoadSkeletonForEdit ( szSkeleton , pd3dDevice ) )
-	{
-		return NULL;
-	}
+	//if( !DxSkinAniControl::LoadSkeletonForEdit ( szSkeleton, pd3dDevice ) )
+	//{
+	//	return NULL;
+	//}
 
-	StringCchCopy( m_szSkinMesh, MAX_PATH, szFile );
-	m_skinMeshRes = DxSkinMeshManager::GetInstance().LoadDxSkinMesh( m_szSkinMesh, m_strSkeleton, bThread, bThread );
-	return m_skinMeshRes.get();
+	//StringCchCopy( m_szSkinMesh, MAX_PATH, szFile );
+	//m_skinMeshRes = DxSkinMeshManager::GetInstance().LoadDxSkinMesh( m_szSkinMesh, m_strSkeleton, bThread, bThread );
+	//return m_skinMeshRes.get();
 
-	return NULL;*/
 	return NULL;
 }
 
@@ -140,26 +140,26 @@ void DxSkinObject::ClearAll ()
 
 HRESULT DxSkinObject::FrameMove ( float fElapsedTime )
 {
-	FrameMove ( fElapsedTime );
+	//DxSkinAniControl::FrameMove ( fElapsedTime );
 
 	return S_OK;
 }
 
 HRESULT DxSkinObject::Render ( LPDIRECT3DDEVICEQ pd3dDevice, D3DXMATRIX &matRot )
 {
-	//if ( !m_skinMeshRes.IsValid() )	
- //       return S_FALSE;
+	if ( !m_skinMeshRes.IsValid() )	
+        return S_FALSE;
 
 	////	Note : Skin Animation.
 	////
-	//Render ( pd3dDevice, matRot );
+	//DxSkinAniControl::Render ( matRot );
 
-	////	Note : SkinMesh 그리기.
-	////
-	//// UINT cTriangles(0);
+	//	Note : SkinMesh 그리기.
 	//
-	//	//TODO::
-	////m_pSkinMesh->DrawMeshClobal ( pd3dDevice, cTriangles );
+	//UINT cTriangles(0);
+	
+	//	TODO::
+	//m_pSkinMesh->DrawMeshClobal ( pd3dDevice, cTriangles );
 
 	return S_OK;
 }

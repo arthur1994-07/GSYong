@@ -1,20 +1,31 @@
 #pragma once
 
 #include <boost/weak_ptr.hpp>
-#include <tr1/memory>
 
 class DxLandMan;
 
+//////////////////////////////////////////////////////////////////////////
+//				ActorNameCollision	& ActorNameCollisionThread
+//
+// 설명		: 이름표시를 위한 충돌처리
+// 작업이유 : 충돌처리가 지형과 하므로 나름 부하기 심하다.
+//
+
+// 각각의 Character 가 가지고 있는 것.
 struct ActorNameCollision
 {
+	//////////////////////////////////////////////////////////////////////////
+	// 기본 셋팅. 고정값.
 	DWORD							m_dwCollMode;		// EMCOLLMODE
+
+	//////////////////////////////////////////////////////////////////////////
 	// Swap 용 Custom Data.
 	boost::weak_ptr<DxLandMan>	m_wpLandMan[2];
 	BOOL						m_bCollision[2];
 
-	
+	//////////////////////////////////////////////////////////////////////////
 	// MainThread 에서 사용해도 되는 데이터.
-	BOOL							m_bCollisionResult;	
+	BOOL							m_bCollisionResult;	// 충돌 결과. 이름을 숨길것인가~?
 
 	//////////////////////////////////////////////////////////////////////////
 	// Swap 용 기본 Data.
